@@ -1,7 +1,7 @@
-"use client";
 import RemoveBtn from "./RemoveBtn";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
+import moment from "moment";
 
 const getWorkouts = async () => {
   try {
@@ -19,32 +19,33 @@ const getWorkouts = async () => {
   }
 };
 
-export default async function Workouts() {
+export default async function WorkoutList() {
   const { workouts } = await getWorkouts();
   return (
-    <>
+    <section>
       <ul className="workouts">
-        {workouts.map(({ exercise, lbs, sets, reps, _id }) => (
+        {workouts.map(({ exercise, lbs, reps, notes, createdAt, _id }) => (
           <li key={_id} className="container card">
+            <div>{moment(createdAt).format("dddd, MMM Do")}</div>
             <div className="exercise">
               <strong>{exercise}</strong>
             </div>
-            <div className="lbs">
-              {lbs}
-              <i>lbs</i>
+            <div className="exercise-details">
+              <div className="lbs">
+                {lbs}
+                <i> lbs </i> x {reps}
+              </div>
+              <p className="notes">Notes: {notes}</p>
             </div>
-            <div className="sets">Sets: {sets}</div>
-            <div className="reps">Reps: {reps}</div>
-            <button type="button" className="update-btn">
-              Update Workout
-            </button>
-            <RemoveBtn id={_id} />
-            <Link href={`/editWorkout/${_id}`}>
-              <HiPencilAlt />
-            </Link>
+            <div className="btn">
+              <RemoveBtn id={_id} />
+              <Link href={`/editWorkout/${_id}`}>
+                <HiPencilAlt />
+              </Link>
+            </div>
           </li>
         ))}
       </ul>
-    </>
+    </section>
   );
 }

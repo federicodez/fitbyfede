@@ -5,8 +5,17 @@ const connectMongoDB = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB.");
   } catch (error) {
-    console.log(err);
+    console.log(error);
   }
 };
 
-export default connectMongoDB;
+const disconnectMongoDB = async () => {
+  try {
+    await mongoose.disconnect(process.env.MONGODB_URI);
+    console.log("Disconnect from MongoDB.");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { connectMongoDB, disconnectMongoDB };

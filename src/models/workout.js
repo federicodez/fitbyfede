@@ -4,8 +4,8 @@ const workoutSchema = new Schema(
   {
     exercise: String,
     lbs: Number,
-    sets: Number,
     reps: Number,
+    notes: String,
   },
   {
     timestamps: true,

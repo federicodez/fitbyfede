@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
@@ -16,6 +17,7 @@
     "autoprefixer": "10.4.15",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
+    "moment": "^2.29.4",
     "mongodb": "^5.8.1",
     "mongoose": "^7.4.5",
     "next": "13.4.19",

@@ -2,18 +2,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Create() {
+export default function CreateWorkoutForm() {
   const [exercise, setExercise] = useState("");
   const [lbs, setLbs] = useState(0);
-  const [sets, setSets] = useState(0);
   const [reps, setReps] = useState(0);
 
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!exercise || !lbs || !sets || !reps) {
+  const handleSubmit = async () => {
+    if (!exercise || !lbs || !reps) {
       alert("Exercise, lbs, sets, and reps are required");
       return;
     }
@@ -24,10 +21,11 @@ export default function Create() {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ exercise, lbs, sets, reps }),
+        body: JSON.stringify({ exercise, lbs, reps }),
       });
 
       if (res.ok) {
+        router.refresh();
         router.push("/");
       } else {
         throw new Error("Failed to create a topic");
@@ -39,7 +37,7 @@ export default function Create() {
 
   return (
     <div className="wrapper container">
-      <form onSubmit={handleSubmit} className="create-form flex flex-col">
+      <form action={handleSubmit} className="create-form flex flex-col">
         <label htmlFor="exercise">Exercise: </label>
         <input
           onChange={(e) => setExercise(e.target.value)}
@@ -54,14 +52,6 @@ export default function Create() {
           type="number"
           name="lbs"
           id="lbs"
-          className="bg-white border rounded-lg"
-        />
-        <label htmlFor="sets">Sets: </label>
-        <input
-          onChange={(e) => setSets(e.target.value)}
-          type="number"
-          name="sets"
-          id="sets"
           className="bg-white border rounded-lg"
         />
         <label htmlFor="reps">Reps: </label>

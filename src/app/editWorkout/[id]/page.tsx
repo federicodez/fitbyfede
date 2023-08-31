@@ -1,6 +1,10 @@
 import EditWorkoutForm from "@/components/EditWorkoutForm";
 
-const getWorkoutById = async (id) => {
+type EditWorkoutProps = {
+  id: string;
+};
+
+const getWorkoutById = async (id: EditWorkoutProps) => {
   try {
     const res = await fetch(`http://localhost:3000/api/workouts/${id}`, {
       cache: "no-store",
@@ -19,16 +23,10 @@ const getWorkoutById = async (id) => {
 export default async function EditWorkout({ params }) {
   const { id } = params;
   const { workout } = await getWorkoutById(id);
-  const { exercise, lbs, sets, reps } = workout;
+  const { exercise, lbs, reps } = workout;
   return (
     <div>
-      <EditWorkoutForm
-        id={id}
-        exercise={exercise}
-        lbs={lbs}
-        sets={sets}
-        reps={reps}
-      />
+      <EditWorkoutForm id={id} exercise={exercise} lbs={lbs} reps={reps} />
     </div>
   );
 }

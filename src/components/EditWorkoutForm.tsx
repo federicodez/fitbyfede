@@ -2,24 +2,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function EditWorkoutForm({ id, exercise, lbs, sets, reps }) {
+export default function EditWorkoutForm({ id, exercise, lbs, reps }) {
   const [newExercise, setNewExercise] = useState(exercise);
   const [newLbs, setNewLbs] = useState(lbs);
-  const [newSets, setNewSets] = useState(sets);
   const [newReps, setNewReps] = useState(reps);
 
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     try {
       const res = await fetch(`http://localhost:3000/api/workouts/${id}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ newExercise, newLbs, newSets, newReps }),
+        body: JSON.stringify({ newExercise, newLbs, newReps }),
       });
 
       if (!res.ok) {
@@ -35,7 +32,7 @@ export default function EditWorkoutForm({ id, exercise, lbs, sets, reps }) {
 
   return (
     <div className="wrapper container">
-      <form onSubmit={handleSubmit} className="create-form flex flex-col">
+      <form action={handleSubmit} className="create-form flex flex-col">
         <label htmlFor="exercise">Exercise: </label>
         <input
           onChange={(e) => setNewExercise(e.target.value)}
@@ -52,15 +49,6 @@ export default function EditWorkoutForm({ id, exercise, lbs, sets, reps }) {
           type="number"
           name="lbs"
           id="lbs"
-          className="bg-white border rounded-lg"
-        />
-        <label htmlFor="sets">Sets: </label>
-        <input
-          onChange={(e) => setNewSets(e.target.value)}
-          value={newSets}
-          type="number"
-          name="sets"
-          id="sets"
           className="bg-white border rounded-lg"
         />
         <label htmlFor="reps">Reps: </label>
