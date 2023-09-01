@@ -3,8 +3,8 @@ import mongoose, { Schema } from "mongoose";
 const workoutSchema = new Schema(
   {
     exercise: String,
-    lbs: Number,
-    reps: Number,
+    lbs: [Number],
+    reps: [Number],
     notes: String,
   },
   {

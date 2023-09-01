@@ -1,19 +1,19 @@
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface FinishWorkoutFormProps {
   exercise: string;
 }
+
 export default function FinishWorkoutForm({
   exercise,
 }: FinishWorkoutFormProps) {
-  const [lbs, setLbs] = useState(0);
-  const [reps, setReps] = useState(0);
-
   const router = useRouter();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data: FormData) => {
+    const lbs = data.get("lbs")?.valueOf();
+    const reps = data.get("reps")?.valueOf();
+
     if (!lbs || !reps) {
       alert("Exercise, lbs, sets, and reps are required");
       return;
@@ -45,7 +45,6 @@ export default function FinishWorkoutForm({
         <h1>{exercise}</h1>
         <label htmlFor="lbs">Weight (lbs): </label>
         <input
-          onChange={(e) => setLbs(e.target.value)}
           type="number"
           name="lbs"
           id="lbs"
@@ -53,7 +52,6 @@ export default function FinishWorkoutForm({
         />
         <label htmlFor="reps">Reps: </label>
         <input
-          onChange={(e) => setReps(e.target.value)}
           type="number"
           name="reps"
           id="reps"

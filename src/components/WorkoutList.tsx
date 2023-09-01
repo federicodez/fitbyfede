@@ -7,7 +7,6 @@ import { WorkoutProps } from "@/types";
 
 export default async function WorkoutList() {
   const { workouts }: { workouts: WorkoutProps } = await getWorkouts();
-
   return (
     <section>
       <ul className="workouts">
@@ -19,8 +18,11 @@ export default async function WorkoutList() {
             </div>
             <div className="exercise-details">
               <div className="lbs">
-                {lbs}
-                <i> lbs </i> x {reps}
+                {lbs?.map((lb: number, id: number) => <div key={id}>{lb}</div>)}
+                <i> lbs </i> x{" "}
+                {reps?.map((rep: number, id: number) => (
+                  <div key={id}>{rep}</div>
+                ))}
               </div>
               <p className="notes">Notes: {notes}</p>
             </div>
