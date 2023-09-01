@@ -1,23 +1,49 @@
 import { NextResponse } from "next/server";
-import { connectMongoDB, disconnectMongoDB } from "@/libs/mongodb";
+import connectMongoDB from "@/libs/mongodb";
 import Workout from "@/models/workout";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request) {
-  const { exercise, lbs, sets, reps } = await request.json();
-  await connectMongoDB();
-  await Workout.create({ exercise, lbs, sets, reps });
-  return NextResponse.json({ message: "Workout Created" }, { status: 201 });
+  try {
+    const { exercise, lbs, sets, reps } = await request.json();
+    await connectMongoDB();
+    await Workout.create({ exercise, lbs, sets, reps });
+    return NextResponse.json({ message: "Workout Created" }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to create workout.",
+    });
+  }
 }
 
 export async function GET() {
-  await connectMongoDB();
-  const workouts = await Workout.find();
-  return NextResponse.json({ workouts });
+  try {
+    await connectMongoDB();
+    const workouts = await Workout.find();
+    return NextResponse.json({ workouts });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to get workout.",
+    });
+  }
 }
 
 export async function DELETE(request) {
-  const id = request.nextUrl.searchParams.get("id");
-  await connectMongoDB();
-  await Workout.findByIdAndDelete(id);
-  return NextResponse.json({ message: "Workout deleted" }, { status: 200 });
+  try {
+    const id = request.nextUrl.searchParams.get("id");
+    await connectMongoDB();
+    await Workout.findByIdAndDelete(id);
+    return NextResponse.json({ message: "Workout deleted" }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to get workout.",
+    });
+  }
 }

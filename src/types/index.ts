@@ -14,13 +14,11 @@ export interface SearchExerciseProps {
 }
 
 export interface WorkoutProps {
-  workouts: {
-    _id: ObjectId;
-    exercise: string;
-    lbs: number;
-    reps: number;
-    notes: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  _id: ObjectId;
+  exercise: string;
+  lbs: number;
+  reps: number;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
 }

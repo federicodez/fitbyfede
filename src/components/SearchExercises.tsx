@@ -14,7 +14,7 @@ export default function SearchExercises({
     query === ""
       ? exercises
       : exercises.filter((item) =>
-          item
+          item[0]
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, "")),
@@ -37,15 +37,15 @@ export default function SearchExercises({
           afterLeave={() => setQuery("")}
         >
           <Combobox.Options>
-            {filteredExercises.map((item) => (
+            {filteredExercises?.map((item, id) => (
               <Combobox.Option
-                key={item}
+                key={id}
                 className={({ active }) =>
                   `relative search-exercises ${
                     active ? "bg-primary-blue text-white" : "text-gray-900"
                   }`
                 }
-                value={item}
+                value={item[0]}
               >
                 {({ selected, active }) => (
                   <>
@@ -54,7 +54,7 @@ export default function SearchExercises({
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
-                      {item}
+                      {item[0]}
                     </span>
                     {selected ? (
                       <span
