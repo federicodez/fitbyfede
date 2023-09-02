@@ -15,6 +15,7 @@ export interface SearchExerciseProps {
 
 export interface WorkoutProps {
   _id: ObjectId;
+  id: string;
   exercise: string;
   lbs: [number];
   reps: [number];

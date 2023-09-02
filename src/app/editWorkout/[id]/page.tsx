@@ -1,4 +1,4 @@
-import EditWorkoutForm from "@/components/EditWorkoutForm";
+import { EditWorkoutForm } from "@/components";
 import { getWorkoutById } from "@/utils";
 
 export default async function EditWorkout({
@@ -8,10 +8,17 @@ export default async function EditWorkout({
 }) {
   const { id } = params;
   const { workout } = await getWorkoutById(id);
-  const { exercise, lbs, reps } = workout;
+  const { _id, exercise, lbs, reps, notes } = workout;
   return (
     <div>
-      <EditWorkoutForm id={id} exercise={exercise} lbs={lbs} reps={reps} />
+      <EditWorkoutForm
+        id={id}
+        _id={_id}
+        exercise={exercise}
+        lbs={lbs}
+        reps={reps}
+        notes={notes}
+      />
     </div>
   );
 }

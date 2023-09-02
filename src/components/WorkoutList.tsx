@@ -1,4 +1,4 @@
-import RemoveBtn from "./RemoveBtn";
+import { RemoveBtn, WorkoutCard } from "./";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
@@ -12,26 +12,17 @@ export default async function WorkoutList() {
       <ul className="workouts">
         {workouts?.map(({ exercise, lbs, reps, notes, createdAt, _id }) => (
           <li key={_id} className="container card">
-            <div>{moment(createdAt).format("dddd, MMM Do")}</div>
-            <div className="exercise">
-              <strong>{exercise}</strong>
-            </div>
-            <div className="exercise-details">
-              <div className="lbs">
-                {lbs?.map((lb: number, id: number) => <div key={id}>{lb}</div>)}
-                <i> lbs </i> x{" "}
-                {reps?.map((rep: number, id: number) => (
-                  <div key={id}>{rep}</div>
-                ))}
-              </div>
-              <p className="notes">Notes: {notes}</p>
-            </div>
             <div className="btn">
               <RemoveBtn id={_id} />
               <Link href={`/editWorkout/${_id}`}>
                 <HiPencilAlt />
               </Link>
             </div>
+            <div>{moment(createdAt).format("dddd, MMM Do")}</div>
+            <div className="exercise">
+              <strong>{exercise}</strong>
+            </div>
+            <WorkoutCard lbs={lbs} reps={reps} />
           </li>
         ))}
       </ul>

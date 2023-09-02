@@ -11,8 +11,8 @@ export default function FinishWorkoutForm({
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
-    const lbs = data.get("lbs")?.valueOf();
-    const reps = data.get("reps")?.valueOf();
+    const lbs = data.getAll("lbs")?.valueOf();
+    const reps = data.getAll("reps")?.valueOf();
 
     if (!lbs || !reps) {
       alert("Exercise, lbs, sets, and reps are required");

@@ -94,14 +94,27 @@ p {
   }
 
   .card {
+    padding: 10px;
     box-shadow:
       inset 0 -3em 3em rgba(0, 0, 0, 0.1),
       0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
   }
 
-  .exercise-details {
+  .workout-card {
     display: flex;
+    justify-content: space-evenly;
     gap: 1rem;
+    padding: 5px;
+  }
+
+  .edit-card {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .edit-card-list input {
+    width: 10rem;
   }
 
   .btn {
