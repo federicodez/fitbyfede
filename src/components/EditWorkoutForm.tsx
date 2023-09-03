@@ -11,10 +11,6 @@ export default function EditWorkoutForm({
   reps,
   notes,
 }: WorkoutProps) {
-  // const [newExercise, setNewExercise] = useState(exercise);
-  // const [newLbs, setNewLbs] = useState<number[]>([]);
-  // const [newReps, setNewReps] = useState<number[]>([]);
-
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -53,7 +49,7 @@ export default function EditWorkoutForm({
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ lbs, reps }),
+        body: JSON.stringify({ lbs: 0, reps: 0 }),
       });
 
       if (!res.ok) {
@@ -69,22 +65,16 @@ export default function EditWorkoutForm({
   return (
     <div className="wrapper container">
       <form action={handleSubmit} className="edit-workout-form">
-        <h1>{exercise}</h1>
-        <div className="edit-card">
-          <div className="edit-card-list">
-            <ul>
-              {lbs?.map((lb, id) => (
-                <li key={id}>
+        <h1 className="edit-workout-form__title">{exercise}</h1>
+        <div className="edit-workout-form__container">
+          <ul className="edit-workout-form__list" id="lbs-list">
+            {lbs?.map((lb, id) => (
+              <li key={id} className="edit-workout-form__item">
+                <div className="edit-workout-form__set">
                   <label>Set</label>
-                  <div>{(id += 1)}</div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="edit-card-list">
-            <ul>
-              {lbs?.map((lb, id) => (
-                <li key={`${lb} ${id}`}>
+                  <div className="edit-workout-form__set-id">{(id += 1)}</div>
+                </div>
+                <div className="edit-workout-form__lbs">
                   <label htmlFor="lbs">Weight (lbs): </label>
                   <input
                     id="number"
@@ -92,40 +82,44 @@ export default function EditWorkoutForm({
                     name="lbs"
                     defaultValue={0}
                     placeholder={`${lb}`}
-                    className="bg-white border rounded-lg"
+                    className="edit-workout-form__input"
                   />
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="edit-card-list">
-            <ul>
-              {reps?.map((rep, id) => (
-                <li key={`${rep} ${id}`}>
-                  <label htmlFor="reps">Reps: </label>
-                  <input
-                    type="number"
-                    name="reps"
-                    defaultValue={0}
-                    placeholder={`${rep}`}
-                    className="bg-white border rounded-lg"
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <ul className="edit-workout-form__list">
+            {reps?.map((rep, id) => (
+              <li key={id}>
+                <label htmlFor="reps">Reps: </label>
+                <input
+                  type="number"
+                  name="reps"
+                  defaultValue={0}
+                  placeholder={`${rep}`}
+                  className="edit-workout-form__input"
+                />
+              </li>
+            ))}
+          </ul>
         </div>
-        <button
-          type="submit"
-          className="border rounded-lg bg-blue-900 w-48 m-4"
-        >
-          Update Workout
-        </button>
-        <CustomButton
-          title="Add Set"
-          handleClick={addSet}
-          containerStyles="bg-blue-900"
-        />
+        <div className="edit-workout-form__btn">
+          <CustomButton
+            title="Add Set"
+            handleClick={addSet}
+            containerStyles="edit-workout-form__add-btn"
+          />
+          <button type="submit" className="edit-workout-form__submit-btn">
+            Update Workout
+          </button>
+          <CustomButton
+            title="Cancel Update"
+            handleClick={() => {
+              router.push("/");
+            }}
+            containerStyles="edit-workout-form__cancel-btn"
+          />
+        </div>
       </form>
     </div>
   );

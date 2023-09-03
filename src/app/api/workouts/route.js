@@ -2,14 +2,19 @@ import { NextResponse } from "next/server";
 import connectMongoDB from "@/libs/mongodb";
 import Workout from "@/models/workout";
 
-export const dynamic = "force-dynamic";
-
 export async function POST(request) {
   try {
     const { exercise, lbs, sets, reps } = await request.json();
     await connectMongoDB();
-    await Workout.create({ exercise, lbs, sets, reps });
-    return NextResponse.json({ message: "Workout Created" }, { status: 201 });
+    await Workout.create({ exercise, lbs, reps });
+    return NextResponse.json(
+      {
+        message: "Workout Created",
+      },
+      {
+        status: 201,
+      },
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json({
@@ -22,7 +27,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     await connectMongoDB();
-    const workouts = await Workout.find();
+    const workouts = await Workout.find().sort({ _id: -1 });
     return NextResponse.json({ workouts });
   } catch (error) {
     console.log(error);

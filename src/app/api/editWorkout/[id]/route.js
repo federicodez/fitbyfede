@@ -7,10 +7,7 @@ export async function PUT(request, { params }) {
     const { id } = params;
     const { lbs, reps } = await request.json();
     await connectMongoDb();
-    const update = await Workout.updateOne(
-      { _id: id },
-      { $push: { lbs, reps } },
-    );
+    await Workout.updateOne({ _id: id }, { $push: { lbs, reps } });
     return NextResponse.json({ message: "Workout updated" }, { status: 200 });
   } catch (error) {
     console.log(error);

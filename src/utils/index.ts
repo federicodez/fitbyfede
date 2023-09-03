@@ -29,3 +29,18 @@ export const getWorkoutById = async (id: string) => {
     console.log(error);
   }
 };
+
+export const getMostRecentWorkout = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/finishWorkout", {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch most recent workout.");
+    }
+    return res.json();
+  } catch (error) {
+    console.log(error);
+  }
+};

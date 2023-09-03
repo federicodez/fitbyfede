@@ -2,9 +2,9 @@ import CreateWorkoutForm from "./CreateWorkoutForm";
 import CustomButton from "./CustomButton";
 import EditWorkoutForm from "./EditWorkoutForm";
 import FinishWorkoutForm from "./FinishWorkoutForm";
+import Navbar from "./Navbar";
 import RemoveBtn from "./RemoveBtn";
 import SearchBar from "./SearchBar";
-import SearchExercises from "./SearchExercises";
 import WorkoutCard from "./WorkoutCard";
 import WorkoutList from "./WorkoutList";
 
@@ -13,9 +13,9 @@ export {
   CustomButton,
   EditWorkoutForm,
   FinishWorkoutForm,
+  Navbar,
   RemoveBtn,
   SearchBar,
-  SearchExercises,
   WorkoutCard,
   WorkoutList,
 };
