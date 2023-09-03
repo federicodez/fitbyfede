@@ -16,6 +16,7 @@ export default function SearchBar() {
   };
 
   const handleClick = async (exercise: [string, string]) => {
+    console.log({ exercise });
     try {
       const res = await fetch(
         `http://localhost:3000/api/finishWorkout/${exercise[0]}`,

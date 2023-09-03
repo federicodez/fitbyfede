@@ -5,27 +5,24 @@ interface WorkoutCardProps {
 
 export default function WorkoutCard({ lbs, reps }: WorkoutCardProps) {
   return (
-    <div className="workout-card">
-      <div className="workout-card-list">
+    <div className="workout-card wrapper">
+      <ul className="workout-card-list">
         {lbs?.map((lb: number, id: number) => (
-          <ul>
-            <li key={id}>
-              <pre>
-                {(id += 1)} {lb}
-                <i> lbs </i> x{" "}
-              </pre>
-            </li>
-          </ul>
+          <li key={id} className="workout-card-item">
+            <div className="workout-card__set-id">{(id += 1)}</div>
+            <div className="workout-card__lbs">{lb}</div>
+            <div className="workout-card__lbs-label">lbs</div>
+          </li>
         ))}
-      </div>
-      <div className="workout-card-list"></div>
-      <div className="workout-card-list">
+      </ul>
+      <ul className="workout-card-list">
         {reps?.map((rep: number, id: number) => (
-          <ul>
-            <li key={id}>{rep}</li>
-          </ul>
+          <li key={id} className="workout-card-item">
+            <div className="workout-card__X">x</div>
+            <div className="workout-card__reps">{rep}</div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
