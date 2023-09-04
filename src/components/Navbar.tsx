@@ -8,7 +8,7 @@ export default function Navbar() {
         <div className="nav wrapper">
           <ul className="nav-list">
             <li className="nav-item">
-              <Link className="nav-link" href="#">
+              <Link className="nav-link" href="/profile">
                 Profile
               </Link>
             </li>

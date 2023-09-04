@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createWorkout } from "@/utils";
 
 export default function CreateWorkoutForm() {
   const [exercise, setExercise] = useState("");
@@ -14,25 +15,7 @@ export default function CreateWorkoutForm() {
       alert("Exercise, lbs, sets, and reps are required");
       return;
     }
-
-    try {
-      const res = await fetch("http://localhost:3000/api/workouts", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ exercise, lbs, reps }),
-      });
-
-      if (res.ok) {
-        router.refresh();
-        router.push("/");
-      } else {
-        throw new Error("Failed to create a topic");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await createWorkout();
   };
 
   return (

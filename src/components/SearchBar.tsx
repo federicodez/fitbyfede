@@ -3,23 +3,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
-import { exercises } from "@/constants/intex";
+import { exercises } from "@/constants";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
-  const handleSearch = async (query: string) => {
-    setQuery(query);
-
-    // router.push(`/createWorkout/${exercise}`);
-  };
-
   const handleClick = async (exercise: [string, string]) => {
-    console.log({ exercise });
     try {
       const res = await fetch(
-        `http://localhost:3000/api/finishWorkout/${exercise[0]}`,
+        `http://localhost:3000/api/update-workout/${exercise[0]}`,
         {
           method: "POST",
           headers: {
@@ -59,7 +52,7 @@ export default function SearchBar() {
       </button>
       <form className="searchbar-form">
         <input
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           type="text"
           name="query"
           placeholder="Search"

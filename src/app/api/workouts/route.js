@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "@/libs/mongodb";
-import Workout from "@/models/workout";
+import { Workout } from "@/models/index";
 
 export async function POST(request) {
   try {
-    const { exercise, lbs, sets, reps } = await request.json();
+    const { exercise, lbs, reps } = await request.json();
     await connectMongoDB();
     await Workout.create({ exercise, lbs, reps });
     return NextResponse.json(

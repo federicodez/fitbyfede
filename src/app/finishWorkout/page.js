@@ -1,4 +1,4 @@
-import { FinishWorkoutForm, EditWorkoutForm } from "@/components/";
+import { FinishWorkoutForm } from "@/components/";
 import { getMostRecentWorkout } from "@/utils";
 
 export default async function FinishWorkout() {

@@ -9,6 +9,10 @@ export default async function WorkoutList() {
   const { workouts }: { workouts: WorkoutProps } = await getWorkouts();
   return (
     <section>
+      <h1 className="home-title">Start Workout</h1>
+      <Link href="/searchWorkout" className="home-link">
+        Start an Empty Workout
+      </Link>
       <ul className="workoutlist">
         {workouts?.map(({ exercise, lbs, reps, notes, createdAt, _id }) => (
           <li key={_id} className="container workoutlist-item">

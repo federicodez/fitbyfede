@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "@/libs/mongodb";
-import Workout from "@/models/workout";
+import { Workout } from "@/models/index";
 
 export async function GET() {
   try {

@@ -14,7 +14,7 @@ export const getWorkouts = async () => {
   }
 };
 
-export const getWorkoutById = async (id: string) => {
+export const getWorkoutById = async (id) => {
   try {
     const res = await fetch(`http://localhost:3000/api/workouts/${id}`, {
       cache: "no-store",
@@ -40,6 +40,27 @@ export const getMostRecentWorkout = async () => {
       throw new Error("Failed to fetch most recent workout.");
     }
     return res.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const createWorkout = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/workouts", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ exercise, lbs, reps }),
+    });
+
+    if (res.ok) {
+      router.refresh();
+      router.push("/");
+    } else {
+      throw new Error("Failed to create a topic");
+    }
   } catch (error) {
     console.log(error);
   }

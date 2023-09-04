@@ -4,12 +4,10 @@ import { WorkoutProps } from "@/types";
 import { CustomButton } from ".";
 
 export default function EditWorkoutForm({
-  _id,
   id,
   exercise,
   lbs,
   reps,
-  notes,
 }: WorkoutProps) {
   const router = useRouter();
 
@@ -22,6 +20,7 @@ export default function EditWorkoutForm({
     reps?.map((rep) => {
       if (!rep.length) throw new Error("Invalid rep.");
     });
+
     try {
       const res = await fetch(`http://localhost:3000/api/workouts/${id}`, {
         method: "PUT",
