@@ -1,30 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { exercises } from "@/constants";
+import { prisma } from "@/db";
+import { useUserContext } from "@/context/user-context";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
+  const { user } = useUserContext();
+  console.log({ user });
+
   const handleClick = async (exercise: [string, string]) => {
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/update-workout/${exercise[0]}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({ exercise }),
-        },
-      );
-
-      if (res.ok) {
-        router.push(`/finishWorkout`);
-      }
+      // const res = await fetch(
+      //   `http://localhost:3000/api/update-workout/${exercise[0]}`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-type": "application/json",
+      //     },
+      //     body: JSON.stringify({ exercise }),
+      //   },
+      // );
+      // if (res.ok) {
+      return prisma.user.findUnique({ where: { email: email } });
+      // const firstW = exercise[0];
+      // const workout = await prisma.workout.create({
+      //   data: { exercise: firstW },
+      // });
+      // router.push(`/finishWorkout`);
+      // }
     } catch (error) {
       console.log(error);
     }

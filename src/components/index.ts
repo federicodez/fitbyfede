@@ -5,6 +5,7 @@ import FinishWorkoutForm from "./FinishWorkoutForm";
 import Navbar from "./Navbar";
 import RemoveBtn from "./RemoveBtn";
 import SearchBar from "./SearchBar";
+import Unauth from "./unauth";
 import WorkoutCard from "./WorkoutCard";
 import WorkoutList from "./WorkoutList";
 
@@ -16,6 +17,7 @@ export {
   Navbar,
   RemoveBtn,
   SearchBar,
+  Unauth,
   WorkoutCard,
   WorkoutList,
 };

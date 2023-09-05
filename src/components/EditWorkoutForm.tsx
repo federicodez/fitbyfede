@@ -1,19 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { WorkoutProps } from "@/types";
+import { Workout } from "@/types";
 import { CustomButton } from ".";
 
-export default function EditWorkoutForm({
-  id,
-  exercise,
-  lbs,
-  reps,
-}: WorkoutProps) {
+export default function EditWorkoutForm({ id, exercise, lbs, reps }: Workout) {
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
-    const lbs = data.getAll("lbs")?.valueOf();
-    lbs?.map((lb) => {
+    const lbs: Lbs = data.getAll("lbs")?.valueOf();
+    lbs?.map((lb: number) => {
       if (!lb.length) throw new Error("Invalid weight.");
     });
     const reps = data.getAll("reps")?.valueOf();

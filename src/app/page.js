@@ -1,4 +1,4 @@
-import { WorkoutList } from "@/components";
+import { WorkoutList, Unauth } from "@/components";
 
 export default async function Home() {
   return (

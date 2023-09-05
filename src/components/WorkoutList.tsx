@@ -3,10 +3,12 @@ import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
 import { getWorkouts } from "@/utils";
-import { WorkoutProps } from "@/types";
+import { Workout } from "@/types";
+import { prisma } from "@/db";
 
 export default async function WorkoutList() {
-  const { workouts }: { workouts: WorkoutProps } = await getWorkouts();
+  // const { workouts }: { workouts: Workout | null } = await getWorkouts();
+  const workouts = await prisma.workout.findMany();
   return (
     <section>
       <h1 className="home-title">Start Workout</h1>

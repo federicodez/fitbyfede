@@ -1,14 +1,14 @@
+import { prisma } from "@/db";
+
 export const getWorkouts = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/workouts", {
-      cache: "no-store",
-    });
+    const workouts = await prisma.workout.findMany();
 
-    if (!res.ok) {
+    if (!workouts.length) {
       throw new Error("Failed to fetch workouts");
     }
 
-    return res.json();
+    return workouts;
   } catch (error) {
     console.log("Error loading workouts: ", error);
   }
@@ -16,15 +16,17 @@ export const getWorkouts = async () => {
 
 export const getWorkoutById = async (id) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/workouts/${id}`, {
-      cache: "no-store",
+    const workout = await prisma.workout.findUnique({
+      where: {
+        id,
+      },
     });
 
-    if (!res.ok) {
+    if (!workout.length) {
       throw new Error("Failed to fetch workout");
     }
 
-    return res.json();
+    return workout;
   } catch (error) {
     console.log(error);
   }
@@ -32,14 +34,6 @@ export const getWorkoutById = async (id) => {
 
 export const getMostRecentWorkout = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/finishWorkout", {
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch most recent workout.");
-    }
-    return res.json();
   } catch (error) {
     console.log(error);
   }
@@ -47,14 +41,7 @@ export const getMostRecentWorkout = async () => {
 
 export const createWorkout = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/workouts", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ exercise, lbs, reps }),
-    });
-
+    await prisma.workout.create({ data: { exercise, lbs, reps } });
     if (res.ok) {
       router.refresh();
       router.push("/");

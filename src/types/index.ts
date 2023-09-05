@@ -1,19 +1,19 @@
 import { ObjectId } from "mongodb";
 import { MouseEventHandler } from "react";
 
-export interface CustomButtonProps {
+export type CustomButtonProps = {
   title: string;
   containerStyles?: string;
   handleClick?: MouseEventHandler<HTMLButtonElement>;
   btnType?: "button" | "submit";
-}
+};
 
-export interface SearchExerciseProps {
+export type SearchExerciseProps = {
   exercise: string;
   setExercise: (exercise: string) => void;
-}
+};
 
-export interface WorkoutProps {
+export type Workout = {
   _id: ObjectId;
   id?: string;
   exercise: string;
@@ -22,8 +22,8 @@ export interface WorkoutProps {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
-export interface Exercises {
+export type Exercises = {
   exercises: [string, string];
-}
+};

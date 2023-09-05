@@ -1,5 +1,4 @@
-import connectMongoDb from "@/libs/mongodb";
-import { User } from "@/models/index";
+import { prisma } from "@/db";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -15,24 +14,20 @@ const authOptions = {
       if (account.provider === "google") {
         const { email, name } = user;
         try {
-          await connectMongoDb();
-          const userExists = await User.findOne({ email });
+          const userExists = await prisma.user.findUnique({
+            where: {
+              email,
+            },
+          });
 
           if (!userExists) {
-            const res = await fetch("http://localhost:3000/api/user", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email,
-                name,
-              }),
-            });
+            const newUser = await prisma.user.create({ data: { name, email } });
 
-            if (res.ok) {
-              return user;
-            }
+            // console.log({ newUser });
+            return newUser;
+          } else {
+            // console.log({ userExists });
+            return userExists;
           }
         } catch (error) {
           console.log(error);

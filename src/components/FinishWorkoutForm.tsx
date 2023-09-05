@@ -1,11 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { CustomButton } from ".";
-import { WorkoutProps } from "@/types";
+import { Workout } from "@/types";
 
-interface FinishWorkoutFormProps {
-  workout: WorkoutProps;
-}
+type FinishWorkoutFormProps = {
+  workout: [Workout];
+};
 
 export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
   const { exercise, lbs, reps, _id } = workout[0];
