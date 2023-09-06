@@ -15,9 +15,9 @@ export type SearchExerciseProps = {
 export type Workout = {
   id: string;
   exercise: string;
-  lbs?: number[];
-  reps?: number[];
-  userId?: string;
+  lbs: number[];
+  reps: number[];
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
 };

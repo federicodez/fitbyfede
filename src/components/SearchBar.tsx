@@ -27,9 +27,8 @@ export default function SearchBar() {
         const { id } = foundUser;
 
         if (id) {
-          const createdWorkout = await createWorkout(id, exercise[0]);
-          console.log({ createWorkout });
-          router.push(`/finishWorkout/${createdWorkout}`);
+          await createWorkout(id, exercise[0]);
+          router.push(`/finishWorkout/${id}`);
         }
       } catch (error) {
         console.log(error);

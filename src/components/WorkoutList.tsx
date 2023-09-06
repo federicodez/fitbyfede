@@ -1,23 +1,13 @@
 import { RemoveBtn, WorkoutCard } from "./";
 import Link from "next/link";
-import { HiPencilAlt } from "react-icons/hi";
+import { HiPencilAlt, HiOutlineTrash } from "react-icons/hi";
 import moment from "moment";
-import { getWorkouts } from "@/utils";
-import { Workout } from "@/types";
 import { prisma } from "@/db";
+import { CircleLoader } from "@/components";
 
 export default async function WorkoutList() {
-  // const { workouts }: { workouts: Workout | null } = await getWorkouts();
-  // const workout = await prisma.workout.create({
-  //   data: {
-  //     exercise: "bench",
-  //     lbs: [135],
-  //     reps: [10],
-  //     userId: "d58ad89e-a8d4-43ca-80c1-535e5878218a",
-  //   },
-  // });
   const workouts = await prisma.workout.findMany();
-  return (
+  return workouts.length ? (
     <section>
       <h1 className="home-title">Start Workout</h1>
       <Link href="/searchWorkout" className="home-link">
@@ -43,5 +33,39 @@ export default async function WorkoutList() {
         ))}
       </ul>
     </section>
+  ) : (
+    <>
+      <h1 className="home-title">Start Workout</h1>
+      <Link href="/searchWorkout" className="home-link">
+        Start an Empty Workout
+      </Link>
+      <div className="workoutlist">
+        <div className="container workoutlist-item">
+          <div className="workoutlist-btn">
+            <div className="workoutlist-btn">
+              <HiOutlineTrash />
+              <Link href="#">
+                <HiPencilAlt />
+              </Link>
+            </div>
+            <div className="workoutlist-date">Wednesday, Sep 5th</div>
+            <div className="workoutlist-exercise">
+              <strong>Squat</strong>
+            </div>
+            <div className="workout-card wrapper">
+              <div className="workout-card-list">
+                <div className="workout-card-item">
+                  <div className="workout-card__set-id">1</div>
+                  <div className="workout-card__lbs">205</div>
+                  <div className="workout-card__lbs-label">lbs</div>
+                  <div className="workout-card__X">x</div>
+                  <div className="workout-card__reps">10</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

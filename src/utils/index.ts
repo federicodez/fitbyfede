@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/db";
+import { Workout } from "@/types";
 
 export const getWorkouts = async () => {
   try {
@@ -15,10 +16,13 @@ export const getWorkouts = async () => {
   }
 };
 
-export const updateWorkout = async (id, lbs, reps) => {
-  console.log({ lbs, reps });
+export const updateWorkout = async (
+  id: string,
+  lbs: number[],
+  reps: number[],
+) => {
   try {
-    const updated = await prisma.workout.update({
+    await prisma.workout.update({
       where: {
         id,
       },
@@ -27,14 +31,12 @@ export const updateWorkout = async (id, lbs, reps) => {
         reps,
       },
     });
-
-    return updated;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const addSetToWorkout = async (workout, id) => {
+export const addSetToWorkout = async (workout: Workout, id: string) => {
   const { lbs, reps } = workout;
   try {
     const updated = await prisma.workout.update({
@@ -52,7 +54,7 @@ export const addSetToWorkout = async (workout, id) => {
   }
 };
 
-export const getWorkoutById = async (id) => {
+export const getWorkoutById = async (id: string) => {
   try {
     const workout = await prisma.workout.findUnique({ where: { id } });
     return workout;
@@ -61,7 +63,7 @@ export const getWorkoutById = async (id) => {
   }
 };
 
-export const getMostRecentWorkout = async (id) => {
+export const getMostRecentWorkout = async (id: string) => {
   try {
     const workout = await prisma.workout.findFirst({
       where: {
@@ -75,10 +77,12 @@ export const getMostRecentWorkout = async (id) => {
   }
 };
 
-export const createWorkout = async (id, exercise) => {
+export const createWorkout = async (id: string, exercise: string) => {
+  const lbs = [0];
+  const reps = [0];
   try {
     const workout = await prisma.workout.create({
-      data: { exercise, userId: id },
+      data: { exercise, lbs, reps, userId: id },
     });
     return workout;
   } catch (error) {
@@ -86,7 +90,7 @@ export const createWorkout = async (id, exercise) => {
   }
 };
 
-export const findUser = async (email) => {
+export const findUser = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     return user;
@@ -95,9 +99,9 @@ export const findUser = async (email) => {
   }
 };
 
-export const deleteWorkout = async (id) => {
+export const deleteWorkout = async (id: string) => {
   try {
-    const deleteWorkout = await prisma.workout.delete({ where: { id } });
+    await prisma.workout.delete({ where: { id } });
   } catch (error) {
     console.log(error);
   }

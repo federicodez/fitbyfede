@@ -29,15 +29,23 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
       reps?.shift();
     });
 
-    const updated = await updateWorkout(id, lbs, reps);
-    router.push("/");
+    try {
+      await updateWorkout(id, lbs, reps);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const addSet = async () => {
-    lbs?.push(0);
-    reps?.push(0);
-    const updated = await updateWorkout(id, lbs, reps);
-    router.refresh();
+    try {
+      lbs?.push(0);
+      reps?.push(0);
+      await updateWorkout(id, lbs, reps);
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -57,7 +65,7 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
                   <input
                     type="string"
                     name="lbs"
-                    defaultValue={0}
+                    defaultValue={`${lb ? lb : 0}`}
                     placeholder={`${lb}`}
                     className="edit-workout-form__input"
                   />
@@ -72,7 +80,7 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
                 <input
                   type="string"
                   name="reps"
-                  defaultValue={0}
+                  defaultValue={`${rep ? rep : 0}`}
                   placeholder={`${rep}`}
                   className="edit-workout-form__input"
                 />

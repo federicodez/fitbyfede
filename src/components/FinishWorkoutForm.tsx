@@ -2,101 +2,56 @@
 import { useRouter } from "next/navigation";
 import { CustomButton } from ".";
 import { Workout } from "@/types";
-import { useSession } from "next-auth/react";
-import { findUser, createWorkout, getMostRecentWorkout } from "@/utils";
+import { deleteWorkout, updateWorkout } from "@/utils";
 
-export default function FinishWorkoutForm({ workout }: Workout) {
+type FinishWorkoutFormProps = {
+  workout: Workout;
+};
+
+export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
   const { id, exercise, lbs, reps } = workout;
   console.log({ id, exercise, lbs, reps });
   const router = useRouter();
-  const { data: session } = useSession();
-
-  // async () => {
-  //   const {
-  //     user: { name, email },
-  //   } = session;
-  //
-  //   if (email) {
-  //     try {
-  //       const foundUser = await findUser(email);
-  //       const { id } = foundUser;
-  //       const recent = await getMostRecentWorkout(id);
-  //       console.log({ recent });
-  //
-  //       if (id) {
-  //         const createdWorkout = await createWorkout(id, exercise[0]);
-  //         const { id } = createdWorkout;
-  //         console.log({ createWorkout });
-  //         router.push(`/editWorkout/${id}`);
-  //       }
-  //       router.push("/");
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
 
   const handleSubmit = async (data: FormData) => {
-    const lbs = data.getAll("lbs")?.valueOf();
-    const reps = data.getAll("reps")?.valueOf();
+    const dataLbs = data.getAll("lbs")?.valueOf();
+    const dataReps = data.getAll("reps")?.valueOf();
 
-    if (!lbs || !reps) {
+    if (!dataLbs || !dataReps) {
       alert("Exercise, lbs, sets, and reps are required");
       return;
     }
 
-    // try {
-    //   const res = await fetch(`http://localhost:3000/api/workouts/${_id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify({ lbs, reps }),
-    //   });
-    //
-    //   if (res.ok) {
-    //     router.refresh();
-    //     router.push("/");
-    //   } else {
-    //     throw new Error("Failed to create a topic");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const newLbs = Object.values(dataLbs);
+    newLbs?.map((lb) => {
+      if (!lb.length) throw new Error("Invalid weight.");
+      lbs?.push(Number(lb));
+      lbs?.shift();
+    });
+
+    const newReps = Object.values(dataReps);
+
+    newReps?.map((rep) => {
+      if (!rep.length) throw new Error("Invalid rep.");
+      reps?.push(Number(rep));
+      reps?.shift();
+    });
+
+    await updateWorkout(id, lbs, reps);
+    router.push("/");
   };
 
   const addSet = async () => {
-    // try {
-    //   const res = await fetch(`http://localhost:3000/api/editWorkout/${_id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify({ lbs: 0, reps: 0 }),
-    //   });
-    //
-    //   if (res.ok) {
-    //     router.refresh();
-    //   } else {
-    //     throw new Error("Failed to create a topic");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    lbs?.push(0);
+    reps?.push(0);
+    await updateWorkout(id, lbs, reps);
+    router.refresh();
   };
 
   const removeWorkout = async () => {
     const confirmed = confirm("Are you sure?");
-
-    // if (confirmed) {
-    //   const res = await fetch(`http://localhost:3000/api/workouts?id=${_id}`, {
-    //     method: "DELETE",
-    //   });
-    //
-    //   if (res.ok) {
-    //     router.push("/");
-    //   }
-    // }
+    const deleted = deleteWorkout(id);
+    router.push("/");
   };
 
   return (
@@ -117,6 +72,7 @@ export default function FinishWorkoutForm({ workout }: Workout) {
                   name="lbs"
                   id="lbs"
                   className="finish-workout-form__input"
+                  required
                 />
               </div>
               <div>
@@ -126,6 +82,7 @@ export default function FinishWorkoutForm({ workout }: Workout) {
                   name="reps"
                   id="reps"
                   className="finish-workout-form__input"
+                  required
                 />
               </div>
             </li>

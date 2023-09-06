@@ -1,3 +1,4 @@
+import CircleLoader from "./circle-loader";
 import CreateWorkoutForm from "./CreateWorkoutForm";
 import CustomButton from "./CustomButton";
 import EditWorkoutForm from "./EditWorkoutForm";
@@ -10,6 +11,7 @@ import WorkoutCard from "./WorkoutCard";
 import WorkoutList from "./WorkoutList";
 
 export {
+  CircleLoader,
   CreateWorkoutForm,
   CustomButton,
   EditWorkoutForm,
