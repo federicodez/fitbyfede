@@ -1,6 +1,6 @@
 type WorkoutCardProps = {
-  lbs: [number];
-  reps: [number];
+  lbs: number[];
+  reps: number[];
 };
 
 export default function WorkoutCard({ lbs, reps }: WorkoutCardProps) {

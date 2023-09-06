@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { MouseEventHandler } from "react";
 
 export type CustomButtonProps = {
@@ -14,12 +13,11 @@ export type SearchExerciseProps = {
 };
 
 export type Workout = {
-  _id: ObjectId;
-  id?: string;
+  id: string;
   exercise: string;
-  lbs?: [number];
-  reps?: [number];
-  notes?: string;
+  lbs?: number[];
+  reps?: number[];
+  userId?: string;
   createdAt: Date;
   updatedAt: Date;
 };

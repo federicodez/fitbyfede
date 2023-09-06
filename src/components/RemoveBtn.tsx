@@ -1,6 +1,7 @@
 "use client";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
+import { deleteWorkout } from "@/utils";
 
 type RemoveProps = {
   id: string;
@@ -12,13 +13,8 @@ export default function RemoveBtn({ id }: RemoveProps) {
     const confirmed = confirm("Are you sure?");
 
     if (confirmed) {
-      const res = await fetch(`http://localhost:3000/api/workouts?id=${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        router.refresh();
-      }
+      const deleted = await deleteWorkout(id);
+      router.refresh();
     }
   };
   return (

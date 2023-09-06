@@ -2,8 +2,9 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Profile() {
-  const { status, data: session } = useSession();
-  console.log({ session, status });
+  // const { status, data: session } = useSession();
+  const { data: session, status } = useSession();
+  // console.log("profile: ", { session, status });
   return (
     <>
       <h1>Profile</h1>

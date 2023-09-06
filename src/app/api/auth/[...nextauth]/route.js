@@ -22,7 +22,6 @@ const authOptions = {
 
           if (!userExists) {
             const newUser = await prisma.user.create({ data: { name, email } });
-
             // console.log({ newUser });
             return newUser;
           } else {

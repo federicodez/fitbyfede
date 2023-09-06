@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { prisma } from "@/db";
 
 type UserContextProviderProps = {
   children: React.ReactNode;
@@ -12,20 +13,24 @@ type UserContext = {
   setUser: React.Dispatch<React.SetStateAction<string>>;
 };
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  workouts: string[];
+};
+
 export const UserContext = createContext<UserContext | null>(null);
 
 export default function UserContextProvider({
   children,
 }: UserContextProviderProps) {
-  const { status, data: session } = useSession();
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-  });
-  const value = { status, session, user, setUser };
+  const [user, setUser] = useState<User | null>(null);
 
   return (
-    <UserContext.Provider value={{ value }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
 }
 

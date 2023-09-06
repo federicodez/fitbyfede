@@ -40,6 +40,8 @@ export async function DELETE(request) {
     const id = request.nextUrl.searchParams.get("id");
     // await Workout.findByIdAndDelete(id);
     // return NextResponse.json({ message: "Workout deleted" }, { status: 200 });
+    const deleteWorkout = await prisma.workout.delete({ where: { id } });
+    return NextResponse({ message: "Workout deleted" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({

@@ -2,58 +2,42 @@
 import { useRouter } from "next/navigation";
 import { Workout } from "@/types";
 import { CustomButton } from ".";
+import { updateWorkout } from "@/utils";
 
-export default function EditWorkoutForm({ id, exercise, lbs, reps }: Workout) {
+type EditWorkoutFormProps = {
+  workout: Workout;
+};
+
+export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
+  const { id, exercise, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
-    const lbs: Lbs = data.getAll("lbs")?.valueOf();
-    lbs?.map((lb: number) => {
+    const dataLbs = data.getAll("lbs")?.valueOf();
+    const newLbs = Object.values(dataLbs);
+    newLbs?.map((lb) => {
       if (!lb.length) throw new Error("Invalid weight.");
+      lbs?.push(Number(lb));
+      lbs?.shift();
     });
-    const reps = data.getAll("reps")?.valueOf();
-    reps?.map((rep) => {
+
+    const dataReps = data.getAll("reps")?.valueOf();
+    const newReps = Object.values(dataReps);
+    newReps?.map((rep) => {
       if (!rep.length) throw new Error("Invalid rep.");
+      reps?.push(Number(rep));
+      reps?.shift();
     });
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/workouts/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ lbs, reps }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to edit workout");
-      }
-
-      router.refresh();
-      router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+    const updated = await updateWorkout(id, lbs, reps);
+    router.push("/");
   };
 
   const addSet = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/api/editWorkout/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ lbs: 0, reps: 0 }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to edit workout");
-      }
-
-      router.refresh();
-    } catch (error) {
-      console.log(error);
-    }
+    lbs?.push(0);
+    reps?.push(0);
+    const updated = await updateWorkout(id, lbs, reps);
+    router.refresh();
   };
 
   return (
@@ -71,8 +55,7 @@ export default function EditWorkoutForm({ id, exercise, lbs, reps }: Workout) {
                 <div className="edit-workout-form__lbs">
                   <label htmlFor="lbs">Weight (lbs): </label>
                   <input
-                    id="number"
-                    type="number"
+                    type="string"
                     name="lbs"
                     defaultValue={0}
                     placeholder={`${lb}`}
@@ -87,7 +70,7 @@ export default function EditWorkoutForm({ id, exercise, lbs, reps }: Workout) {
               <li key={id}>
                 <label htmlFor="reps">Reps: </label>
                 <input
-                  type="number"
+                  type="string"
                   name="reps"
                   defaultValue={0}
                   placeholder={`${rep}`}

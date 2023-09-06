@@ -8,6 +8,14 @@ import { prisma } from "@/db";
 
 export default async function WorkoutList() {
   // const { workouts }: { workouts: Workout | null } = await getWorkouts();
+  // const workout = await prisma.workout.create({
+  //   data: {
+  //     exercise: "bench",
+  //     lbs: [135],
+  //     reps: [10],
+  //     userId: "d58ad89e-a8d4-43ca-80c1-535e5878218a",
+  //   },
+  // });
   const workouts = await prisma.workout.findMany();
   return (
     <section>
@@ -16,11 +24,11 @@ export default async function WorkoutList() {
         Start an Empty Workout
       </Link>
       <ul className="workoutlist">
-        {workouts?.map(({ exercise, lbs, reps, notes, createdAt, _id }) => (
-          <li key={_id} className="container workoutlist-item">
+        {workouts?.map(({ id, exercise, lbs, reps, createdAt }) => (
+          <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
-              <RemoveBtn id={_id} />
-              <Link href={`/editWorkout/${_id}`}>
+              <RemoveBtn id={id} />
+              <Link href={`/editWorkout/${id}`}>
                 <HiPencilAlt />
               </Link>
             </div>

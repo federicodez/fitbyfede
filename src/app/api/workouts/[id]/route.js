@@ -1,6 +1,23 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/db";
 
+export async function POST(req, { params }) {
+  try {
+    const { id } = params;
+    const { exercise } = await req.json();
+
+    await prisma.workout.create({
+      data: {
+        exercise,
+        userId: id,
+      },
+    });
+    return NextResponse.json({ message: "Workout created" }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function PUT(request, { params }) {
   try {
     const { id } = params;
