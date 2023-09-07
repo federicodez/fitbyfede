@@ -1,10 +1,12 @@
 "use server";
 import { prisma } from "@/db";
-import { Workout } from "@/types";
+import { type Workout } from "@/types";
 
 export const getWorkouts = async () => {
   try {
-    const workouts = await prisma.workout.findMany();
+    const workouts = await prisma.workout.findMany({
+      orderBy: { createdAt: "desc" },
+    });
 
     if (!workouts.length) {
       throw new Error("Failed to fetch workouts");

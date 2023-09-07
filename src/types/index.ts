@@ -12,11 +12,21 @@ export type SearchExerciseProps = {
   setExercise: (exercise: string) => void;
 };
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  hashedPassword: string | null;
+  emailVerified: string | null;
+  workouts: Workout[] | null;
+};
+
 export type Workout = {
   id: string;
   exercise: string;
   lbs: number[];
   reps: number[];
+  user?: User;
   userId: string;
   createdAt: Date;
   updatedAt: Date;

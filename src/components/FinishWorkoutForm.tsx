@@ -10,7 +10,6 @@ type FinishWorkoutFormProps = {
 
 export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
   const { id, exercise, lbs, reps } = workout;
-  console.log({ id, exercise, lbs, reps });
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -30,15 +29,18 @@ export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
     });
 
     const newReps = Object.values(dataReps);
-
     newReps?.map((rep) => {
       if (!rep.length) throw new Error("Invalid rep.");
       reps?.push(Number(rep));
       reps?.shift();
     });
 
-    await updateWorkout(id, lbs, reps);
-    router.push("/");
+    try {
+      await updateWorkout(id, lbs, reps);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const addSet = async () => {

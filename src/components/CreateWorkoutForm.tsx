@@ -23,7 +23,6 @@ export default function CreateWorkoutForm() {
     const workout = await prisma.workout.create({
       data: { exercise, lbs, reps },
     });
-    // await createWorkout();
   };
 
   return (

@@ -7,10 +7,6 @@ import { findUser, createWorkout } from "@/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-type Exercise = {
-  exerise: string[];
-};
-
 export default function SearchBar() {
   const [query, setQuery] = useState("");
 
@@ -28,7 +24,7 @@ export default function SearchBar() {
 
         if (id) {
           await createWorkout(id, exercise[0]);
-          router.push(`/finishWorkout/${id}`);
+          router.push(`/finish-workout/${id}`);
         }
       } catch (error) {
         console.log(error);

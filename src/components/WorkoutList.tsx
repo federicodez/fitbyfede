@@ -2,16 +2,15 @@ import { RemoveBtn, WorkoutCard } from "./";
 import Link from "next/link";
 import { HiPencilAlt, HiOutlineTrash } from "react-icons/hi";
 import moment from "moment";
-import { prisma } from "@/db";
 import { getWorkouts } from "@/utils";
-import { CircleLoader, Login } from "@/components";
+import { CircleLoader } from "@/components";
 
 export default async function WorkoutList() {
   const workouts = await getWorkouts();
   return workouts?.length ? (
     <section>
       <h1 className="home-title">Start Workout</h1>
-      <Link href="/searchWorkout" className="home-link">
+      <Link href="/search-workout" className="home-link">
         Start an Empty Workout
       </Link>
       <ul className="workoutlist">
@@ -19,7 +18,7 @@ export default async function WorkoutList() {
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
               <RemoveBtn id={id} />
-              <Link href={`/editWorkout/${id}`}>
+              <Link href={`/edit-workout/${id}`}>
                 <HiPencilAlt />
               </Link>
             </div>

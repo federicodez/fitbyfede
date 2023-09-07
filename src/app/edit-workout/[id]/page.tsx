@@ -1,4 +1,4 @@
-import { EditWorkoutForm } from "@/components";
+import { EditWorkoutForm, Unauth } from "@/components";
 import { getWorkoutById } from "@/utils";
 
 export default async function EditWorkout({
@@ -8,10 +8,11 @@ export default async function EditWorkout({
 }) {
   const { id } = params;
   const workout = await getWorkoutById(id);
-  console.log({ workout });
-  return (
+  return workout ? (
     <div>
-      <EditWorkoutForm workout={workout} />
+      <Unauth>
+        <EditWorkoutForm workout={workout} />
+      </Unauth>
     </div>
-  );
+  ) : null;
 }
