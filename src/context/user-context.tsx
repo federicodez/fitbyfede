@@ -8,16 +8,16 @@ type UserContextProviderProps = {
   children: React.ReactNode;
 };
 
-type UserContext = {
-  user: string;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
-};
-
 type User = {
   id: string;
   name: string;
   email: string;
   workouts: string[];
+};
+
+type UserContext = {
+  user: string;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 };
 
 export const UserContext = createContext<UserContext | null>(null);
@@ -26,12 +26,10 @@ export default function UserContextProvider({
   children,
 }: UserContextProviderProps) {
   const [user, setUser] = useState<User | null>(null);
+  const { status, data: session } = useSession();
+  const value = { user, setUser, session, status };
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 export function useUserContext() {

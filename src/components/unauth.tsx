@@ -1,6 +1,14 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { Login } from "./index";
+import { useSession } from "next-auth/react";
 
-export default function Unauth() {
-  return <button onClick={() => signIn("google")}>Sign In</button>;
+export default function Unauth({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
+  return session === null ? (
+    <div>
+      <Login />
+    </div>
+  ) : (
+    <div>{children}</div>
+  );
 }

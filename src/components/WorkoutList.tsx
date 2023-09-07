@@ -3,11 +3,12 @@ import Link from "next/link";
 import { HiPencilAlt, HiOutlineTrash } from "react-icons/hi";
 import moment from "moment";
 import { prisma } from "@/db";
-import { CircleLoader } from "@/components";
+import { getWorkouts } from "@/utils";
+import { CircleLoader, Login } from "@/components";
 
 export default async function WorkoutList() {
-  const workouts = await prisma.workout.findMany();
-  return workouts.length ? (
+  const workouts = await getWorkouts();
+  return workouts?.length ? (
     <section>
       <h1 className="home-title">Start Workout</h1>
       <Link href="/searchWorkout" className="home-link">
@@ -34,7 +35,7 @@ export default async function WorkoutList() {
       </ul>
     </section>
   ) : (
-    <>
+    <div>
       <h1 className="home-title">Start Workout</h1>
       <Link href="/searchWorkout" className="home-link">
         Start an Empty Workout
@@ -66,6 +67,6 @@ export default async function WorkoutList() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

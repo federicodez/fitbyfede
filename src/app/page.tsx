@@ -1,9 +1,11 @@
 import { WorkoutList, Unauth } from "@/components";
 
-export default async function Home() {
+export default function Home() {
   return (
     <main className="wrapper container">
-      <WorkoutList />
+      <Unauth>
+        <WorkoutList />
+      </Unauth>
     </main>
   );
 }

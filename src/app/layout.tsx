@@ -2,7 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "@/components";
-import { NextAuthProvider } from "./Providers";
+import NextAuthProvider from "@/context/Provider";
+import UserContextProvider from "@/context/user-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NextAuthProvider>
-          <Navbar />
-          {children}
+          <UserContextProvider>
+            <Navbar />
+            {children}
+          </UserContextProvider>
         </NextAuthProvider>
       </body>
     </html>
