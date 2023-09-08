@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 export const authOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 10000,
+    maxAge: 30 * 24 * 60 * 60,
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -20,10 +20,10 @@ export const authOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
         email: { label: "Email", type: "email" },
-        allowDangerousEmailAccountLinking: true,
       },
       async authorize(credentials) {
         // check to see if email and password is valid
+        // console.log("credentials: ", credentials);
         if (!credentials.email || !credentials.password) {
           return null;
         }
@@ -58,36 +58,32 @@ export const authOptions = {
       name: "google",
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
   callbacks: {
-    async signIn({ user, credentials }) {
-      console.log("user: ", user);
-      console.log("credentials: ", credentials);
-      if (credentials) {
-        return true;
-      }
-      const { email, name } = user;
-      try {
-        const userExists = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-        });
+    async signIn({ user, account }) {
+      // console.log("user: ", user);
+      // console.log("account: ", account);
+      if (account.provider === "google") {
+        const { name, email } = user;
+        try {
+          const userExists = await prisma.user.findUnique({
+            where: {
+              email,
+            },
+          });
 
-        if (!userExists) {
-          const newUser = await prisma.user.create({ data: { name, email } });
-          console.log({ newUser });
-          return newUser;
-        } else {
-          // console.log({ userExists });
-          return userExists;
+          if (!userExists) {
+            const newUser = await prisma.user.create({ data: { name, email } });
+            return newUser;
+          } else {
+            return userExists;
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
       }
       return user;
     },

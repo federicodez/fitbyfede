@@ -3,6 +3,7 @@ import CreateWorkoutForm from "./CreateWorkoutForm";
 import CustomButton from "./CustomButton";
 import EditWorkoutForm from "./EditWorkoutForm";
 import FinishWorkoutForm from "./FinishWorkoutForm";
+import GetWorkouts from "./GetWorkouts";
 import Login from "./login";
 import Navbar from "./Navbar";
 import RemoveBtn from "./RemoveBtn";
@@ -17,6 +18,7 @@ export {
   CustomButton,
   EditWorkoutForm,
   FinishWorkoutForm,
+  GetWorkouts,
   Login,
   Navbar,
   RemoveBtn,

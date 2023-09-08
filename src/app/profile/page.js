@@ -1,19 +1,21 @@
 "use client";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Login } from "@/components";
+import { useSession, signOut } from "next-auth/react";
+import { Unauth } from "@/components";
 
 export default function Profile() {
-  const { data: session, status } = useSession();
-  console.log("profile: ", { session, status });
+  const { data: session } = useSession();
+  console.log(session);
   return (
-    <>
-      <h1>Profile</h1>
-      <p>Hello {session?.user?.name}</p>
-      {status === "authenticated" ? (
-        <button onClick={() => signOut()}>Sign Out</button>
-      ) : (
-        <Login />
-      )}
-    </>
+    <section className="profile wrapper container">
+      <Unauth>
+        <button className="sign-out-btn" onClick={() => signOut()}>
+          Sign Out
+        </button>
+        <div className="profile-card">
+          <h1 className="profile-title">Profile</h1>
+          <p className="user-name">{session?.user?.name}</p>
+        </div>
+      </Unauth>
+    </section>
   );
 }

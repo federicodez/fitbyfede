@@ -24,6 +24,25 @@ export const updateWorkout = async (
   reps: number[],
 ) => {
   try {
+    const updated = await prisma.workout.update({
+      where: {
+        id,
+      },
+      data: {
+        lbs,
+        reps,
+      },
+    });
+    console.log("utils: ", updated);
+    return updated;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addSetToWorkout = async (workout: Workout, id: string) => {
+  const { lbs, reps } = workout;
+  try {
     await prisma.workout.update({
       where: {
         id,
@@ -38,27 +57,10 @@ export const updateWorkout = async (
   }
 };
 
-export const addSetToWorkout = async (workout: Workout, id: string) => {
-  const { lbs, reps } = workout;
-  try {
-    const updated = await prisma.workout.update({
-      where: {
-        id,
-      },
-      data: {
-        lbs,
-        reps,
-      },
-    });
-    return updated;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getWorkoutById = async (id: string) => {
   try {
-    const workout = await prisma.workout.findUnique({ where: { id } });
+    const workout = await prisma.workout.findUnique({ where: { id: id } });
+    console.log("utils: ", workout);
     return workout;
   } catch (error) {
     console.log(error);

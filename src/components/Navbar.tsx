@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HiPlus } from "react-icons/hi";
+import { FaUserLarge } from "react-icons/fa6";
 
 export default function Navbar() {
   return (
@@ -8,6 +9,7 @@ export default function Navbar() {
         <div className="nav wrapper">
           <ul className="nav-list">
             <li className="nav-item">
+              <FaUserLarge />
               <Link className="nav-link" href="/profile">
                 Profile
               </Link>

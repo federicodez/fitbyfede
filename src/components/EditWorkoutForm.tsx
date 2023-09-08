@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
 import { CustomButton } from ".";
@@ -20,7 +21,6 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
       lbs?.push(Number(lb));
       lbs?.shift();
     });
-
     const dataReps = data.getAll("reps")?.valueOf();
     const newReps = Object.values(dataReps);
     newReps?.map((rep) => {
@@ -30,8 +30,9 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
     });
 
     try {
-      await updateWorkout(id, lbs, reps);
-      router.push("/");
+      const updated = await updateWorkout(id, lbs, reps);
+      // console.log("edit: ", updated?.id);
+      router.push(`/workout-list/${updated?.id}`);
     } catch (error) {
       console.log(error);
     }
