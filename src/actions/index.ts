@@ -75,7 +75,7 @@ export const getMostRecentWorkout = async (id: string) => {
       where: {
         userId: id,
       },
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
     return workout;
   } catch (error) {

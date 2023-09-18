@@ -1,12 +1,16 @@
 import { getWorkouts, getCurrentUser } from "@/actions";
-import { WorkoutList } from "@/components";
+import { EmptyState, WorkoutList } from "@/components";
 
 const Workouts = async () => {
   const currentUser = await getCurrentUser();
 
   if (currentUser) {
     const workouts = await getWorkouts(currentUser.id);
-    return <WorkoutList items={workouts!} />;
+    if (workouts) {
+      return <WorkoutList items={workouts!} />;
+    } else {
+      return <EmptyState />;
+    }
   }
 };
 

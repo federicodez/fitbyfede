@@ -350,7 +350,13 @@ p {
   }
 
   .profile-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
     margin: 1rem auto;
+    gap: 1rem;
     border-radius: 20px;
     border: 1px solid #fff;
     box-shadow:
@@ -358,6 +364,19 @@ p {
       0 0 0 2px rgb(255, 255, 255),
       0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
     text-align: center;
+  }
+
+  .profile-title {
+    font-weight: var(--fw-bold);
+  }
+
+  .profile-image {
+    border-radius: 20px;
+  }
+
+  .sign-out-btn {
+    margin: 1rem;
+    font-weight: var(--fw-bold);
   }
 }
 

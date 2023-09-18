@@ -1,11 +1,12 @@
 "use client";
+
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Avatar } from "@/components";
 
 const Profile = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  // console.log({ session });
   return (
     <section className="profile wrapper container">
       <button
@@ -19,6 +20,7 @@ const Profile = () => {
       </button>
       <div className="profile-card">
         <h1 className="profile-title">Profile</h1>
+        <Avatar />
         <p>{session?.user?.name}</p>
       </div>
     </section>

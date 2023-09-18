@@ -25,6 +25,7 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  image: string | null;
   hashedPassword: string | null;
   emailVerified: string | null;
   workouts: Workout[] | null;

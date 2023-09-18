@@ -51,7 +51,6 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   };
 
   const removeWorkout = async () => {
-    const confirmed = confirm("Are you sure?");
     await deleteWorkout(id);
     router.push("/workouts");
   };
