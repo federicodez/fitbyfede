@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { CustomButton } from ".";
 import { Workout } from "@/types";
-import { deleteWorkout, updateWorkout } from "@/utils";
+import { deleteWorkout, updateWorkout } from "@/actions";
 
 type FinishWorkoutFormProps = {
   workout: Workout;
@@ -37,7 +37,7 @@ export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
 
     try {
       await updateWorkout(id, lbs, reps);
-      router.push("/");
+      router.push("/workouts");
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +53,7 @@ export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
   const removeWorkout = async () => {
     const confirmed = confirm("Are you sure?");
     const deleted = deleteWorkout(id);
-    router.push("/");
+    router.push("/workouts");
   };
 
   return (

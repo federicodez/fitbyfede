@@ -1,7 +1,7 @@
 "use client";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
-import { deleteWorkout } from "@/utils";
+import { deleteWorkout } from "@/actions";
 
 type RemoveProps = {
   id: string;

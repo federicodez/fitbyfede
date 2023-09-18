@@ -1,6 +1,8 @@
 "use server";
-import { prisma } from "@/db";
+import prisma from "@/db";
 import { type Workout } from "@/types";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const getWorkouts = async () => {
   try {
@@ -94,7 +96,11 @@ export const createWorkout = async (id: string, exercise: string) => {
   }
 };
 
-export const findUser = async (email: string) => {
+export const getSession = async () => {
+  return await getServerSession(authOptions);
+};
+
+export const getCurrentUser = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     return user;

@@ -1,5 +1,5 @@
-import { FinishWorkoutForm, Unauth } from "@/components/";
-import { getMostRecentWorkout } from "@/utils";
+import { FinishWorkoutForm } from "@/components/";
+import { getMostRecentWorkout } from "@/actions";
 
 export default async function FinishWorkout({
   params,
@@ -12,9 +12,7 @@ export default async function FinishWorkout({
 
   return workout ? (
     <>
-      <Unauth>
-        <FinishWorkoutForm workout={workout} />
-      </Unauth>
+      <FinishWorkoutForm workout={workout} />
     </>
   ) : null;
 }

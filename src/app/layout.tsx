@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "@/components";
 import NextAuthProvider from "@/context/Provider";
-import UserContextProvider from "@/context/user-context";
+import ToasterContext from "@/context/ToasterContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NextAuthProvider>
-          <UserContextProvider>
-            <Navbar />
-            {children}
-          </UserContextProvider>
+          <ToasterContext />
+          <Navbar />
+          {children}
         </NextAuthProvider>
       </body>
     </html>

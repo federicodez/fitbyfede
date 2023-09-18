@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createWorkout } from "@/utils";
-import { prisma } from "@/db";
+import { createWorkout } from "@/actions";
 import { useSession } from "next-auth/react";
 
 export default function CreateWorkoutForm() {
@@ -20,7 +19,7 @@ export default function CreateWorkoutForm() {
       alert("Exercise, lbs, sets, and reps are required");
       return;
     }
-    const workout = await prisma.workout.create({
+    await createWorkout({
       data: { exercise, lbs, reps },
     });
   };

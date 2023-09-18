@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
 import { CustomButton } from ".";
-import { updateWorkout } from "@/utils";
+import { updateWorkout } from "@/actions";
 
 type EditWorkoutFormProps = {
   workout: Workout;
@@ -32,7 +32,7 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
     try {
       const updated = await updateWorkout(id, lbs, reps);
       // console.log("edit: ", updated?.id);
-      router.push(`/workout-list/${updated?.id}`);
+      router.push(`/workouts/${updated?.id}`);
     } catch (error) {
       console.log(error);
     }

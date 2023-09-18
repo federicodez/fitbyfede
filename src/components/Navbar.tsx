@@ -16,7 +16,7 @@ export default function Navbar() {
             </li>
             <li className="nav-item">
               <HiPlus />
-              <Link className="nav-link" href="/">
+              <Link className="nav-link" href="/workouts">
                 Start Workout
               </Link>
             </li>

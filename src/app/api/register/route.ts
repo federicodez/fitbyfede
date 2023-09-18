@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import { prisma } from "@/db";
+import prisma from "@/db";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   const body = await req.json();
   const { name, email, password } = body.data;
   console.log({ body });

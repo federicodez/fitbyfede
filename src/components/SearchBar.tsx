@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { exercises } from "@/constants";
-import { findUser, createWorkout } from "@/utils";
+import { findUser, createWorkout } from "@/actions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 

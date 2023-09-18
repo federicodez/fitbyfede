@@ -1,5 +1,5 @@
 import { WorkoutList } from "@/components";
-import { getWorkoutById, getWorkouts } from "@/utils";
+import { getWorkoutById, getWorkouts } from "@/actions";
 
 export default async function Workouts() {
   const workouts = await getWorkouts();
