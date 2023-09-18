@@ -30,9 +30,8 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
     });
 
     try {
-      const updated = await updateWorkout(id, lbs, reps);
-      // console.log("edit: ", updated?.id);
-      router.push(`/workouts/${updated?.id}`);
+      await updateWorkout(id, lbs, reps);
+      router.push(`/workouts`);
     } catch (error) {
       console.log(error);
     }

@@ -3,32 +3,25 @@ import { useState } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { exercises } from "@/constants";
-import { findUser, createWorkout } from "@/actions";
-import { useSession } from "next-auth/react";
+import { createWorkout } from "@/actions";
 import { useRouter } from "next/navigation";
+import { type CurrentUser } from "@/types";
 
-export default function SearchBar() {
+type SearchBarProps = {
+  currentUser: CurrentUser;
+};
+
+const SearchBar = ({ currentUser }: SearchBarProps) => {
   const [query, setQuery] = useState("");
 
-  const { status: authenticated, data: session } = useSession();
   const router = useRouter();
 
   const handleClick = async (exercise: [string, string]) => {
-    const {
-      user: { name, email },
-    } = session;
-    if (email) {
-      try {
-        const foundUser = await findUser(email);
-        const { id } = foundUser;
-
-        if (id) {
-          await createWorkout(id, exercise[0]);
-          router.push(`/finish-workout/${id}`);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      await createWorkout(currentUser.id, exercise[0]);
+      router.push(`/finish-workout/${currentUser.id}`);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -76,4 +69,6 @@ export default function SearchBar() {
       </ul>
     </div>
   );
-}
+};
+
+export default SearchBar;

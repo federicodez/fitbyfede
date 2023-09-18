@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { RemoveBtn, WorkoutCard } from "./";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
@@ -5,10 +8,12 @@ import moment from "moment";
 import { type Workout } from "@/types";
 import { exampleWorkout } from "@/constants";
 type WorkoutListProps = {
-  workouts: Workout[];
+  items: Workout[];
 };
 
-export default function WorkoutList({ workouts }: WorkoutListProps) {
+const WorkoutList = ({ items }: WorkoutListProps) => {
+  const [workouts, setWorkouts] = useState(items);
+
   return workouts?.length ? (
     <section>
       <h1 className="home-title">Start Workout</h1>
@@ -62,4 +67,6 @@ export default function WorkoutList({ workouts }: WorkoutListProps) {
       </ul>
     </section>
   );
-}
+};
+
+export default WorkoutList;

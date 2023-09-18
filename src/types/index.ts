@@ -12,6 +12,15 @@ export type SearchExerciseProps = {
   setExercise: (exercise: string) => void;
 };
 
+export type CurrentUser = {
+  email: string;
+  emailVerified: string | null;
+  hashedPassword: string | null;
+  id: string;
+  image?: string | null;
+  name: string;
+};
+
 export type User = {
   id: string;
   name: string;

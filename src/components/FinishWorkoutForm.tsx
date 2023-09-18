@@ -8,7 +8,7 @@ type FinishWorkoutFormProps = {
   workout: Workout;
 };
 
-export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
+const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   const { id, exercise, lbs, reps } = workout;
   const router = useRouter();
 
@@ -52,7 +52,7 @@ export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
 
   const removeWorkout = async () => {
     const confirmed = confirm("Are you sure?");
-    const deleted = deleteWorkout(id);
+    await deleteWorkout(id);
     router.push("/workouts");
   };
 
@@ -108,4 +108,6 @@ export default function FinishWorkoutForm({ workout }: FinishWorkoutFormProps) {
       </form>
     </div>
   );
-}
+};
+
+export default FinishWorkoutForm;

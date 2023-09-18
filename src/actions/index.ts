@@ -4,9 +4,12 @@ import { type Workout } from "@/types";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export const getWorkouts = async () => {
+export const getWorkouts = async (userId: string) => {
   try {
     const workouts = await prisma.workout.findMany({
+      where: {
+        userId,
+      },
       orderBy: { createdAt: "desc" },
     });
 
@@ -26,7 +29,7 @@ export const updateWorkout = async (
   reps: number[],
 ) => {
   try {
-    const updated = await prisma.workout.update({
+    await prisma.workout.update({
       where: {
         id,
       },
@@ -35,8 +38,6 @@ export const updateWorkout = async (
         reps,
       },
     });
-    console.log("utils: ", updated);
-    return updated;
   } catch (error) {
     console.log(error);
   }
@@ -62,7 +63,6 @@ export const addSetToWorkout = async (workout: Workout, id: string) => {
 export const getWorkoutById = async (id: string) => {
   try {
     const workout = await prisma.workout.findUnique({ where: { id: id } });
-    console.log("utils: ", workout);
     return workout;
   } catch (error) {
     console.log(error);
@@ -87,10 +87,9 @@ export const createWorkout = async (id: string, exercise: string) => {
   const lbs = [0];
   const reps = [0];
   try {
-    const workout = await prisma.workout.create({
+    await prisma.workout.create({
       data: { exercise, lbs, reps, userId: id },
     });
-    return workout;
   } catch (error) {
     console.log(error);
   }
@@ -100,7 +99,28 @@ export const getSession = async () => {
   return await getServerSession(authOptions);
 };
 
-export const getCurrentUser = async (email: string) => {
+export const getCurrentUser = async () => {
+  try {
+    const session = await getSession();
+
+    if (!session?.user?.email) {
+      return null;
+    }
+
+    const currentUser = await prisma.user.findUnique({
+      where: { email: session.user.email as string },
+    });
+
+    if (!currentUser) {
+      return null;
+    }
+    return currentUser;
+  } catch (error) {
+    console.log("Failed to get user.", error);
+  }
+};
+
+export const findUser = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     return user;
