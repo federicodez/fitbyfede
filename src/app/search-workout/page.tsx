@@ -4,11 +4,7 @@ import { SearchBar } from "@/components";
 const SearchWorkout = async () => {
   const currentUser = await getCurrentUser();
 
-  return (
-    <div>
-      <SearchBar currentUser={currentUser} />
-    </div>
-  );
+  return <SearchBar currentUser={currentUser!} />;
 };
 
 export default SearchWorkout;

@@ -43,22 +43,22 @@ export const updateWorkout = async (
   }
 };
 
-export const addSetToWorkout = async (workout: Workout, id: string) => {
-  const { lbs, reps } = workout;
-  try {
-    await prisma.workout.update({
-      where: {
-        id,
-      },
-      data: {
-        lbs,
-        reps,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const addSetToWorkout = async (workout: Workout, id: string) => {
+//   const { lbs, reps } = workout;
+//   try {
+//     await prisma.workout.update({
+//       where: {
+//         id,
+//       },
+//       data: {
+//         lbs,
+//         reps,
+//       },
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const getWorkoutById = async (id: string) => {
   try {
@@ -69,26 +69,29 @@ export const getWorkoutById = async (id: string) => {
   }
 };
 
-export const getMostRecentWorkout = async (id: string) => {
-  try {
-    const workout = await prisma.workout.findFirst({
-      where: {
-        userId: id,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-    return workout;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const getMostRecentWorkout = async (id: string) => {
+//   try {
+//     const workout = await prisma.workout.findFirst({
+//       where: {
+//         userId: id,
+//       },
+//       orderBy: { createdAt: "desc" },
+//     });
+//     return workout;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
-export const createWorkout = async (id: string, exercise: string) => {
-  const lbs = [0];
-  const reps = [0];
+export const createWorkout = async (workout: Workout) => {
   try {
     await prisma.workout.create({
-      data: { exercise, lbs, reps, userId: id },
+      data: {
+        exercise: workout.exercise,
+        lbs: workout.lbs,
+        reps: workout.reps,
+        userId: workout.userId,
+      },
     });
   } catch (error) {
     console.log(error);

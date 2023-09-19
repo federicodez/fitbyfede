@@ -5,7 +5,7 @@ import Link from "next/link";
 import { exercises } from "@/constants";
 import { createWorkout } from "@/actions";
 import { useRouter } from "next/navigation";
-import { type CurrentUser } from "@/types";
+import { CurrentUser } from "@/types";
 
 type SearchBarProps = {
   currentUser: CurrentUser;
@@ -16,10 +16,11 @@ const SearchBar = ({ currentUser }: SearchBarProps) => {
 
   const router = useRouter();
 
-  const handleClick = async (exercise: [string, string]) => {
+  const handleClick = async (exercise: string) => {
+    // console.log("searchbar: ", exercise);
     try {
-      await createWorkout(currentUser.id, exercise[0]);
-      router.push(`/finish-workout/${currentUser.id}`);
+      // await createWorkout(currentUser.id, exercise);
+      router.push(`/finish-workout/${exercise}`);
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +61,7 @@ const SearchBar = ({ currentUser }: SearchBarProps) => {
       <ul className="filtered__list">
         {filteredExercises?.map((exercise, id) => (
           <li key={id} className="filtered__item">
-            <div onClick={() => handleClick(exercise)}>
+            <div onClick={() => handleClick(exercise[0])}>
               <strong>{exercise[0]}</strong>
             </div>
             <div>{exercise[1]}</div>

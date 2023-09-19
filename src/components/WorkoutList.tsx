@@ -5,13 +5,14 @@ import { RemoveBtn, WorkoutCard } from "./";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
-import { type Workout } from "@/types";
+import { type Workout, CurrentUser } from "@/types";
 import { exampleWorkout } from "@/constants";
 type WorkoutListProps = {
   items: Workout[];
+  currentUser: CurrentUser;
 };
 
-const WorkoutList = ({ items }: WorkoutListProps) => {
+const WorkoutList = ({ currentUser, items }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState(items);
 
   return workouts?.length ? (
@@ -24,7 +25,11 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         {workouts?.map(({ id, exercise, lbs, reps, createdAt }) => (
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
-              <RemoveBtn id={id} />
+              <RemoveBtn
+                id={id}
+                setWorkouts={setWorkouts}
+                currentUser={currentUser}
+              />
               <Link href={`/edit-workout/${id}`}>
                 <HiPencilAlt />
               </Link>

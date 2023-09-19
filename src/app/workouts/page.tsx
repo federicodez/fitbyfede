@@ -7,7 +7,7 @@ const Workouts = async () => {
   if (currentUser) {
     const workouts = await getWorkouts(currentUser.id);
     if (workouts) {
-      return <WorkoutList items={workouts!} />;
+      return <WorkoutList currentUser={currentUser} items={workouts!} />;
     } else {
       return <EmptyState />;
     }

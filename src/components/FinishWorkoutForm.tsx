@@ -1,15 +1,26 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { CustomButton } from ".";
-import { Workout } from "@/types";
-import { deleteWorkout, updateWorkout } from "@/actions";
+import { CurrentUser, Workout } from "@/types";
+import { createWorkout, deleteWorkout, updateWorkout } from "@/actions";
+import { useState } from "react";
 
 type FinishWorkoutFormProps = {
-  workout: Workout;
+  currentUser: CurrentUser;
+  exercise: string;
 };
 
-const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
-  const { id, exercise, lbs, reps } = workout;
+const FinishWorkoutForm = ({
+  currentUser,
+  exercise,
+}: FinishWorkoutFormProps) => {
+  // const { id, exercise, lbs, reps } = workout;
+  const [workout, setWorkout] = useState<Workout>({
+    exercise,
+    lbs: [0],
+    reps: [0],
+    userId: currentUser.id,
+  });
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -22,21 +33,19 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
     }
 
     const newLbs = Object.values(dataLbs);
-    newLbs?.map((lb) => {
-      if (!lb.length) throw new Error("Invalid weight.");
-      lbs?.push(Number(lb));
-      lbs?.shift();
-    });
+    newLbs?.map((lb) => Number(lb));
+    console.log(newLbs);
+    setWorkout({ ...workout, lbs: newLbs });
 
     const newReps = Object.values(dataReps);
-    newReps?.map((rep) => {
-      if (!rep.length) throw new Error("Invalid rep.");
-      reps?.push(Number(rep));
-      reps?.shift();
-    });
+    newReps?.map((rep) => Number(rep));
+    console.log(newReps);
+    setWorkout({ ...workout, reps: newReps });
 
     try {
-      await updateWorkout(id, lbs, reps);
+      // await updateWorkout(workout);
+      console.log({ workout });
+      // await createWorkout(workout);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -44,14 +53,15 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   };
 
   const addSet = async () => {
-    lbs?.push(0);
-    reps?.push(0);
-    await updateWorkout(id, lbs, reps);
-    router.refresh();
+    setWorkout({
+      ...workout,
+      lbs: [...workout.lbs, 0],
+      reps: [...workout.reps, 0],
+    });
   };
 
   const removeWorkout = async () => {
-    await deleteWorkout(id);
+    // await deleteWorkout(id);
     router.push("/workouts");
   };
 
@@ -60,7 +70,7 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
       <form action={handleSubmit} className="finish-workout-form">
         <h1 className="finish-workout-form__title">{exercise}</h1>
         <ul className="finish-workout-form__list">
-          {lbs?.map((lb, id) => (
+          {workout.lbs?.map((lbs, id) => (
             <li key={id} className="finish-workout-form__item">
               <div className="finish-workout-form__set">
                 <label>Set</label>

@@ -21,25 +21,24 @@ export type CurrentUser = {
   name: string;
 };
 
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  image: string | null;
-  hashedPassword: string | null;
-  emailVerified: string | null;
-  workouts: Workout[] | null;
-};
+// export type User = {
+//   id: string;
+//   name: string;
+//   email: string;
+//   image: string | null;
+//   hashedPassword: string | null;
+//   emailVerified: string | null;
+//   workouts: Workout[] | null;
+// };
 
 export type Workout = {
-  id: string;
+  // id: string;
   exercise: string;
   lbs: number[];
   reps: number[];
-  user?: User;
   userId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  // createdAt: Date;
+  // updatedAt: Date;
 };
 
 export type Exercises = {
