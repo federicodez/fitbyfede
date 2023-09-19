@@ -3,7 +3,7 @@ import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import { HiOutlineTrash } from "react-icons/hi";
 import moment from "moment";
-import { WorkoutCard } from ".";
+import WorkoutCard from "@/app/workouts/components/WorkoutCard";
 
 const EmptyState = () => {
   return (

@@ -1,9 +1,17 @@
-import { CreateWorkoutForm } from "@/components";
+import { getCurrentUser } from "@/actions";
+import CreateWorkoutForm from "./components/CreateWorkoutForm";
 
-export default async function CreateWorkout() {
-  return (
-    <div>
-      <CreateWorkoutForm />
-    </div>
-  );
-}
+const CreateWorkout = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+    return (
+      <>
+        <CreateWorkoutForm currentUser={currentUser} />
+      </>
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export default CreateWorkout;

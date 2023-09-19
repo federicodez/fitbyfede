@@ -32,13 +32,13 @@ export type CurrentUser = {
 // };
 
 export type Workout = {
-  // id: string;
+  id: string;
   exercise: string;
   lbs: number[];
   reps: number[];
   userId: string;
-  // createdAt: Date;
-  // updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Exercises = {

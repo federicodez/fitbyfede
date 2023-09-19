@@ -1,26 +1,20 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { CustomButton } from ".";
-import { CurrentUser, Workout } from "@/types";
-import { createWorkout, deleteWorkout, updateWorkout } from "@/actions";
-import { useState } from "react";
 
-type FinishWorkoutFormProps = {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createWorkout } from "@/actions";
+import { type CurrentUser } from "@/types";
+import { CustomButton } from "@/components";
+
+type CreateWorkoutFormProps = {
   currentUser: CurrentUser;
-  exercise: string;
 };
 
-const FinishWorkoutForm = ({
-  currentUser,
-  exercise,
-}: FinishWorkoutFormProps) => {
-  // const { id, exercise, lbs, reps } = workout;
-  const [workout, setWorkout] = useState<Workout>({
-    exercise,
-    lbs: [0],
-    reps: [0],
-    userId: currentUser.id,
-  });
+const CreateWorkoutForm = ({ currentUser }: CreateWorkoutFormProps) => {
+  const [exercise, setExercise] = useState("");
+  const [lbs, setLbs] = useState([0]);
+  const [reps, setReps] = useState([0]);
+
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -32,20 +26,21 @@ const FinishWorkoutForm = ({
       return;
     }
 
-    const newLbs = Object.values(dataLbs);
-    newLbs?.map((lb) => Number(lb));
-    console.log(newLbs);
-    setWorkout({ ...workout, lbs: newLbs });
+    const newLbs = Object.values(dataLbs).map((lb) => {
+      lbs.push(Number(lb));
+      lbs.shift();
+    });
+    const newReps = Object.values(dataReps).map((rep) => {
+      reps.push(Number(rep));
+      reps.shift();
+    });
 
-    const newReps = Object.values(dataReps);
-    newReps?.map((rep) => Number(rep));
-    console.log(newReps);
-    setWorkout({ ...workout, reps: newReps });
+    setLbs([...lbs]);
+    setReps([...reps]);
+    console.log("lbs: ", lbs, "reps: ", reps);
 
     try {
-      // await updateWorkout(workout);
-      console.log({ workout });
-      // await createWorkout(workout);
+      await createWorkout(currentUser.id, exercise, lbs, reps);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -53,24 +48,28 @@ const FinishWorkoutForm = ({
   };
 
   const addSet = async () => {
-    setWorkout({
-      ...workout,
-      lbs: [...workout.lbs, 0],
-      reps: [...workout.reps, 0],
-    });
+    setLbs([...lbs, 0]);
+    setReps([...reps, 0]);
+    router.refresh();
   };
 
   const removeWorkout = async () => {
-    // await deleteWorkout(id);
     router.push("/workouts");
   };
 
   return (
     <div className="wrapper container">
-      <form action={handleSubmit} className="finish-workout-form">
-        <h1 className="finish-workout-form__title">{exercise}</h1>
+      <form action={handleSubmit} className="create-form flex flex-col">
+        <label htmlFor="exercise">Exercise: </label>
+        <input
+          onChange={(e) => setExercise(e.target.value)}
+          type="text"
+          name="exercise"
+          id="exercise"
+          className="bg-white border rounded-lg"
+        />
         <ul className="finish-workout-form__list">
-          {workout.lbs?.map((lbs, id) => (
+          {lbs?.map((lbs, id) => (
             <li key={id} className="finish-workout-form__item">
               <div className="finish-workout-form__set">
                 <label>Set</label>
@@ -82,6 +81,7 @@ const FinishWorkoutForm = ({
                   type="number"
                   name="lbs"
                   id="lbs"
+                  placeholder="0"
                   className="finish-workout-form__input"
                   required
                 />
@@ -92,6 +92,7 @@ const FinishWorkoutForm = ({
                   type="number"
                   name="reps"
                   id="reps"
+                  placeholder="0"
                   className="finish-workout-form__input"
                   required
                 />
@@ -119,4 +120,4 @@ const FinishWorkoutForm = ({
   );
 };
 
-export default FinishWorkoutForm;
+export default CreateWorkoutForm;

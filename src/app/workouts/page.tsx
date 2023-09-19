@@ -1,5 +1,6 @@
 import { getWorkouts, getCurrentUser } from "@/actions";
-import { EmptyState, WorkoutList } from "@/components";
+import { EmptyState } from "@/components";
+import WorkoutList from "./components/WorkoutList";
 
 const Workouts = async () => {
   const currentUser = await getCurrentUser();

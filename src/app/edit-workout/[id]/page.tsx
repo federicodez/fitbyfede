@@ -1,16 +1,15 @@
-import { EditWorkoutForm } from "@/components";
+import EditWorkoutForm from "../components/EditWorkoutForm";
 import { getWorkoutById } from "@/actions";
 
-export default async function EditWorkout({
-  params,
-}: {
-  params: { id: string };
-}) {
+const EditWorkout = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const workout = await getWorkoutById(id);
-  return workout ? (
-    <div>
-      <EditWorkoutForm workout={workout} />
-    </div>
-  ) : null;
-}
+
+  try {
+    const workout = await getWorkoutById(id);
+    return workout ? <EditWorkoutForm workout={workout} /> : null;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export default EditWorkout;

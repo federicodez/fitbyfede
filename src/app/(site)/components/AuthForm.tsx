@@ -8,7 +8,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import Input from "@/components/inputs/Input";
-import AuthSocialButton from "@/components/AuthSocialButton";
+import AuthSocialButton from "./AuthSocialButton";
 import Button from "@/components/Button";
 import { toast } from "react-hot-toast";
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { RemoveBtn, WorkoutCard } from "./";
+import { RemoveBtn } from "@/components";
+import WorkoutCard from "./WorkoutCard";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";

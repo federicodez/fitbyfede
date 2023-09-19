@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { exercises } from "@/constants";
-import { createWorkout } from "@/actions";
+import { createExercise } from "@/actions";
 import { useRouter } from "next/navigation";
 import { CurrentUser } from "@/types";
 
@@ -17,10 +17,12 @@ const SearchBar = ({ currentUser }: SearchBarProps) => {
   const router = useRouter();
 
   const handleClick = async (exercise: string) => {
-    // console.log("searchbar: ", exercise);
     try {
-      // await createWorkout(currentUser.id, exercise);
-      router.push(`/finish-workout/${exercise}`);
+      const { id } = currentUser;
+      const workout = await createExercise(id, exercise);
+      if (workout) {
+        router.push(`/finish-workout/${workout.id}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +41,7 @@ const SearchBar = ({ currentUser }: SearchBarProps) => {
   return (
     <div className="searchbar wrapper container">
       <button type="button" className="searchbar-btn" id="create-btn">
-        <Link href="/createWorkout">New</Link>
+        <Link href="/create-workout">New</Link>
       </button>
       <button type="button" className="searchbar-btn" id="cancel-btn">
         <Link href="/">

@@ -1,30 +1,25 @@
 "use client";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
-import { CustomButton } from ".";
+import { CustomButton } from "@/components";
 import { updateWorkout } from "@/actions";
 
 type EditWorkoutFormProps = {
   workout: Workout;
 };
 
-export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
+const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
   const { id, exercise, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
     const dataLbs = data.getAll("lbs")?.valueOf();
-    const newLbs = Object.values(dataLbs);
-    newLbs?.map((lb) => {
-      if (!lb.length) throw new Error("Invalid weight.");
+    const newLbs = Object.values(dataLbs).map((lb) => {
       lbs?.push(Number(lb));
       lbs?.shift();
     });
     const dataReps = data.getAll("reps")?.valueOf();
-    const newReps = Object.values(dataReps);
-    newReps?.map((rep) => {
-      if (!rep.length) throw new Error("Invalid rep.");
+    const newReps = Object.values(dataReps).map((rep) => {
       reps?.push(Number(rep));
       reps?.shift();
     });
@@ -108,4 +103,6 @@ export default function EditWorkoutForm({ workout }: EditWorkoutFormProps) {
       </form>
     </div>
   );
-}
+};
+
+export default EditWorkoutForm;
