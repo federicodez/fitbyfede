@@ -3,7 +3,7 @@ import { HiPlus } from "react-icons/hi";
 import { FaUserLarge } from "react-icons/fa6";
 import { GiMeal } from "react-icons/gi";
 
-export default function Navbar() {
+const Navbar = () => {
   return (
     <header className="primary-header">
       <nav className="nav">
@@ -32,4 +32,6 @@ export default function Navbar() {
       </nav>
     </header>
   );
-}
+};
+
+export default Navbar;

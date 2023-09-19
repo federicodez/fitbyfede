@@ -1,9 +1,9 @@
 type WorkoutCardProps = {
-  lbs: number[] | null;
-  reps: number[] | null;
+  lbs: number[];
+  reps: number[];
 };
 
-export default function WorkoutCard({ lbs, reps }: WorkoutCardProps) {
+const WorkoutCard = ({ lbs, reps }: WorkoutCardProps) => {
   return (
     <div className="workout-card wrapper">
       <ul className="workout-card-list">
@@ -25,4 +25,6 @@ export default function WorkoutCard({ lbs, reps }: WorkoutCardProps) {
       </ul>
     </div>
   );
-}
+};
+
+export default WorkoutCard;

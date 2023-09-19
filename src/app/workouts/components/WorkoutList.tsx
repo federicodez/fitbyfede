@@ -6,8 +6,9 @@ import WorkoutCard from "./WorkoutCard";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
-import { type Workout, CurrentUser } from "@/types";
+import { Workout, CurrentUser } from "@/types";
 import { exampleWorkout } from "@/constants";
+
 type WorkoutListProps = {
   items: Workout[];
   currentUser: CurrentUser;

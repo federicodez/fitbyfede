@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
@@ -64,6 +65,12 @@ const SearchBar = ({ currentUser }: SearchBarProps) => {
         {filteredExercises?.map((exercise, id) => (
           <li key={id} className="filtered__item">
             <div onClick={() => handleClick(exercise[0])}>
+              <input
+                type="checkbox"
+                id="exercise"
+                name="exercise"
+                className="filtered__item-checkbox"
+              />
               <strong>{exercise[0]}</strong>
             </div>
             <div>{exercise[1]}</div>

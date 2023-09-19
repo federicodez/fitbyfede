@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { CustomButton } from "@/components";
 import { Workout } from "@/types";

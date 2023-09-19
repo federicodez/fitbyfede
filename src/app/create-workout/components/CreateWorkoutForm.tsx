@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createWorkout } from "@/actions";
-import { type CurrentUser } from "@/types";
+import { CurrentUser } from "@/types";
 import { CustomButton } from "@/components";
 
 type CreateWorkoutFormProps = {
@@ -37,7 +37,6 @@ const CreateWorkoutForm = ({ currentUser }: CreateWorkoutFormProps) => {
 
     setLbs([...lbs]);
     setReps([...reps]);
-    console.log("lbs: ", lbs, "reps: ", reps);
 
     try {
       await createWorkout(currentUser.id, exercise, lbs, reps);
