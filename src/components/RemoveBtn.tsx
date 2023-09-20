@@ -1,6 +1,6 @@
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
-import { deleteWorkout, getWorkoutsByUserId } from "@/actions";
+import { deleteWorkout, getWorkouts } from "@/actions";
 import { Workout } from "@/types";
 
 type RemoveProps = {
@@ -13,7 +13,7 @@ const RemoveBtn = ({ id, setWorkouts }: RemoveProps) => {
 
   const removeWorkout = async () => {
     await deleteWorkout(id);
-    const workouts = await getWorkoutsByUserId();
+    const workouts = await getWorkouts();
     if (workouts) {
       setWorkouts(workouts);
     }

@@ -1,11 +1,11 @@
 import { Avatar } from "@/components";
 import SignOut from "./components/SignOut";
-import { getWorkoutsByUserId } from "@/actions";
+import { getWorkouts } from "@/actions";
 import Statistics from "./components/WorkoutStatistics";
 
 const Profile = async () => {
   try {
-    const workouts = await getWorkoutsByUserId();
+    const workouts = await getWorkouts();
     if (workouts) {
       return (
         <section className="profile wrapper container">

@@ -1,10 +1,10 @@
-import { getWorkoutsByUserId } from "@/actions";
+import { getWorkouts } from "@/actions";
 import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 
 const Workouts = async () => {
   try {
-    const workouts = await getWorkoutsByUserId();
+    const workouts = await getWorkouts();
     if (workouts) {
       return <WorkoutList items={workouts!} />;
     } else {

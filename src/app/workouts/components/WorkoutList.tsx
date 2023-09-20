@@ -6,7 +6,7 @@ import WorkoutCard from "./WorkoutCard";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
-import { Workout } from "@/types";
+import { type Workout } from "@/types";
 import { exampleWorkout } from "@/constants";
 
 type WorkoutListProps = {
@@ -51,7 +51,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         {exampleWorkout?.map(({ id, exercise, lbs, reps, createdAt }) => (
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
-              <RemoveBtn id={id} />
+              <RemoveBtn setWorkouts={setWorkouts} id={id} />
               <Link href={`/edit-workout/${id}`}>
                 <HiPencilAlt />
               </Link>
