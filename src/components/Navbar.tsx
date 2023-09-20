@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { HiPlus } from "react-icons/hi";
 import { FaUserLarge } from "react-icons/fa6";
-import { GiMeal } from "react-icons/gi";
+import { GiMeal, GiWeightLiftingUp } from "react-icons/gi";
 
 const Navbar = () => {
   return (
@@ -22,9 +22,9 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <GiMeal />
-              <Link className="nav-link" href="#">
-                Meals
+              <GiWeightLiftingUp />
+              <Link className="nav-link" href="/exercises">
+                Exercises
               </Link>
             </li>
           </ul>

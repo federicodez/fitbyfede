@@ -17,7 +17,6 @@
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "20.5.7",
-    "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "axios": "^1.5.0",
@@ -39,6 +38,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@types/react": "^18.2.22",
     "prisma": "^5.3.1"
   }
 }

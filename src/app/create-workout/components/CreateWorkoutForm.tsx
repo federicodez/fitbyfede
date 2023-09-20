@@ -3,14 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createWorkout } from "@/actions";
-import { CurrentUser } from "@/types";
 import { CustomButton } from "@/components";
 
-type CreateWorkoutFormProps = {
-  currentUser: CurrentUser;
-};
-
-const CreateWorkoutForm = ({ currentUser }: CreateWorkoutFormProps) => {
+const CreateWorkoutForm = () => {
   const [exercise, setExercise] = useState("");
   const [lbs, setLbs] = useState([0]);
   const [reps, setReps] = useState([0]);
@@ -39,7 +34,7 @@ const CreateWorkoutForm = ({ currentUser }: CreateWorkoutFormProps) => {
     setReps([...reps]);
 
     try {
-      await createWorkout(currentUser.id, exercise, lbs, reps);
+      await createWorkout(exercise, lbs, reps);
       router.push("/workouts");
     } catch (error) {
       console.log(error);

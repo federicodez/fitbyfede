@@ -1,10 +1,16 @@
-import { getCurrentUser } from "@/actions";
+import { getMostRecentWorkouts } from "@/actions";
 import SearchBar from "./components/SearchBar";
 
 const SearchWorkout = async () => {
-  const currentUser = await getCurrentUser();
+  try {
+    const workouts = await getMostRecentWorkouts();
 
-  return <SearchBar currentUser={currentUser!} />;
+    if (workouts) {
+      return <SearchBar workouts={workouts} />;
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export default SearchWorkout;

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { CustomButton } from "@/components";
-import { Workout } from "@/types";
+import { type Workout } from "@/types";
 import { deleteWorkout, updateWorkout } from "@/actions";
 
 type FinishWorkoutFormProps = {

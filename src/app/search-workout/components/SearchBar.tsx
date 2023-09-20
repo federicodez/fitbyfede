@@ -6,21 +6,20 @@ import Link from "next/link";
 import { exercises } from "@/constants";
 import { createExercise } from "@/actions";
 import { useRouter } from "next/navigation";
-import { CurrentUser } from "@/types";
+import { Workout } from "@/types";
 
 type SearchBarProps = {
-  currentUser: CurrentUser;
+  workouts: Workout[];
 };
 
-const SearchBar = ({ currentUser }: SearchBarProps) => {
+const SearchBar = ({ workouts }: SearchBarProps) => {
   const [query, setQuery] = useState("");
 
   const router = useRouter();
 
   const handleClick = async (exercise: string) => {
     try {
-      const { id } = currentUser;
-      const workout = await createExercise(id, exercise);
+      const workout = await createExercise(exercise);
       if (workout) {
         router.push(`/finish-workout/${workout.id}`);
       }
@@ -62,6 +61,21 @@ const SearchBar = ({ currentUser }: SearchBarProps) => {
         </button>
       </form>
       <ul className="filtered__list">
+        <h3 className="most-recent-title">RECENT</h3>
+        {workouts?.map((workout, id) => (
+          <li key={id} className="filtered__item">
+            <div onClick={() => handleClick(workout.exercise)}>
+              <input
+                type="checkbox"
+                id="exercise"
+                name="exercise"
+                className="filtered__item-checkbox"
+              />
+              <strong>{workout.exercise}</strong>
+            </div>
+          </li>
+        ))}
+        <h3 className="filtered-title">EXERCISES</h3>
         {filteredExercises?.map((exercise, id) => (
           <li key={id} className="filtered__item">
             <div onClick={() => handleClick(exercise[0])}>

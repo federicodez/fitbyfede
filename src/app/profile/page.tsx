@@ -1,30 +1,36 @@
-"use client";
-
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Avatar } from "@/components";
+import SignOut from "./components/SignOut";
+import { getWorkoutsByUserId } from "@/actions";
+import Statistics from "./components/WorkoutStatistics";
 
-const Profile = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-  return (
-    <section className="profile wrapper container">
-      <button
-        className="sign-out-btn"
-        onClick={() => {
-          signOut();
-          router.push("/");
-        }}
-      >
-        Sign Out
-      </button>
-      <div className="profile-card">
-        <h1 className="profile-title">Profile</h1>
-        <Avatar />
-        <p>{session?.user?.name}</p>
-      </div>
-    </section>
-  );
+const Profile = async () => {
+  try {
+    const workouts = await getWorkoutsByUserId();
+    if (workouts) {
+      return (
+        <section className="profile wrapper container">
+          <SignOut />
+          <div className="profile-card">
+            <h1 className="profile-title">Profile</h1>
+            <Avatar />
+          </div>
+          <Statistics workouts={workouts} />
+        </section>
+      );
+    }
+
+    return (
+      <section className="profile wrapper container">
+        <SignOut />
+        <div className="profile-card">
+          <h1 className="profile-title">Profile</h1>
+          <Avatar />
+        </div>
+      </section>
+    );
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export default Profile;
