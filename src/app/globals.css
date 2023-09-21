@@ -59,7 +59,6 @@ p {
   margin-inline: auto;
 }
 
-/*********Mobile**********/
 .primary-header {
   overflow: hidden;
   position: fixed;
@@ -77,7 +76,6 @@ p {
 .nav-list {
   display: flex;
   justify-content: space-evenly;
-  color: #fff;
 }
 
 .nav-item {
@@ -87,19 +85,15 @@ p {
   flex-direction: column;
 }
 
-.nav-link {
-  color: #fff;
-}
-
 .home-link {
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid black;
+  border: 2px solid #8d99ae;
   border-radius: 20px;
-  color: #fff;
-  background-color: blue;
+  color: #495057;
+  background-color: #fff;
   padding: 16px 32px;
   width: 15rem;
   margin: 1rem;
@@ -118,8 +112,8 @@ p {
 }
 
 .home-link:active {
-  background: #fff;
-  color: blue;
+  background: #495057;
+  color: #fff;
 }
 
 .workoutlist-item {
@@ -147,7 +141,7 @@ p {
 }
 
 .remove-btn:active {
-  background: red;
+  background: #d90429;
 }
 
 .searchbar-form {
@@ -159,7 +153,7 @@ p {
   display: flex;
   justify-content: center;
   width: 100%;
-  border: 2px solid gray;
+  border: 2px solid #8d99ae;
   border-radius: 10px;
   background-color: #fff;
   color: #000;
@@ -181,7 +175,7 @@ p {
   top: 0;
 
   &#create-btn {
-    color: blue;
+    color: #03045e;
     margin: 1rem;
   }
 
@@ -191,13 +185,13 @@ p {
     margin-top: 1rem;
     margin-left: auto;
     margin-right: auto;
-    color: red;
+    color: #c1121f;
   }
 
   &#__add-btn {
     right: 0;
     margin: 1rem;
-    color: blue;
+    color: #03045e;
   }
 }
 
@@ -230,8 +224,8 @@ p {
 }
 
 .finish-workout-form__set-id {
-  background-color: lightgrey;
-  border: 1px solid gray;
+  background-color: #edf2f4;
+  border: 1px solid #8d99ae;
   border-radius: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -265,21 +259,21 @@ p {
 }
 
 .finish-workout-form__btn {
-  background-color: darkblue;
+  background-color: #03045e;
   color: #fff;
   border-radius: 10px;
   margin: 1rem;
 }
 
 .finish-workout-form__custom-btn {
-  background-color: darkblue;
+  background-color: #03045e;
   color: #fff;
   border-radius: 10px;
   margin: 1rem;
 }
 
 .finish-workout-form__cancel-btn {
-  background-color: lightcoral;
+  background-color: #ff8fa3;
   color: #fff;
   border-radius: 10px;
   margin: 1rem;
@@ -296,8 +290,8 @@ p {
     margin-left: 1rem;
 
     .edit-workout-form__set-id {
-      background-color: lightgrey;
-      border: 1px solid gray;
+      background-color: #edf2f4;
+      border: 1px solid #8d99ae;
       border-radius: 10px;
       padding-left: 10px;
       padding-right: 10px;
@@ -360,13 +354,15 @@ p {
   gap: 1rem;
 }
 
-.profile-card {
+.profile {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.profile-card {
   padding: 1rem;
-  margin: 1rem auto;
+  margin: 20rem auto;
   gap: 1rem;
   border-radius: 20px;
   border: 1px solid #fff;
@@ -414,4 +410,11 @@ p {
 }
 .linethrough:after {
   margin-left: 10px;
+}
+
+/*********Mobile**********/
+@media (max-width: 868px) {
+  .profile-card {
+    margin: 10rem auto;
+  }
 }
