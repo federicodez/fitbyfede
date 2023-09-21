@@ -358,11 +358,12 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .profile-card {
   padding: 1rem;
-  margin: 20rem auto;
+  margin: auto;
   gap: 1rem;
   border-radius: 20px;
   border: 1px solid #fff;
