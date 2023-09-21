@@ -8,9 +8,8 @@ import WorkoutCard from "@/app/workouts/components/WorkoutCard";
 const EmptyState = () => {
   return (
     <section>
-      <h1 className="home-title">Start Workout</h1>
       <Link href="/search-workout" className="home-link">
-        Start an Empty Workout
+        Start a Workout
       </Link>
       <ul className="workoutlist">
         {exampleWorkout?.map(({ id, exercise, lbs, reps, createdAt }) => (

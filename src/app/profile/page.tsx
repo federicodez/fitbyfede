@@ -1,36 +1,17 @@
 import { Avatar } from "@/components";
-import SignOut from "./components/SignOut";
-import { getWorkouts } from "@/actions";
-import Statistics from "./components/WorkoutStatistics";
+import Navbar from "@/components/navbar/Navbar";
 
 const Profile = async () => {
-  try {
-    const workouts = await getWorkouts();
-    if (workouts) {
-      return (
-        <section className="profile wrapper container">
-          <SignOut />
-          <div className="profile-card">
-            <h1 className="profile-title">Profile</h1>
-            <Avatar />
-          </div>
-          <Statistics workouts={workouts} />
-        </section>
-      );
-    }
-
-    return (
+  return (
+    <Navbar>
       <section className="profile wrapper container">
-        <SignOut />
         <div className="profile-card">
           <h1 className="profile-title">Profile</h1>
           <Avatar />
         </div>
       </section>
-    );
-  } catch (err) {
-    console.log(err);
-  }
+    </Navbar>
+  );
 };
 
 export default Profile;

@@ -5,11 +5,7 @@ import WorkoutList from "./components/WorkoutList";
 const Workouts = async () => {
   try {
     const workouts = await getWorkouts();
-    if (workouts) {
-      return <WorkoutList items={workouts!} />;
-    } else {
-      return <EmptyState />;
-    }
+    return workouts ? <WorkoutList items={workouts} /> : <EmptyState />;
   } catch (err) {
     console.log(err);
   }
