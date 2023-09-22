@@ -8,11 +8,15 @@ type PieChartProps = {
   workouts: Workout[];
 };
 
+type Tally = {
+  [key: string]: number;
+};
+
 const PieChart = async ({ workouts }: PieChartProps) => {
-  const tally = workouts.reduce((acc, curr) => {
-    acc[curr.exercise] = (acc[curr.exercise] || 0) + 1;
-    return acc;
-  }, {});
+  const tally = workouts.reduce((tally: Tally, curr: Workout) => {
+    tally[curr.exercise] = (tally[curr.exercise] || 0) + 1;
+    return tally;
+  }, {} as Tally);
   const labelData = Object.keys(tally);
   const setData = Object.values(tally);
   const data = {
