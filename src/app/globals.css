@@ -355,7 +355,7 @@ p {
 }
 
 .profile {
-  margin-bottom: 7rem;
+  margin: auto;
   /* display: flex; */
   /* justify-content: center; */
   /* align-items: center; */
@@ -364,7 +364,7 @@ p {
 
 .profile-card {
   padding: 1rem;
-  margin: 1rem auto;
+  margin: 2rem auto;
   gap: 1rem;
   border-radius: 20px;
   border: 1px solid #fff;
@@ -381,12 +381,14 @@ p {
 
 .statistics-card {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* flex-wrap: wrap; */
   /* flex-direction: column; */
   /* height: 100%; */
   /* width: 100%; */
   margin-top: 1rem;
-  gap: 1rem;
+  /* gap: 1rem; */
   /* border-radius: 20px; */
   /* border: 1px solid #fff; */
 }
@@ -440,6 +442,6 @@ p {
 /*********Mobile**********/
 @media (max-width: 868px) {
   .profile-card {
-    margin: 10rem auto;
+    margin: 1.5rem auto;
   }
 }

@@ -12,8 +12,6 @@ type StatisticsProps = {
 const Statistics = ({ workouts }: StatisticsProps) => {
   return (
     <div className="statistics-card">
-      <LineChart workouts={workouts} />
-      <BarChart workouts={workouts} />
       <PieChart workouts={workouts} />
     </div>
   );
