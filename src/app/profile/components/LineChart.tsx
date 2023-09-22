@@ -27,21 +27,33 @@ type LineChartProps = {
 };
 
 const LineChart = async ({ workouts }: LineChartProps) => {
+  const heaviest = workouts[0].lbs.reduce((acc, curr) => {
+    if (acc < curr) {
+      acc = curr;
+    }
+    return acc;
+  }, 0);
+  // console.log({ heaviest });
+
+  const labels = workouts.map(({ createdAt }) =>
+    moment(createdAt).format("dddd, MMM Do"),
+  );
+
   const data = {
-    labels: workouts.map(({ createdAt }) =>
-      moment(createdAt).format("dddd, MMM Do"),
-    ),
+    labels,
     datasets: [
       {
+        label: "Dataset 1",
         data: workouts.map((workout) => workout.lbs[0]),
       },
     ],
   };
 
   const options = {
+    responsive: true,
     plugins: {
       legend: {
-        display: false,
+        position: "top" as const,
       },
       title: {
         display: true,
@@ -71,7 +83,7 @@ const LineChart = async ({ workouts }: LineChartProps) => {
     },
   };
 
-  return <Line className="bar-chart" data={data} options={options} />;
+  return <Line className="chart" id="line" data={data} options={options} />;
 };
 
 export default LineChart;

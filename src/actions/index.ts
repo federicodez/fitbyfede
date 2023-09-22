@@ -165,3 +165,24 @@ export const getMostRecentWorkouts = async () => {
     console.log(err);
   }
 };
+
+export const getWorkoutByExercise = async (exercise: string) => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+
+    const exercises = await prisma.workout.findMany({
+      where: {
+        userId: currentUser.id,
+        exercise,
+      },
+    });
+
+    return exercises;
+  } catch (err: any) {
+    console.log(err);
+  }
+};

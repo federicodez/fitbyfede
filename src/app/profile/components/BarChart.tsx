@@ -24,11 +24,14 @@ type BarChartProps = {
 };
 
 const BarChart = async ({ workouts }: BarChartProps) => {
+  const labels = workouts.map((workout) => workout.exercise);
   const data = {
-    labels: workouts.map((workout) => workout.exercise),
+    labels,
     datasets: [
       {
+        label: "Dataset 1",
         data: workouts.map((workout) => workout.lbs[0]),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
   };
@@ -45,7 +48,7 @@ const BarChart = async ({ workouts }: BarChartProps) => {
     },
   };
 
-  return <Bar className="bar-chart" data={data} options={options} />;
+  return <Bar className="chart" id="bar" data={data} options={options} />;
 };
 
 export default BarChart;

@@ -19,7 +19,7 @@ const PieChart = async ({ workouts }: PieChartProps) => {
     labels: labelData,
     datasets: [
       {
-        label: "Workout Categories",
+        label: "Workout Ratio",
         data: setData,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -42,7 +42,7 @@ const PieChart = async ({ workouts }: PieChartProps) => {
     ],
   };
 
-  return <Pie className="pie-chart" data={data} />;
+  return <Pie className="chart" id="pie" data={data} />;
 };
 
 export default PieChart;
