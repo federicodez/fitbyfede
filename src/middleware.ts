@@ -8,10 +8,10 @@ export default withAuth({
 
 export const config = {
   matcher: [
-    "/workouts",
-    "/create-workout",
-    "/edit-workout",
-    "/profile",
-    "/search-workout",
+    "/workouts/:path*",
+    "/create-workout/:path*",
+    "/edit-workout/:path*",
+    "/profile/:path*",
+    "/search-workout/:path*",
   ],
 };

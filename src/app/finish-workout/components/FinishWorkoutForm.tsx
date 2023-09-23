@@ -13,7 +13,7 @@ type FinishWorkoutFormProps = {
 
 const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { id, exercise, lbs, reps } = workout;
+  const { id, exercise, sets, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {

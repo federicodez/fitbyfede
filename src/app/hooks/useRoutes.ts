@@ -3,8 +3,7 @@ import { usePathname } from "next/navigation";
 import { HiArrowLeftOnRectangle } from "react-icons/hi2";
 import { signOut } from "next-auth/react";
 import { FaUserLarge } from "react-icons/fa6";
-import { GiMeal, GiWeightLiftingUp } from "react-icons/gi";
-import { HiPlus } from "react-icons/hi";
+import { GiMeal, GiWeightLiftingUp, GiStrongMan } from "react-icons/gi";
 
 const useRoutes = () => {
   const pathname = usePathname();
@@ -20,7 +19,7 @@ const useRoutes = () => {
       {
         label: "Start Workout",
         href: "/workouts",
-        icon: HiPlus,
+        icon: GiWeightLiftingUp,
         active: pathname === "/workouts",
       },
       {

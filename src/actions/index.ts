@@ -29,6 +29,7 @@ export const getWorkouts = async () => {
 
 export const updateWorkout = async (
   id: string,
+  sets: string[],
   lbs: number[],
   reps: number[],
 ) => {
@@ -38,6 +39,7 @@ export const updateWorkout = async (
         id,
       },
       data: {
+        sets,
         lbs,
         reps,
       },
@@ -60,6 +62,7 @@ export const getWorkoutById = async (id: string) => {
 export const createExercise = async (exercise: string) => {
   const lbs = [0];
   const reps = [0];
+  const sets = ["1"];
   try {
     const currentUser = await getCurrentUser();
 
@@ -70,6 +73,7 @@ export const createExercise = async (exercise: string) => {
     const workout = await prisma.workout.create({
       data: {
         exercise: exercise,
+        sets,
         lbs,
         reps,
         userId: currentUser.id,
@@ -84,6 +88,7 @@ export const createExercise = async (exercise: string) => {
 
 export const createWorkout = async (
   exercise: string,
+  sets: string[],
   lbs: number[],
   reps: number[],
 ) => {
@@ -97,6 +102,7 @@ export const createWorkout = async (
     const workout = await prisma.workout.create({
       data: {
         exercise: exercise,
+        sets: sets,
         lbs: lbs,
         reps: reps,
         userId: currentUser.id,

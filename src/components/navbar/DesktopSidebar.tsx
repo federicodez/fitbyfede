@@ -11,8 +11,6 @@ interface DesktopSidebarProps {
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
   const routes = useRoutes();
 
-  console.log({ currentUser }, "TEST");
-
   return (
     <>
       <div

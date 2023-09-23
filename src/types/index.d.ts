@@ -19,6 +19,7 @@ export type CurrentUser = {
 export type Workout = {
   id: string;
   exercise: string;
+  sets: string[];
   lbs: number[];
   reps: number[];
   userId: string;

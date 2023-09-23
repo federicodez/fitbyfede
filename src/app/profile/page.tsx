@@ -6,17 +6,17 @@ import { getWorkouts } from "@/actions";
 const Profile = async () => {
   try {
     const workouts = await getWorkouts();
-    return workouts ? (
+    return (
       <Navbar>
         <section className="profile wrapper container">
           <div className="profile-card">
             <h1 className="profile-title">Profile</h1>
             <Avatar />
           </div>
-          <Statistics workouts={workouts} />
+          {workouts ? <Statistics workouts={workouts} /> : null}
         </section>
       </Navbar>
-    ) : null;
+    );
   } catch (err) {
     console.log(err);
   }

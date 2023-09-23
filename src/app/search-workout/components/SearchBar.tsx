@@ -66,7 +66,9 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
           </button>
         </form>
         <ul className="filtered__list">
-          <h3 className="most-recent-title">RECENT</h3>
+          {workouts.length ? (
+            <h3 className="most-recent-title">RECENT</h3>
+          ) : null}
           {workouts?.map((workout, id) => (
             <li key={id} className="filtered__item">
               <div onClick={() => handleClick(workout.exercise)}>

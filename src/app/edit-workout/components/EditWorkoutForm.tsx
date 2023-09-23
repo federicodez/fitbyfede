@@ -10,10 +10,11 @@ type EditWorkoutFormProps = {
 };
 
 const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
-  const { id, exercise, lbs, reps } = workout;
+  const { id, exercise, sets, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
+    const dataSets = data.getAll("sets")?.valueOf();
     const dataLbs = data.getAll("lbs")?.valueOf();
     const newLbs = Object.values(dataLbs).map((lb) => {
       lbs?.push(Number(lb));
@@ -26,7 +27,7 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
     });
 
     try {
-      await updateWorkout(id, lbs, reps);
+      await updateWorkout(id, sets, lbs, reps);
       router.push(`/workouts`);
     } catch (error) {
       console.log(error);
@@ -35,9 +36,12 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
 
   const addSet = async () => {
     try {
+      const set = `${(sets[sets.length - 1] += 1)}`;
+      console.log({ set });
+      sets?.push(`${(sets[sets.length - 1] += 1)}`);
       lbs?.push(0);
       reps?.push(0);
-      await updateWorkout(id, lbs, reps);
+      await updateWorkout(id, sets, lbs, reps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -49,14 +53,25 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
       <form action={handleSubmit} className="edit-workout-form">
         <h1 className="edit-workout-form__title">{exercise}</h1>
         <div className="edit-workout-form__container">
+          <ul className="edit-workout-form__list" id="sets-list">
+            {sets?.map((set, id) => (
+              <li key={id} className="edit-workout-form__item">
+                <div className="edit-workout-form__label-input">
+                  <label htmlFor="set">Set</label>
+                  <input
+                    type="string"
+                    name="set"
+                    defaultValue={`${set}`}
+                    className="edit-workout-form__input"
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
           <ul className="edit-workout-form__list" id="lbs-list">
             {lbs?.map((lb, id) => (
               <li key={id} className="edit-workout-form__item">
-                <div className="edit-workout-form__set">
-                  <label>Set</label>
-                  <div className="edit-workout-form__set-id">{(id += 1)}</div>
-                </div>
-                <div className="edit-workout-form__lbs">
+                <div className="edit-workout-form__label-input">
                   <label htmlFor="lbs">Weight (lbs): </label>
                   <input
                     type="string"
@@ -71,15 +86,17 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
           </ul>
           <ul className="edit-workout-form__list">
             {reps?.map((rep, id) => (
-              <li key={id}>
-                <label htmlFor="reps">Reps: </label>
-                <input
-                  type="string"
-                  name="reps"
-                  defaultValue={`${rep ? rep : 0}`}
-                  placeholder={`${rep}`}
-                  className="edit-workout-form__input"
-                />
+              <li key={id} className="edit-workout-form__item">
+                <div className="edit-workout-form__label-input">
+                  <label htmlFor="reps">Reps: </label>
+                  <input
+                    type="string"
+                    name="reps"
+                    defaultValue={`${rep ? rep : 0}`}
+                    placeholder={`${rep}`}
+                    className="edit-workout-form__input"
+                  />
+                </div>
               </li>
             ))}
           </ul>
