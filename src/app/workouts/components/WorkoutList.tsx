@@ -22,7 +22,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         Start a Workout
       </Link>
       <ul className="workoutlist">
-        {workouts?.map(({ id, exercise, lbs, reps, createdAt }) => (
+        {workouts?.map(({ id, exercise, sets, lbs, reps, createdAt }) => (
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
               <RemoveBtn id={id} setWorkouts={setWorkouts} />
@@ -36,7 +36,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
             <div className="workoutlist-exercise">
               <strong>{exercise}</strong>
             </div>
-            <WorkoutCard lbs={lbs} reps={reps} />
+            <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
           </li>
         ))}
       </ul>

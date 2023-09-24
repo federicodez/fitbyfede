@@ -20,8 +20,10 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
   const router = useRouter();
 
   const handleClick = async (exercise: string) => {
+    console.log({ exercise });
     try {
       const workout = await createExercise(exercise);
+      console.log("workout: ", workout);
       if (workout) {
         setIsLoading(true);
         router.push(`/finish-workout/${workout.id}`);
@@ -49,7 +51,7 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
           <Link href="/create-workout">New</Link>
         </button>
         <button type="button" className="searchbar-btn" id="cancel-btn">
-          <Link href="/">
+          <Link href="/workouts">
             <HiX />
           </Link>
         </button>
@@ -66,7 +68,7 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
           </button>
         </form>
         <ul className="filtered__list">
-          {workouts.length ? (
+          {workouts?.length ? (
             <h3 className="most-recent-title">RECENT</h3>
           ) : null}
           {workouts?.map((workout, id) => (

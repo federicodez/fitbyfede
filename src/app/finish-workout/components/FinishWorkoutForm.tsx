@@ -17,6 +17,7 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
+    const dataSets = data.getAll("sets")?.valueOf();
     const dataLbs = data.getAll("lbs")?.valueOf();
     const dataReps = data.getAll("reps")?.valueOf();
 
@@ -35,7 +36,7 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
     });
 
     try {
-      await updateWorkout(id, lbs, reps);
+      await updateWorkout(id, sets, lbs, reps);
       setIsLoading(true);
       router.push("/workouts");
     } catch (error) {
@@ -44,10 +45,16 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   };
 
   const addSet = async () => {
-    lbs?.push(0);
-    reps?.push(0);
-    await updateWorkout(id, lbs, reps);
-    router.refresh();
+    try {
+      const set = Number(sets[sets.length - 1]) + 1;
+      sets?.push(String(set));
+      lbs?.push(0);
+      reps?.push(0);
+      await updateWorkout(id, sets, lbs, reps);
+      router.refresh();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const removeWorkout = async () => {
@@ -59,50 +66,65 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
     <>
       {isLoading && <LoadingModel />}
       <div className="wrapper container">
-        <form action={handleSubmit} className="finish-workout-form">
-          <h1 className="finish-workout-form__title">{exercise}</h1>
-          <ul className="finish-workout-form__list">
-            {lbs?.map((lbs, id) => (
-              <li key={id} className="finish-workout-form__item">
-                <div className="finish-workout-form__set">
-                  <label>Set</label>
-                  <div className="finish-workout-form__set-id">{(id += 1)}</div>
-                </div>
-                <div>
-                  <label htmlFor="lbs">Weight (lbs): </label>
-                  <input
-                    type="number"
-                    name="lbs"
-                    id="lbs"
-                    className="finish-workout-form__input"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="reps">Reps: </label>
-                  <input
-                    type="number"
-                    name="reps"
-                    id="reps"
-                    className="finish-workout-form__input"
-                    required
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-          <div className="finish-workout-form__btn-container">
+        <form action={handleSubmit} className="workout-form">
+          <h1 className="workout-form__title">{exercise}</h1>
+          <div className="workout-form__container">
+            <ul className="workout-form__list" id="sets-list">
+              {sets?.map((set, id) => (
+                <li key={id} className="workout-form__item">
+                  <div className="workout-form__label-input">
+                    <label htmlFor="set">Set</label>
+                    <span className="workout-form__input">{set}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <ul className="workout-form__list">
+              {lbs?.map((lb, id) => (
+                <li key={id} className="workout-form__item">
+                  <div className="workout-form__label-input">
+                    <label htmlFor="lbs">Weight (lbs): </label>
+                    <input
+                      type="number"
+                      name="lbs"
+                      id="lbs"
+                      className="workout-form__input"
+                      required
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <ul className="workout-form__list">
+              {reps?.map((rep, id) => (
+                <li key={id} className="workout-form__item">
+                  <div className="workout-form__label-input">
+                    <label htmlFor="reps">Reps: </label>
+                    <input
+                      type="number"
+                      name="reps"
+                      id="reps"
+                      className="workout-form__input"
+                      required
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="workout-form__btn">
             <CustomButton
               title="Add Set"
-              containerStyles="finish-workout-form__custom-btn"
+              containerStyles="workout-form__add-btn"
               handleClick={addSet}
             />
-            <button type="submit" className="finish-workout-form__btn">
+            <button type="submit" className="workout-form__submit-btn">
               Create Workout
             </button>
             <CustomButton
               title="Cancel Workout"
-              containerStyles="finish-workout-form__cancel-btn"
+              containerStyles="workout-form__cancel-btn"
               handleClick={removeWorkout}
             />
           </div>

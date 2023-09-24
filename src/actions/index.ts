@@ -50,6 +50,17 @@ export const updateWorkout = async (
   }
 };
 
+export const changeWorkoutSet = async (id: string, sets: string[]) => {
+  try {
+    await prisma.workout.update({
+      where: { id },
+      data: { sets },
+    });
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
 export const getWorkoutById = async (id: string) => {
   try {
     const workout = await prisma.workout.findUnique({ where: { id: id } });
@@ -72,7 +83,7 @@ export const createExercise = async (exercise: string) => {
 
     const workout = await prisma.workout.create({
       data: {
-        exercise: exercise,
+        exercise,
         sets,
         lbs,
         reps,
