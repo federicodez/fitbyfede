@@ -4,8 +4,9 @@ import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
 import { CustomButton } from "@/components";
-import { updateWorkout, changeWorkoutSet } from "@/actions";
+import { updateWorkout, changeWorkoutSet, deleteSet } from "@/actions";
 import LoadingModel from "@/components/models/LoadingModel";
+import { HiOutlineTrash } from "react-icons/hi";
 
 type EditWorkoutFormProps = {
   workout: Workout;
@@ -84,6 +85,18 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
     }
   };
 
+  const handleDeleteSet = async (setId: number) => {
+    sets.splice(setId, 1);
+    lbs.splice(setId, 1);
+    reps.splice(setId, 1);
+    try {
+      await deleteSet(id, sets, lbs, reps);
+      router.refresh();
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       {isLoading && <LoadingModel />}
@@ -133,8 +146,11 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
                   </option>
                 </li>
               </ul>
-              {sets?.map((set, id) => (
-                <li key={id} className="workout-form__item">
+              {sets?.map((set, setId) => (
+                <li key={setId} className="workout-form__item">
+                  <button type="button" onClick={() => handleDeleteSet(setId)}>
+                    <HiOutlineTrash />
+                  </button>
                   <div className="workout-form__label-input">
                     <span>Set</span>
                     <CustomButton
@@ -142,7 +158,7 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
                       containerStyles="workout-form__input"
                       handleClick={() => {
                         setSetOptions(!setOptions);
-                        setSetIndex(id);
+                        setSetIndex(setId);
                       }}
                     />
                   </div>
