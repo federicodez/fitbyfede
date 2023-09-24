@@ -159,6 +159,26 @@ export const deleteWorkout = async (id: string) => {
   }
 };
 
+export const deleteSet = async (
+  id: string,
+  sets: string[],
+  lbs: number[],
+  reps: number[],
+) => {
+  try {
+    await prisma.workout.update({
+      where: { id },
+      data: {
+        sets,
+        lbs,
+        reps,
+      },
+    });
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
 export const getMostRecentWorkouts = async () => {
   try {
     const currentUser = await getCurrentUser();
