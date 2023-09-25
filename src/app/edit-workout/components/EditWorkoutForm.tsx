@@ -20,10 +20,9 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
-    // const { target } = e;
-    // if (target) {
-    //   console.log("e: ", target as HTMLFormElement).value;
-    // }
+    console.log("handle submit fire");
+    const dataSets = data.getAll("sets")?.valueOf();
+
     const dataLbs = data.getAll("lbs")?.valueOf();
     const newLbs = Object.values(dataLbs).map((lb) => {
       lbs?.push(Number(lb));
@@ -46,24 +45,18 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
 
   const addSet = async () => {
     try {
-      enum Sets {
-        warm = "w",
-        drop = "d",
-        failure = "f",
-      }
       const lastSet = sets[sets.length - 1];
-      if (
-        (lastSet as Sets) !== "w" ||
-        (lastSet as Sets) !== "d" ||
-        (lastSet as Sets) !== "f"
-      ) {
+      if (!!Number(lastSet)) {
         const set = Number(lastSet) + 1;
         sets?.push(String(set));
-        lbs?.push(0);
-        reps?.push(0);
-        await updateWorkout(id, sets, lbs, reps);
-        router.refresh();
+      } else {
+        sets?.push("1");
       }
+
+      lbs?.push(0);
+      reps?.push(0);
+      await updateWorkout(id, sets, lbs, reps);
+      router.refresh();
     } catch (error) {
       console.log(error);
     }
@@ -73,15 +66,20 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
     const { target } = e;
     if (target) {
       const set = (target as HTMLButtonElement).value;
-      sets[setIndex] = set;
-      sets.forEach((set, id) => {
-        if (id !== setIndex) {
-          Number(set) - 1;
-          String(set);
+      sets.splice(setIndex, 1, set);
+      const newSet: string[] = [];
+      let i = 1;
+      sets.map((set) => {
+        if (!!Number(set)) {
+          newSet.push(String(i));
+          i++;
+        } else {
+          newSet.push(set);
         }
       });
-      console.log("set: ", sets);
-      await changeWorkoutSet(id, sets);
+
+      await changeWorkoutSet(id, newSet);
+      router.refresh();
     }
   };
 
@@ -89,6 +87,11 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
     sets.splice(setId, 1);
     lbs.splice(setId, 1);
     reps.splice(setId, 1);
+    if (!sets.length) {
+      sets.push("1");
+      lbs.push(0);
+      reps.push(0);
+    }
     try {
       await deleteSet(id, sets, lbs, reps);
       router.refresh();
@@ -106,14 +109,15 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
           <div className="workout-form__container">
             <ul className="workout-form__list" id="sets-list">
               <ul
+                onMouseLeave={() => setSetOptions(!setOptions)}
                 className={
                   setOptions
-                    ? "absolute bg-gray-500 text-white ml-20 px-2 rounded-lg"
+                    ? "absolute bg-gray-800 text-white ml-20 px-2 rounded-lg"
                     : "hidden"
                 }
               >
                 <li>
-                  <button
+                  <option
                     value="w"
                     onClick={(e) => {
                       changeSet(e);
@@ -121,7 +125,7 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
                     }}
                   >
                     Warm-up
-                  </button>
+                  </option>
                 </li>
                 <li>
                   <option
