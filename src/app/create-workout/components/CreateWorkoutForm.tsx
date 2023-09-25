@@ -104,9 +104,9 @@ const CreateWorkoutForm = () => {
     <>
       {isLoading && <LoadingModel />}
       <div className="wrapper container">
-        <form action={handleSubmit} className="create-form flex flex-col m-4">
-          <div className="flex gap-2 justify-center items-center">
-            <label htmlFor="exercise" className="">
+        <form action={handleSubmit} className="flex flex-col m-4">
+          <div className="grid grid-cols-3 m-5">
+            <label htmlFor="exercise" className="cols-span-1 text-center">
               Exercise:{" "}
             </label>
             <input
@@ -114,7 +114,7 @@ const CreateWorkoutForm = () => {
               type="text"
               name="exercise"
               id="exercise"
-              className="bg-white border rounded-lg col-span-3"
+              className="bg-white border rounded-lg col-start-2 col-span-2 mr-5"
             />
           </div>
 
@@ -175,7 +175,7 @@ const CreateWorkoutForm = () => {
                 </div>
               </div>
               <div className="col-span-1 justify-self-center">
-                <label htmlFor="lbs">Weight (lbs): </label>
+                <label htmlFor="lbs">Weight: </label>
                 <input
                   type="number"
                   name="lbs"
@@ -198,18 +198,18 @@ const CreateWorkoutForm = () => {
               </div>
             </div>
           ))}
-          <div className="workout-form__btn">
+          <div className="flex flex-col gap-2 my-2">
             <CustomButton
               title="Add Set"
-              containerStyles="workout-form__add-btn"
+              containerStyles="bg-gray-600 text-white rounded-lg"
               handleClick={addSet}
             />
-            <button type="submit" className="workout-form__submit-btn">
+            <button type="submit" className="bg-blue-800 text-white rounded-lg">
               Create Workout
             </button>
             <CustomButton
               title="Cancel Workout"
-              containerStyles="workout-form__cancel-btn"
+              containerStyles="bg-red-300 text-white rounded-lg"
               handleClick={removeWorkout}
             />
           </div>
