@@ -20,16 +20,13 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
-    console.log("handle submit fire");
-    const dataSets = data.getAll("sets")?.valueOf();
-
     const dataLbs = data.getAll("lbs")?.valueOf();
-    const newLbs = Object.values(dataLbs).map((lb) => {
+    Object.values(dataLbs).map((lb) => {
       lbs?.push(Number(lb));
       lbs?.shift();
     });
     const dataReps = data.getAll("reps")?.valueOf();
-    const newReps = Object.values(dataReps).map((rep) => {
+    Object.values(dataReps).map((rep) => {
       reps?.push(Number(rep));
       reps?.shift();
     });
