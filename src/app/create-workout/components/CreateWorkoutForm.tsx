@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createWorkout } from "@/actions";
 import { CustomButton } from "@/components";
+import LoadingModel from "@/components/models/LoadingModel";
+import { HiOutlineTrash } from "react-icons/hi2";
 
 const CreateWorkoutForm = () => {
   const [exercise, setExercise] = useState("");
+  const [sets, setSets] = useState<string[]>(["1"]);
   const [lbs, setLbs] = useState([0]);
   const [reps, setReps] = useState([0]);
+  const [setOptions, setSetOptions] = useState(false);
+  const [setIndex, setSetIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -21,11 +27,11 @@ const CreateWorkoutForm = () => {
       return;
     }
 
-    const newLbs = Object.values(dataLbs).map((lb) => {
+    Object.values(dataLbs).map((lb) => {
       lbs.push(Number(lb));
       lbs.shift();
     });
-    const newReps = Object.values(dataReps).map((rep) => {
+    Object.values(dataReps).map((rep) => {
       reps.push(Number(rep));
       reps.shift();
     });
@@ -34,7 +40,7 @@ const CreateWorkoutForm = () => {
     setReps([...reps]);
 
     try {
-      await createWorkout(exercise, lbs, reps);
+      await createWorkout(exercise, sets, lbs, reps);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -42,8 +48,51 @@ const CreateWorkoutForm = () => {
   };
 
   const addSet = async () => {
+    const lastSet = sets[sets.length - 1];
+    if (!!Number(lastSet)) {
+      const set = Number(lastSet) + 1;
+      // sets?.push(String(set));
+      setSets([...sets, String(set)]);
+    } else {
+      // sets?.push("1");
+      setSets([...sets, "1"]);
+    }
+
     setLbs([...lbs, 0]);
     setReps([...reps, 0]);
+    router.refresh();
+  };
+
+  const changeSet = async (e: MouseEvent) => {
+    const { target } = e;
+    if (target) {
+      const set = (target as HTMLButtonElement).value;
+      sets.splice(setIndex, 1, set);
+      const newSet: string[] = [];
+      let i = 1;
+      sets.map((set) => {
+        if (!!Number(set)) {
+          newSet.push(String(i));
+          i++;
+        } else {
+          newSet.push(set);
+        }
+      });
+    }
+  };
+
+  const handleDeleteSet = async (setId: number) => {
+    sets.splice(setId, 1);
+    lbs.splice(setId, 1);
+    reps.splice(setId, 1);
+    if (!sets.length) {
+      sets.push("1");
+      setSets([...sets]);
+      lbs.push(0);
+      setLbs([...lbs]);
+      reps.push(0);
+      setReps([...reps]);
+    }
     router.refresh();
   };
 
@@ -52,65 +101,121 @@ const CreateWorkoutForm = () => {
   };
 
   return (
-    <div className="wrapper container">
-      <form action={handleSubmit} className="create-form flex flex-col">
-        <label htmlFor="exercise">Exercise: </label>
-        <input
-          onChange={(e) => setExercise(e.target.value)}
-          type="text"
-          name="exercise"
-          id="exercise"
-          className="bg-white border rounded-lg"
-        />
-        <ul className="finish-workout-form__list">
-          {lbs?.map((lbs, id) => (
-            <li key={id} className="finish-workout-form__item">
-              <div className="finish-workout-form__set">
-                <label>Set</label>
-                <div className="finish-workout-form__set-id">{(id += 1)}</div>
+    <>
+      {isLoading && <LoadingModel />}
+      <div className="wrapper container">
+        <form action={handleSubmit} className="create-form flex flex-col m-4">
+          <div className="flex gap-2 justify-center items-center">
+            <label htmlFor="exercise" className="">
+              Exercise:{" "}
+            </label>
+            <input
+              onChange={(e) => setExercise(e.target.value)}
+              type="text"
+              name="exercise"
+              id="exercise"
+              className="bg-white border rounded-lg col-span-3"
+            />
+          </div>
+
+          <div
+            onMouseLeave={() => setSetOptions(!setOptions)}
+            className={
+              setOptions
+                ? "absolute bg-gray-800 text-white ml-20 px-2 rounded-lg"
+                : "hidden"
+            }
+          >
+            <option
+              value="w"
+              onClick={(e) => {
+                changeSet(e);
+                setSetOptions(!setOptions);
+              }}
+            >
+              Warm-up
+            </option>
+            <option
+              value="d"
+              onClick={(e) => {
+                changeSet(e);
+                setSetOptions(!setOptions);
+              }}
+            >
+              Drop Set
+            </option>
+            <option
+              value="f"
+              onClick={(e) => {
+                changeSet(e);
+                setSetOptions(!setOptions);
+              }}
+            >
+              Failure
+            </option>
+          </div>
+          {sets?.map((set, setId) => (
+            <div className="grid grid-cols-3 gap-4" id="sets-list">
+              <div className="col-span-1">
+                <div className="flex justify-around">
+                  <button type="button" onClick={() => handleDeleteSet(setId)}>
+                    <HiOutlineTrash />
+                  </button>
+                  <div>
+                    <span>Set</span>
+                    <CustomButton
+                      title={set}
+                      containerStyles="workout-form__input"
+                      handleClick={() => {
+                        setSetOptions(!setOptions);
+                        setSetIndex(setId);
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
+              <div className="col-span-1 justify-self-center">
                 <label htmlFor="lbs">Weight (lbs): </label>
                 <input
                   type="number"
                   name="lbs"
                   id="lbs"
                   placeholder="0"
-                  className="finish-workout-form__input"
+                  className="workout-form__input"
                   required
                 />
               </div>
-              <div>
+              <div className="col-span-1 justify-self-center">
                 <label htmlFor="reps">Reps: </label>
                 <input
                   type="number"
                   name="reps"
                   id="reps"
                   placeholder="0"
-                  className="finish-workout-form__input"
+                  className="workout-form__input"
                   required
                 />
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
-        <div className="finish-workout-form__btn-container">
-          <CustomButton
-            title="Add Set"
-            containerStyles="finish-workout-form__custom-btn"
-            handleClick={addSet}
-          />
-          <button type="submit" className="finish-workout-form__btn">
-            Create Workout
-          </button>
-          <CustomButton
-            title="Cancel Workout"
-            containerStyles="finish-workout-form__cancel-btn"
-            handleClick={removeWorkout}
-          />
-        </div>
-      </form>
-    </div>
+          <div className="workout-form__btn">
+            <CustomButton
+              title="Add Set"
+              containerStyles="workout-form__add-btn"
+              handleClick={addSet}
+            />
+            <button type="submit" className="workout-form__submit-btn">
+              Create Workout
+            </button>
+            <CustomButton
+              title="Cancel Workout"
+              containerStyles="workout-form__cancel-btn"
+              handleClick={removeWorkout}
+            />
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 
