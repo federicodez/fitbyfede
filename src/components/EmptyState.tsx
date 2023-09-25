@@ -12,7 +12,7 @@ const EmptyState = () => {
         Start a Workout
       </Link>
       <ul className="workoutlist">
-        {exampleWorkout?.map(({ id, exercise, lbs, reps, createdAt }) => (
+        {exampleWorkout?.map(({ id, exercise, sets, lbs, reps, createdAt }) => (
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
               <HiOutlineTrash />
@@ -26,7 +26,7 @@ const EmptyState = () => {
             <div className="workoutlist-exercise">
               <strong>{exercise}</strong>
             </div>
-            <WorkoutCard lbs={lbs} reps={reps} />
+            <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
           </li>
         ))}
       </ul>

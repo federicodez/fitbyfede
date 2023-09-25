@@ -155,7 +155,7 @@ const CreateWorkoutForm = () => {
             </option>
           </div>
           {sets?.map((set, setId) => (
-            <div className="grid grid-cols-3 gap-4" id="sets-list">
+            <div key={setId} className="grid grid-cols-3 gap-4" id="sets-list">
               <div className="col-span-1">
                 <div className="flex justify-around">
                   <button type="button" onClick={() => handleDeleteSet(setId)}>
