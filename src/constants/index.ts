@@ -2,7 +2,7 @@ export const exampleWorkout = [
   {
     id: "1a3e5965-48b6-46a3-9251-2f565e1746f9",
     exercise: ["Squat (Barbell)", "Legs"],
-    sets: ["1"],
+    sets: ["1", "2", "3"],
     lbs: [205, 195, 185],
     reps: [8, 7, 5],
     createdAt: "2023-09-07T21:03:14.326Z",
