@@ -211,7 +211,7 @@ const WorkoutForm = ({ formtype, workout }: WorkoutFormProps) => {
               {formtype}
             </Button>
             <CustomButton
-              title="Cancel Update"
+              title="Cancel"
               handleClick={() => {
                 router.push("/workouts");
               }}
