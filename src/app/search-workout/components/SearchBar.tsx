@@ -20,7 +20,6 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
   const router = useRouter();
 
   const handleClick = async (exercise: string) => {
-    console.log({ exercise });
     try {
       const workout = await createExercise(exercise);
       console.log("workout: ", workout);
