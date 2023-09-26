@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { exercises } from "@/constants";
-import { createExercise } from "@/actions";
+import { createExercise, createWorkoutSession, createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
@@ -16,20 +16,32 @@ type SearchBarProps = {
 const SearchBar = ({ workouts }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
 
   const router = useRouter();
 
-  const handleClick = async (exercise: string) => {
+  const handleClick = async () => {
     try {
-      const workout = await createExercise(exercise);
-      console.log("workout: ", workout);
-      if (workout) {
+      const session = await createWorkoutSession();
+
+      if (session) {
+        await createMany(exerciseQueue, session);
         setIsLoading(true);
-        router.push(`/finish-workout/${workout.id}`);
+        router.push(`/finish-workout/${session.id}`);
       }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const addToExercises = async (exercise: string) => {
+    if (!exerciseQueue.includes(exercise)) {
+      exerciseQueue.push(exercise);
+    } else {
+      const index = exerciseQueue.indexOf(exercise);
+      exerciseQueue.splice(index, 1);
+    }
+    setExerciseQueue([...exerciseQueue]);
   };
 
   const filteredExercises =
@@ -55,8 +67,13 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
               <HiX />
             </Link>
           </button>
-          <button type="submit" className="text-[#03045e]" id="__add-btn">
-            Add
+          <button
+            type="button"
+            onClick={handleClick}
+            className="text-[#03045e]"
+            id="__add-btn"
+          >
+            {`Add (${exerciseQueue?.length})`}
           </button>
         </div>
         <form className="searchbar-form">
@@ -74,11 +91,13 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
           ) : null}
           {workouts?.map((workout, id) => (
             <li key={id} className="filtered__item">
-              <div onClick={() => handleClick(workout.exercise)}>
+              <div>
                 <input
                   type="checkbox"
                   id="exercise"
                   name="exercise"
+                  value={workout.exercise}
+                  onChange={() => addToExercises(workout.exercise)}
                   className="filtered__item-checkbox"
                 />
                 <strong>{workout.exercise}</strong>
@@ -88,11 +107,13 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
           <h3 className="filtered-title">EXERCISES</h3>
           {filteredExercises?.map((exercise, id) => (
             <li key={id} className="filtered__item">
-              <div onClick={() => handleClick(exercise[0])}>
+              <div>
                 <input
                   type="checkbox"
                   id="exercise"
                   name="exercise"
+                  value={exercise[0]}
+                  onChange={() => addToExercises(exercise[0])}
                   className="filtered__item-checkbox"
                 />
                 <strong>{exercise[0]}</strong>
