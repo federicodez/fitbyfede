@@ -2,6 +2,7 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { WorkoutSession } from "@prisma/client";
 
 export const getWorkouts = async () => {
   try {
@@ -70,7 +71,72 @@ export const getWorkoutById = async (id: string) => {
   }
 };
 
-export const createExercise = async (exercise: string) => {
+export const getWorkoutsBySessionId = async (id: string) => {
+  try {
+    const workouts = await prisma.workout.findMany({
+      where: {
+        workoutSessionId: id,
+      },
+    });
+
+    return workouts;
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const createWorkoutSession = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+
+    const session = await prisma.workoutSession.create({
+      data: {
+        userId: currentUser.id,
+      },
+    });
+    return session;
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const createMany = async (
+  exerciseQueue: string[],
+  session: WorkoutSession,
+) => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+    await Promise.all(
+      exerciseQueue.map(async (exercise: string) => {
+        await prisma.workout.create({
+          data: {
+            exercise,
+            sets: ["1"],
+            lbs: [0],
+            reps: [0],
+            userId: currentUser.id,
+            workoutSessionId: session.id,
+          },
+        });
+      }),
+    );
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const createExercise = async (
+  exercise: string,
+  session: WorkoutSession,
+) => {
   const lbs = [0];
   const reps = [0];
   const sets = ["1"];
@@ -83,11 +149,12 @@ export const createExercise = async (exercise: string) => {
 
     const workout = await prisma.workout.create({
       data: {
-        exercise,
+        exercise: exercise,
         sets,
         lbs,
         reps,
         userId: currentUser.id,
+        workoutSessionId: session.id,
       },
     });
 
