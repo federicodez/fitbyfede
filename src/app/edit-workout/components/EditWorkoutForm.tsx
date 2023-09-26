@@ -105,7 +105,7 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
           <h1 className="workout-form__title">{exercise}</h1>
           <div className="workout-form__container">
             <ul className="workout-form__list" id="sets-list">
-              <ul
+              <div
                 onMouseLeave={() => setSetOptions(!setOptions)}
                 className={
                   setOptions
@@ -113,40 +113,34 @@ const EditWorkoutForm = ({ workout }: EditWorkoutFormProps) => {
                     : "hidden"
                 }
               >
-                <li>
-                  <option
-                    value="w"
-                    onClick={(e) => {
-                      changeSet(e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Warm-up
-                  </option>
-                </li>
-                <li>
-                  <option
-                    value="d"
-                    onClick={(e) => {
-                      changeSet(e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Drop Set
-                  </option>
-                </li>
-                <li>
-                  <option
-                    value="f"
-                    onClick={(e) => {
-                      changeSet(e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Failure
-                  </option>
-                </li>
-              </ul>
+                <option
+                  value="w"
+                  onClick={(e) => {
+                    changeSet(e);
+                    setSetOptions(!setOptions);
+                  }}
+                >
+                  Warm-up
+                </option>
+                <option
+                  value="d"
+                  onClick={(e) => {
+                    changeSet(e);
+                    setSetOptions(!setOptions);
+                  }}
+                >
+                  Drop Set
+                </option>
+                <option
+                  value="f"
+                  onClick={(e) => {
+                    changeSet(e);
+                    setSetOptions(!setOptions);
+                  }}
+                >
+                  Failure
+                </option>
+              </div>
               {sets?.map((set, setId) => (
                 <li key={setId} className="workout-form__item">
                   <button type="button" onClick={() => handleDeleteSet(setId)}>

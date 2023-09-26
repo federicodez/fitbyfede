@@ -16,9 +16,7 @@ const EmptyState = () => {
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
               <HiOutlineTrash />
-              <Link href={`/edit-workout/${id}`}>
-                <HiPencilAlt />
-              </Link>
+              <HiPencilAlt />
             </div>
             <div className="workoutlist-date">
               {moment(createdAt).format("dddd, MMM Do")}

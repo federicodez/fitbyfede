@@ -46,14 +46,19 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
     <>
       {isLoading && <LoadingModel />}
       <div className="searchbar wrapper container">
-        <button type="button" className="searchbar-btn" id="create-btn">
-          <Link href="/create-workout">New</Link>
-        </button>
-        <button type="button" className="searchbar-btn" id="cancel-btn">
-          <Link href="/workouts">
-            <HiX />
-          </Link>
-        </button>
+        <div className="flex flex-row justify-between">
+          <button type="button" className="text-[#03045e]" id="create-btn">
+            <Link href="/create-workout">New</Link>
+          </button>
+          <button type="button" className="text-[#c1121f]" id="cancel-btn">
+            <Link href="/workouts">
+              <HiX />
+            </Link>
+          </button>
+          <button type="submit" className="text-[#03045e]" id="__add-btn">
+            Add
+          </button>
+        </div>
         <form className="searchbar-form">
           <input
             onChange={(e) => setQuery(e.target.value)}
@@ -62,9 +67,6 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
             placeholder="Search"
             className="searchbar-form__input"
           />
-          <button type="submit" className="searchbar-btn" id="__add-btn">
-            Add
-          </button>
         </form>
         <ul className="filtered__list">
           {workouts?.length ? (

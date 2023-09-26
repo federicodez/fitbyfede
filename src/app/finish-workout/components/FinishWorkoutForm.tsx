@@ -1,36 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { CustomButton } from "@/components";
 import { type Workout } from "@/types";
-import { deleteWorkout, updateWorkout } from "@/actions";
+import {
+  changeWorkoutSet,
+  deleteSet,
+  deleteWorkout,
+  updateWorkout,
+} from "@/actions";
 import LoadingModel from "@/components/models/LoadingModel";
+import { HiOutlineTrash } from "react-icons/hi2";
 
 type FinishWorkoutFormProps = {
   workout: Workout;
 };
 
 const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
+  const [setOptions, setSetOptions] = useState(false);
+  const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const { id, exercise, sets, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
-    const dataSets = data.getAll("sets")?.valueOf();
     const dataLbs = data.getAll("lbs")?.valueOf();
-    const dataReps = data.getAll("reps")?.valueOf();
-
-    if (!dataLbs || !dataReps) {
-      alert("Exercise, lbs, sets, and reps are required");
-      return;
-    }
-
-    const newLbs = Object.values(dataLbs).map((lb) => {
+    Object.values(dataLbs).map((lb) => {
       lbs?.push(Number(lb));
       lbs?.shift();
     });
-    const newReps = Object.values(dataReps).map((rep) => {
+    const dataReps = data.getAll("reps")?.valueOf();
+    Object.values(dataReps).map((rep) => {
       reps?.push(Number(rep));
       reps?.shift();
     });
@@ -46,19 +47,64 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
 
   const addSet = async () => {
     try {
-      const set = Number(sets[sets.length - 1]) + 1;
-      sets?.push(String(set));
+      const lastSet = sets[sets.length - 1];
+      if (!!Number(lastSet)) {
+        const set = Number(lastSet) + 1;
+        sets?.push(String(set));
+      } else {
+        sets?.push("1");
+      }
+
       lbs?.push(0);
       reps?.push(0);
       await updateWorkout(id, sets, lbs, reps);
       router.refresh();
-    } catch (err) {
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const changeSet = async (e: MouseEvent) => {
+    const { target } = e;
+    if (target) {
+      const set = (target as HTMLButtonElement).value;
+      sets.splice(setIndex, 1, set);
+      const newSet: string[] = [];
+      let i = 1;
+      sets.map((set) => {
+        if (!!Number(set)) {
+          newSet.push(String(i));
+          i++;
+        } else {
+          newSet.push(set);
+        }
+      });
+
+      await changeWorkoutSet(id, newSet);
+      router.refresh();
+    }
+  };
+
+  const handleDeleteSet = async (setId: number) => {
+    sets.splice(setId, 1);
+    lbs.splice(setId, 1);
+    reps.splice(setId, 1);
+    if (!sets.length) {
+      sets.push("1");
+      lbs.push(0);
+      reps.push(0);
+    }
+    try {
+      await deleteSet(id, sets, lbs, reps);
+      router.refresh();
+    } catch (err: any) {
       console.log(err);
     }
   };
 
   const removeWorkout = async () => {
     await deleteWorkout(id);
+    setIsLoading(true);
     router.push("/workouts");
   };
 
@@ -70,11 +116,57 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
           <h1 className="workout-form__title">{exercise}</h1>
           <div className="workout-form__container">
             <ul className="workout-form__list" id="sets-list">
-              {sets?.map((set, id) => (
-                <li key={id} className="workout-form__item">
+              <div
+                onMouseLeave={() => setSetOptions(!setOptions)}
+                className={
+                  setOptions
+                    ? "absolute bg-gray-800 text-white ml-20 px-2 rounded-lg"
+                    : "hidden"
+                }
+              >
+                <option
+                  value="w"
+                  onClick={(e) => {
+                    changeSet(e);
+                    setSetOptions(!setOptions);
+                  }}
+                >
+                  Warm-up
+                </option>
+                <option
+                  value="d"
+                  onClick={(e) => {
+                    changeSet(e);
+                    setSetOptions(!setOptions);
+                  }}
+                >
+                  Drop Set
+                </option>
+                <option
+                  value="f"
+                  onClick={(e) => {
+                    changeSet(e);
+                    setSetOptions(!setOptions);
+                  }}
+                >
+                  Failure
+                </option>
+              </div>
+              {sets?.map((set, setId) => (
+                <li key={setId} className="workout-form__item">
+                  <button type="button" onClick={() => handleDeleteSet(setId)}>
+                    <HiOutlineTrash />
+                  </button>
                   <div className="workout-form__label-input">
-                    <label htmlFor="set">Set</label>
-                    <span className="workout-form__input">{set}</span>
+                    <span>Set</span>
+                    <CustomButton
+                      title={set}
+                      containerStyles="workout-form__input"
+                      handleClick={() => {
+                        setSetOptions(!setOptions);
+                        setSetIndex(setId);
+                      }}
+                    />
                   </div>
                 </li>
               ))}
@@ -88,6 +180,8 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
                       type="number"
                       name="lbs"
                       id="lbs"
+                      defaultValue={`${lb ? lb : 0}`}
+                      placeholder={`${lb}`}
                       className="workout-form__input"
                       required
                     />
@@ -105,6 +199,8 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
                       type="number"
                       name="reps"
                       id="reps"
+                      defaultValue={`${rep ? rep : 0}`}
+                      placeholder={`${rep}`}
                       className="workout-form__input"
                       required
                     />

@@ -4,7 +4,12 @@ import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
 import { CustomButton, Button } from "@/components";
-import { updateWorkout, changeWorkoutSet, deleteSet } from "@/actions";
+import {
+  updateWorkout,
+  changeWorkoutSet,
+  deleteSet,
+  deleteWorkout,
+} from "@/actions";
 import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi";
 
