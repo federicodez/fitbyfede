@@ -29,34 +29,41 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model User {
+  id              String           @id @default(uuid())
+  name            String?
+  email           String?          @unique
+  hashedPassword  String?
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  workouts        Workout[]
+  workoutSessions WorkoutSession[]
 }
 
-model User {
-  id             String    @id @default(uuid())
-  name           String?
-  email          String?   @unique
-  hashedPassword String?
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  workouts       Workout[]
+model WorkoutSession {
+  id         String    @id @default(uuid())
+  createdAt  DateTime  @default(now())
+
+  workoutIds String[]
+  workouts   Workout[]
+
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Workout {
-  id        String   @id @default(uuid())
-  exercise  String
-  sets      String[]
-  lbs       Int[]
-  reps      Int[]
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String          @id @default(uuid())
+  exercise         String
+  sets             String[]
+  lbs              Int[]
+  reps             Int[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workoutSessionId String         
+  workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
 }
