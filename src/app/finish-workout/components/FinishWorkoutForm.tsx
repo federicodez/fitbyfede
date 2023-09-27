@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, EventHandler } from "react";
 import { useRouter } from "next/navigation";
 import { CustomButton } from "@/components";
-import { type Workout } from "@/types";
+import { Workout } from "@prisma/client";
 import {
   changeWorkoutSet,
+  deleteSession,
   deleteSet,
   deleteWorkout,
   updateWorkout,
@@ -14,17 +15,24 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi2";
 
 type FinishWorkoutFormProps = {
-  workout: Workout;
+  sessionId: string;
+  items: Workout[];
 };
 
-const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
+const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
+  const [workouts, setWorkouts] = useState(items);
   const [setOptions, setSetOptions] = useState(false);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { id, exercise, sets, lbs, reps } = workout;
   const router = useRouter();
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (id: string, data: FormData) => {
+    console.log("firing");
+    const workout = workouts.filter((workout) =>
+      workout.id === id ? workout : null,
+    );
+    const { sets, lbs, reps } = workout[0];
+
     const dataLbs = data.getAll("lbs")?.valueOf();
     Object.values(dataLbs).map((lb) => {
       lbs?.push(Number(lb));
@@ -45,7 +53,12 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
     }
   };
 
-  const addSet = async () => {
+  const addSet = async (id: string) => {
+    const workout = workouts.filter((workout) =>
+      workout.id === id ? workout : null,
+    );
+
+    const { sets, lbs, reps } = workout[0];
     try {
       const lastSet = sets[sets.length - 1];
       if (!!Number(lastSet)) {
@@ -64,7 +77,11 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
     }
   };
 
-  const changeSet = async (e: MouseEvent) => {
+  const changeSet = async (id: string, e: MouseEvent) => {
+    const workout = workouts.filter((workout) =>
+      workout.id === id ? workout : null,
+    );
+    const { sets } = workout[0];
     const { target } = e;
     if (target) {
       const set = (target as HTMLButtonElement).value;
@@ -85,7 +102,11 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
     }
   };
 
-  const handleDeleteSet = async (setId: number) => {
+  const handleDeleteSet = async (id: string, setId: number) => {
+    const workout = workouts.filter((workout) =>
+      workout.id === id ? workout : null,
+    );
+    const { sets, lbs, reps } = workout[0];
     sets.splice(setId, 1);
     lbs.splice(setId, 1);
     reps.splice(setId, 1);
@@ -103,16 +124,20 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
   };
 
   const removeWorkout = async () => {
-    await deleteWorkout(id);
+    await deleteSession(sessionId);
     setIsLoading(true);
     router.push("/workouts");
   };
 
   return (
-    <>
+    <div className="wrapper container">
       {isLoading && <LoadingModel />}
-      <div className="wrapper container">
-        <form action={handleSubmit} className="workout-form">
+      {workouts?.map(({ id, exercise, sets, lbs, reps }) => (
+        <form
+          key={id}
+          action={(data) => handleSubmit(id, data)}
+          className="workout-form"
+        >
           <h1 className="workout-form__title">{exercise}</h1>
           <div className="workout-form__container">
             <ul className="workout-form__list" id="sets-list">
@@ -127,7 +152,7 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
                 <option
                   value="w"
                   onClick={(e) => {
-                    changeSet(e);
+                    changeSet(id, e);
                     setSetOptions(!setOptions);
                   }}
                 >
@@ -136,7 +161,7 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
                 <option
                   value="d"
                   onClick={(e) => {
-                    changeSet(e);
+                    changeSet(id, e);
                     setSetOptions(!setOptions);
                   }}
                 >
@@ -145,7 +170,7 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
                 <option
                   value="f"
                   onClick={(e) => {
-                    changeSet(e);
+                    changeSet(id, e);
                     setSetOptions(!setOptions);
                   }}
                 >
@@ -154,7 +179,10 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
               </div>
               {sets?.map((set, setId) => (
                 <li key={setId} className="workout-form__item">
-                  <button type="button" onClick={() => handleDeleteSet(setId)}>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteSet(id, setId)}
+                  >
                     <HiOutlineTrash />
                   </button>
                   <div className="workout-form__label-input">
@@ -213,20 +241,28 @@ const FinishWorkoutForm = ({ workout }: FinishWorkoutFormProps) => {
             <CustomButton
               title="Add Set"
               containerStyles="workout-form__add-btn"
-              handleClick={addSet}
-            />
-            <button type="submit" className="workout-form__submit-btn">
-              Create Workout
-            </button>
-            <CustomButton
-              title="Cancel Workout"
-              containerStyles="workout-form__cancel-btn"
-              handleClick={removeWorkout}
+              handleClick={() => addSet(id)}
             />
           </div>
         </form>
+      ))}
+
+      <div className="workout-form__btn">
+        <button type="submit" className="workout-form__submit-btn">
+          Create Workout
+        </button>
+        <CustomButton
+          title="Create Workout"
+          containerStyles="workout-form__submit-btn"
+          handleClick={handleSubmit}
+        />
+        <CustomButton
+          title="Cancel Workout"
+          containerStyles="workout-form__cancel-btn"
+          handleClick={removeWorkout}
+        />
       </div>
-    </>
+    </div>
   );
 };
 
