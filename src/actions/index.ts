@@ -218,6 +218,16 @@ export const getCurrentUser = async () => {
   }
 };
 
+export const deleteSession = async (sessionId: string) => {
+  try {
+    await prisma.workoutSession.delete({
+      where: { id: sessionId },
+    });
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
 export const deleteWorkout = async (id: string) => {
   try {
     await prisma.workout.delete({ where: { id } });
