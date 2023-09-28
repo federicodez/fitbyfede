@@ -51,6 +51,39 @@ export const updateWorkout = async (
   }
 };
 
+export const updateWorkoutReps = async (id: string, reps: number[]) => {
+  try {
+    await prisma.workout.update({
+      where: { id },
+      data: { reps },
+    });
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const updateWorkoutWeight = async (id: string, lbs: number[]) => {
+  try {
+    await prisma.workout.update({
+      where: { id },
+      data: { lbs },
+    });
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const updateWorkoutSets = async (id: string, sets: string[]) => {
+  try {
+    await prisma.workout.update({
+      where: { id },
+      data: { sets },
+    });
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
 export const changeWorkoutSet = async (id: string, sets: string[]) => {
   try {
     await prisma.workout.update({
