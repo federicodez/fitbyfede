@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { exercises } from "@/constants";
-import { createExercise } from "@/actions";
+import { createExercise, createWorkoutSession } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
@@ -21,11 +21,13 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
 
   const handleClick = async (exercise: string) => {
     try {
-      const workout = await createExercise(exercise);
-      console.log("workout: ", workout);
-      if (workout) {
-        setIsLoading(true);
-        router.push(`/finish-workout/${workout.id}`);
+      const session = await createWorkoutSession();
+      if (session?.id) {
+        const workout = await createExercise(exercise, session);
+        if (workout) {
+          setIsLoading(true);
+          router.push(`/finish-workout/${workout.id}`);
+        }
       }
     } catch (error) {
       console.log(error);
