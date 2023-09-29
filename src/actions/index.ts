@@ -202,6 +202,7 @@ export const createWorkout = async (
   sets: string[],
   lbs: number[],
   reps: number[],
+  session: WorkoutSession,
 ) => {
   try {
     const currentUser = await getCurrentUser();
@@ -217,6 +218,7 @@ export const createWorkout = async (
         lbs: lbs,
         reps: reps,
         userId: currentUser.id,
+        workoutSessionId: session.id,
       },
     });
 

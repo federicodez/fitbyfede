@@ -6,6 +6,8 @@ import { createWorkout } from "@/actions";
 import { CustomButton } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { WorkoutSession } from "@prisma/client";
+import { createWorkoutSession } from "@/actions";
 
 const CreateWorkoutForm = () => {
   const [exercise, setExercise] = useState("");
@@ -40,8 +42,12 @@ const CreateWorkoutForm = () => {
     setReps([...reps]);
 
     try {
-      await createWorkout(exercise, sets, lbs, reps);
-      router.push("/workouts");
+      const session = await createWorkoutSession();
+
+      if (session?.id) {
+        await createWorkout(exercise, sets, lbs, reps, session);
+        router.push("/workouts");
+      }
     } catch (error) {
       console.log(error);
     }
