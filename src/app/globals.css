@@ -214,13 +214,12 @@ p {
 
 .workout-form__container {
   display: grid;
-  grid-template-columns: repeat(3, 250px);
+  grid-template-columns: repeat(3, auto);
   gap: 1rem;
 
   .workout-form__item {
     display: flex;
     flex-direction: row;
-    /* margin-left: 1rem; */
 
     .workout-form__label-input {
       margin-left: auto;

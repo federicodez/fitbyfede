@@ -6,11 +6,7 @@ const EditWorkout = async ({ params }: { params: { id: string } }) => {
 
   try {
     const workout = await getWorkoutById(id);
-    return workout ? (
-      <EditWorkoutForm workout={workout} />
-    ) : (
-      <p className="pt-50">No current workouts</p>
-    );
+    return workout ? <EditWorkoutForm workout={workout} /> : null;
   } catch (err) {
     console.log(err);
   }

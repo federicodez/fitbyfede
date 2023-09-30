@@ -1,17 +1,31 @@
 import { useState, MouseEvent } from "react";
 import { CustomButton } from "@/components";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 type SetFormProps = {
   id: string;
   sets: string[];
+  setIndex: number;
+  setSetIndex: (setIndex: number) => void;
   changeSet: (id: string, e: MouseEvent) => void;
   handleDeleteSet: (id: string, setId: number) => void;
 };
 
-const SetForm = ({ id, sets, changeSet, handleDeleteSet }: SetFormProps) => {
+const SetForm = ({
+  id,
+  sets,
+  setIndex,
+  setSetIndex,
+  changeSet,
+  handleDeleteSet,
+}: SetFormProps) => {
   const [setOptions, setSetOptions] = useState(false);
-  const [setIndex, setSetIndex] = useState<number>(0);
+  const { register, control } = useFormContext();
+  const { fields, append, remove } = useFieldArray({
+    name: "workout",
+    control,
+  });
 
   return (
     <ul className="workout-form__list" id="sets-list">
