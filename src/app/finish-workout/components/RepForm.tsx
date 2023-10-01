@@ -2,12 +2,15 @@ import { Workout } from "@prisma/client";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 type RepFormProps = {
-  id: string;
+  workoutIndex: number;
 };
 
-const RepForm = ({ id }: RepFormProps) => {
+const RepForm = ({ workoutIndex }: RepFormProps) => {
   const { register, control } = useFormContext();
-  const { fields, append } = useFieldArray({ name: "workout", control });
+  const { fields } = useFieldArray({
+    name: `workouts.${workoutIndex}.reps`,
+    control,
+  });
   return (
     <ul className="workout-form__list">
       {fields?.map((field, index) => (
@@ -16,7 +19,10 @@ const RepForm = ({ id }: RepFormProps) => {
             <label htmlFor="reps">Reps: </label>
             <input
               type="number"
-              {...register(`workout.${index}.rep`, { valueAsNumber: true })}
+              placeholder="0"
+              {...register(`workouts.${workoutIndex}.reps.${index}` as const, {
+                valueAsNumber: true,
+              })}
               className="workout-form__input"
             />
           </div>

@@ -4,81 +4,29 @@ import { HiOutlineTrash } from "react-icons/hi2";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 type SetFormProps = {
-  id: string;
-  sets: string[];
-  setIndex: number;
-  setSetIndex: (setIndex: number) => void;
-  changeSet: (id: string, e: MouseEvent) => void;
-  handleDeleteSet: (id: string, setId: number) => void;
+  workoutIndex: number;
 };
 
-const SetForm = ({
-  id,
-  sets,
-  setIndex,
-  setSetIndex,
-  changeSet,
-  handleDeleteSet,
-}: SetFormProps) => {
-  const [setOptions, setSetOptions] = useState(false);
+const SetForm = ({ workoutIndex }: SetFormProps) => {
   const { register, control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
-    name: "workout",
+    name: `workouts.${workoutIndex}.sets`,
     control,
   });
 
   return (
     <ul className="workout-form__list" id="sets-list">
-      <div
-        onMouseLeave={() => setSetOptions(!setOptions)}
-        className={
-          setOptions
-            ? "absolute bg-gray-800 text-white ml-20 px-2 rounded-lg"
-            : "hidden"
-        }
-      >
-        <option
-          value="w"
-          onClick={(e) => {
-            changeSet(id, e);
-            setSetOptions(!setOptions);
-          }}
-        >
-          Warm-up
-        </option>
-        <option
-          value="d"
-          onClick={(e) => {
-            changeSet(id, e);
-            setSetOptions(!setOptions);
-          }}
-        >
-          Drop Set
-        </option>
-        <option
-          value="f"
-          onClick={(e) => {
-            changeSet(id, e);
-            setSetOptions(!setOptions);
-          }}
-        >
-          Failure
-        </option>
-      </div>
-      {sets?.map((set, setId) => (
-        <li key={setId} className="workout-form__item">
-          <button type="button" onClick={() => handleDeleteSet(id, setId)}>
+      {fields?.map((field, index) => (
+        <li key={field.id} className="workout-form__item">
+          <button type="button" onClick={() => {}}>
             <HiOutlineTrash />
           </button>
           <div className="workout-form__label-input">
             <span>Set</span>
-            <CustomButton
-              title={set}
-              containerStyles="workout-form__input"
-              handleClick={() => {
-                setSetOptions(!setOptions);
-                setSetIndex(setId);
-              }}
+            <input
+              type="string"
+              {...register(`workouts.${workoutIndex}.sets.${index}` as const)}
+              className="workout-form__input"
             />
           </div>
         </li>

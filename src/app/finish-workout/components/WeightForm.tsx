@@ -1,22 +1,31 @@
 import { Workout } from "@prisma/client";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 
 type WeightFormProps = {
-  id: string;
+  workoutIndex: number;
 };
 
-const WeightForm = ({ id }: WeightFormProps) => {
+const WeightForm = ({ workoutIndex }: WeightFormProps) => {
   const { register, control } = useFormContext();
-  const { fields, append } = useFieldArray({ name: "workout", control });
+  const { fields, append, remove } = useFieldArray({
+    name: `workouts.${workoutIndex}.lbs`,
+    control,
+  });
+
+  fields.map((field) => console.log(field));
   return (
     <ul className="workout-form__list">
-      {fields.map((field, index) => (
+      {fields?.map((field, index) => (
         <li key={field.id} className="workout-form__item">
           <div className="workout-form__label-input">
             <label htmlFor="lbs">Weight (lbs): </label>
             <input
               type="number"
-              {...register(`workout.${index}.lb`, { valueAsNumber: true })}
+              placeholder="0"
+              {...register(`workouts.${workoutIndex}.lbs.${index}` as const, {
+                valueAsNumber: true,
+              })}
+              name="lbs"
               className="workout-form__input"
             />
           </div>

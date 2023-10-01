@@ -22,36 +22,28 @@ type FinishWorkoutFormProps = {
 };
 
 type FormValues = {
-  workout: {
+  workouts: {
+    set: number;
     lb: number;
     rep: number;
   }[];
 };
 
-const defaultValues = {
-  workout: [{ lb: 0, rep: 0 }],
-};
-
 const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
-  const [workouts, setWorkouts] = useState(items);
-  const [weights, setWeights] = useState([{ id: "", lb: "" }]);
-  const [repititions, setRepititions] = useState<number[]>([]);
-  const [setIndex, setSetIndex] = useState<number>(0);
+  // const [workouts, setWorkouts] = useState(items);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const methods = useForm<FormValues>({ defaultValues });
-  const {
-    control,
-    formState: { errors },
-  } = useForm({ defaultValues });
-  const { fields, append } = useFieldArray({ name: "workout", control });
-
-  // const onSubmit = async (data) => {
-  // const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
-  // setWeights({ ...dataLbs });
-  // console.log({ weights });
-  // console.log(workouts);
-  // };
+  const workouts = items.map(({ exercise, sets, lbs, reps }, index) => ({
+    sets,
+    lbs,
+    reps,
+  }));
+  const { register, control, handleSubmit } = useForm({
+    defaultValues: { workouts },
+  });
+  // const { control, watch, register } = methods;
+  const { fields, append } = useFieldArray({ control, name: "workouts" });
+  // console.log("workouts: ", watch("workouts"));
 
   const addSet = async (id: string) => {
     const workout = workouts.filter((workout) =>
@@ -132,52 +124,64 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
   return (
     <div className="wrapper container">
       {isLoading && <LoadingModel />}
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit((data) => console.log(data))}>
-          <ul className="workout-form__list">
-            {workouts?.map(({ id, exercise, sets }) => (
-              <li key={id} className="workout-form__item">
-                <h1 className="workout-form__title">{exercise}</h1>
-                <div className="workout-form__container">
-                  <div className="workout-form__label-input grid grid-cols-3 gap-4">
-                    <SetForm
-                      {...methods}
-                      id={id}
-                      sets={sets}
-                      setIndex={setIndex}
-                      setSetIndex={setSetIndex}
-                      changeSet={changeSet}
-                      handleDeleteSet={handleDeleteSet}
-                    />
-                    <WeightForm {...methods} id={id} />
-                    <RepForm {...methods} id={id} />
-                  </div>
+      <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <ul className="workout-form__list">
+          {fields?.map((workout, index) => (
+            <li key={workout.id} className="workout-form__item">
+              <h1 className="workout-form__title">{items[index].exercise}</h1>
+              <div className="workout-form__container">
+                <div className="workout-form__label-input grid grid-cols-3 gap-4">
+                  <label htmlFor="sets">Set</label>
+                  <input
+                    type="string"
+                    {...register(`workouts.${index}.sets` as const)}
+                    className="workout-form__input"
+                  />
+                  <label htmlFor="lbs">Weight (lbs): </label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    {...register(`workouts.${index}.lbs` as const, {
+                      valueAsNumber: true,
+                    })}
+                    name="lbs"
+                    className="workout-form__input"
+                  />
+                  <label htmlFor="reps">Reps: </label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    {...register(`workouts.${index}.reps` as const, {
+                      valueAsNumber: true,
+                    })}
+                    className="workout-form__input"
+                  />
                 </div>
-                <div className="workout-form__btn">
-                  <button
-                    type="button"
-                    className="workout-form__add-btn"
-                    onClick={() => append({ lb: 0, rep: 0 })}
-                  >
-                    Add Set
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <div className="workout-form__btn">
+                <button
+                  type="button"
+                  onClick={() => append({ sets: ["0"], lbs: [0], reps: [0] })}
+                  className="workout-form__add-btn"
+                >
+                  Add Set
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
 
-          <div className="workout-form__btn">
-            <button type="submit" className="workout-form__submit-btn">
-              Create Workout
-            </button>
-            <CustomButton
-              title="Cancel Workout"
-              containerStyles="workout-form__cancel-btn"
-              handleClick={removeWorkout}
-            />
-          </div>
-        </form>
-      </FormProvider>
+        <div className="workout-form__btn">
+          <button type="submit" className="workout-form__submit-btn">
+            Create Workout
+          </button>
+          <CustomButton
+            title="Cancel Workout"
+            containerStyles="workout-form__cancel-btn"
+            handleClick={removeWorkout}
+          />
+        </div>
+      </form>
     </div>
   );
 };
