@@ -42,12 +42,8 @@ const CreateWorkoutForm = () => {
     setReps([...reps]);
 
     try {
-      const session = await createWorkoutSession();
-
-      if (session?.id) {
-        await createWorkout(exercise, sets, lbs, reps, session);
-        router.push("/workouts");
-      }
+      await createWorkout(exercise, sets, lbs, reps);
+      router.push("/workouts");
     } catch (error) {
       console.log(error);
     }
