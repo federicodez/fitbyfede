@@ -1,18 +1,13 @@
-import { getWorkoutById, getWorkoutsBySessionId } from "@/actions";
-import FinishWorkoutForm from "../components/FinishWorkoutForm";
+import { getWorkoutsBySessionId } from "@/actions";
+import WorkoutList from "../components/WorkoutList";
 
 const FinishWorkout = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   try {
-    // const workout = await getWorkoutById(id);
     const workouts = await getWorkoutsBySessionId(id);
 
-    return workouts ? (
-      <>
-        <FinishWorkoutForm sessionId={id} items={workouts} />
-      </>
-    ) : null;
+    return workouts ? <WorkoutList sessionId={id} items={workouts} /> : null;
   } catch (error) {
     console.log(error);
   }

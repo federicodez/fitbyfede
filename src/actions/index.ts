@@ -210,6 +210,12 @@ export const createWorkout = async (
       return null;
     }
 
+    const session = await prisma.workoutSession.create({
+      data: {
+        userId: currentUser.id,
+      },
+    });
+
     const workout = await prisma.workout.create({
       data: {
         exercise: exercise,
@@ -217,6 +223,7 @@ export const createWorkout = async (
         lbs: lbs,
         reps: reps,
         userId: currentUser.id,
+        workoutSessionId: session.id,
       },
     });
 

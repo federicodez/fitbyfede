@@ -7,12 +7,12 @@ type WeightFormProps = {
 
 const WeightForm = ({ workoutIndex }: WeightFormProps) => {
   const { register, control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
-    name: `workouts.${workoutIndex}.lbs`,
+  const { fields } = useFieldArray({
+    name: `lbs`,
     control,
   });
 
-  fields.map((field) => console.log(field));
+  fields.map((field) => console.log({ field }));
   return (
     <ul className="workout-form__list">
       {fields?.map((field, index) => (
@@ -22,7 +22,7 @@ const WeightForm = ({ workoutIndex }: WeightFormProps) => {
             <input
               type="number"
               placeholder="0"
-              {...register(`workouts.${workoutIndex}.lbs.${index}` as const, {
+              {...register(`lbs[${index}]` as const, {
                 valueAsNumber: true,
               })}
               name="lbs"
