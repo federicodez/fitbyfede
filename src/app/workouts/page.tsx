@@ -1,11 +1,16 @@
-import { getWorkouts } from "@/actions";
+import {
+  getWorkouts,
+  getAllWorkoutSessions,
+  getWorkoutsBySessionId,
+} from "@/actions";
 import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 
 const Workouts = async () => {
   try {
     const workouts = await getWorkouts();
-    return workouts ? <WorkoutList items={workouts} /> : <EmptyState />;
+
+    return workouts?.length ? <WorkoutList items={workouts} /> : <EmptyState />;
   } catch (err) {
     console.log(err);
   }

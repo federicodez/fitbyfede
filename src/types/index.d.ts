@@ -25,4 +25,5 @@ export type Workout = {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  workoutSessionId: string;
 };

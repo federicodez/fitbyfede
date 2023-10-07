@@ -2,7 +2,7 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { WorkoutSession } from "@prisma/client";
+import { WorkoutSession, Workout } from "@prisma/client";
 
 export const getWorkouts = async () => {
   try {
@@ -48,39 +48,6 @@ export const updateWorkout = async (
     return updated;
   } catch (error) {
     console.log(error);
-  }
-};
-
-export const updateWorkoutReps = async (id: string, reps: number[]) => {
-  try {
-    await prisma.workout.update({
-      where: { id },
-      data: { reps },
-    });
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
-export const updateWorkoutWeight = async (id: string, lbs: number[]) => {
-  try {
-    await prisma.workout.update({
-      where: { id },
-      data: { lbs },
-    });
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
-export const updateWorkoutSets = async (id: string, sets: string[]) => {
-  try {
-    await prisma.workout.update({
-      where: { id },
-      data: { sets },
-    });
-  } catch (err: any) {
-    console.log(err);
   }
 };
 
@@ -134,6 +101,30 @@ export const createWorkoutSession = async () => {
     return session;
   } catch (err: any) {
     console.log(err);
+  }
+};
+
+export const getAllWorkoutSessions = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+
+    const sessions = prisma.workoutSession.findMany({
+      where: {
+        userId: currentUser.id,
+      },
+    });
+
+    if (!sessions) {
+      return null;
+    }
+
+    return sessions;
+  } catch (error) {
+    console.log(error);
   }
 };
 

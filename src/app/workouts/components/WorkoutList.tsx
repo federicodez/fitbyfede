@@ -6,65 +6,71 @@ import WorkoutCard from "./WorkoutCard";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
-import { type Workout } from "@/types";
 import { exampleWorkout } from "@/constants";
+import { WorkoutSession } from "@prisma/client";
+import { Workout } from "@/types";
 
 type WorkoutListProps = {
   items: Workout[];
 };
 
-const WorkoutList = ({ items }: WorkoutListProps) => {
-  const [workouts, setWorkouts] = useState(items);
+type SortedWorkouts = {
+  sessionId: {
+    workouts: Workout[];
+  }[];
+};
 
-  return workouts?.length ? (
+type Groups = {
+  [key: string]: Workout[];
+};
+
+const WorkoutList = ({ items }: WorkoutListProps) => {
+  const [workouts, setWorkouts] = useState<Workout[]>(items);
+  // const sorted = items.reduce((groups: Groups, workout: Workout) => {
+  //   if (!groups[workout.workoutSessionId])
+  //     groups[workout.workoutSessionId] = [];
+  //
+  //   groups[workout.workoutSessionId].push(workout);
+  //   return groups;
+  // }, {} as Groups);
+  // const sortedWorkouts = Object.values(sorted);
+  // sortedWorkouts.map((items) => console.log(items));
+
+  return (
     <section>
       <Link href="/search-workout" className="home-link">
         Start a Workout
       </Link>
       <ul className="workoutlist">
-        {workouts?.map(({ id, exercise, sets, lbs, reps, createdAt }) => (
-          <li key={id} className="container workoutlist-item">
-            <div className="workoutlist-btn">
-              <RemoveBtn id={id} setWorkouts={setWorkouts} />
-              <Link href={`/edit-workout/${id}`}>
-                <HiPencilAlt className="workoutlist__edit-btn" />
-              </Link>
-            </div>
-            <div className="workoutlist-date">
-              {moment(createdAt).format("dddd, MMM Do")}
-            </div>
-            <div className="workoutlist-exercise">
-              <strong>{exercise}</strong>
-            </div>
-            <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
-          </li>
-        ))}
-      </ul>
-    </section>
-  ) : (
-    <section>
-      <h1 className="home-title">Start Workout</h1>
-      <Link href="/search-workout" className="home-link">
-        Start an Empty Workout
-      </Link>
-      <ul className="workoutlist">
-        {exampleWorkout?.map(({ id, exercise, sets, lbs, reps, createdAt }) => (
-          <li key={id} className="container workoutlist-item">
-            <div className="workoutlist-btn">
-              <RemoveBtn setWorkouts={setWorkouts} id={id} />
-              <Link href={`/edit-workout/${id}`}>
-                <HiPencilAlt />
-              </Link>
-            </div>
-            <div className="workoutlist-date">
-              {moment(createdAt).format("dddd, MMM Do")}
-            </div>
-            <div className="workoutlist-exercise">
-              <strong>{exercise}</strong>
-            </div>
-            <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
-          </li>
-        ))}
+        {workouts?.length
+          ? workouts.map(({ id, exercise, sets, lbs, reps, createdAt }) => (
+              <li key={id} className="container workoutlist-item">
+                <WorkoutCard
+                  id={id}
+                  exercise={exercise}
+                  sets={sets}
+                  lbs={lbs}
+                  reps={reps}
+                  createdAt={createdAt}
+                  setWorkouts={setWorkouts}
+                />
+              </li>
+            ))
+          : exampleWorkout?.map(
+              ({ id, exercise, sets, lbs, reps, createdAt }) => (
+                <li key={id} className="container workoutlist-item">
+                  <WorkoutCard
+                    id={id}
+                    exercise={exercise[0]}
+                    sets={sets}
+                    lbs={lbs}
+                    reps={reps}
+                    createdAt={createdAt}
+                    setWorkouts={setWorkouts}
+                  />
+                </li>
+              ),
+            )}
       </ul>
     </section>
   );

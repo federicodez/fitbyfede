@@ -13,9 +13,9 @@ const RemoveBtn = ({ id, setWorkouts }: RemoveProps) => {
 
   const removeWorkout = async () => {
     await deleteWorkout(id);
-    const workouts = await getWorkouts();
-    if (workouts) {
-      setWorkouts(workouts);
+    const items = await getWorkouts();
+    if (items) {
+      setWorkouts(items);
     }
     router.refresh();
   };

@@ -58,7 +58,7 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
     <>
       {isLoading && <LoadingModel />}
       <div className="searchbar wrapper container">
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-between mt-8">
           <button type="button" className="text-[#03045e]" id="create-btn">
             <Link href="/create-workout">New</Link>
           </button>
