@@ -74,7 +74,7 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
 
   const changeSet = async (id: string, e: MouseEvent) => {
     const workout = workouts.filter((workout) => workout.id === id);
-    const { sets, lbs, reps } = workout[0];
+    const { sets } = workout[0];
     const { target } = e;
     if (target) {
       const set = (target as HTMLButtonElement).value;
