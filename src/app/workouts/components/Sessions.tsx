@@ -11,18 +11,18 @@ import moment from "moment";
 type SessionsProps = {
   ids: any[];
   exercises: {
-    id: string;
+    [key: string]: string;
   };
   sets: {
-    id: string[];
+    [key: string]: string[];
   };
   lbs: {
-    id: number[];
+    [key: string]: number[];
   };
   reps: {
-    id: number[];
+    [key: string]: number[];
   };
-  sessionId: string;
+  sessionId?: string;
 };
 
 const Sessions = ({
@@ -34,37 +34,42 @@ const Sessions = ({
   sessionId,
 }: SessionsProps) =>
   ids?.map((id: string, idIndex: number) => (
-    <div key={idIndex} className="workout-card wrapper">
+    <div key={idIndex} className="wrapper grid grid-cols-3 my-4">
+      <div className="grid col-span-3">
+        <strong>{exercises[id]}</strong>
+      </div>
       <ul className="workout-card-list">
-        <li className="workout-card-item">
-          <div className="workoutlist-exercise">
-            <strong>{exercises[id]}</strong>
-          </div>
-          <ul className="workout-card-list">
-            {sets[id]?.map((set: number, setIndex: number) => (
-              <li key={setIndex} className="workout-card-item">
-                <div className="workout-card__set-label">Set</div>
-                <div className="workout-card__set-id">{set}</div>
-              </li>
-            ))}
-          </ul>
-          <ul className="workout-card-list">
-            {lbs[id]?.map((lb: number, lbIndex: number) => (
-              <li key={lbIndex} className="workout-card-item">
-                <div className="workout-card__lb">{lb}</div>
-                <div className="workout-card__lbs-label">lbs</div>
-              </li>
-            ))}
-          </ul>
-          <ul className="workout-card-list">
-            {reps[id]?.map((rep: number, repIndex: number) => (
-              <li key={repIndex} className="workout-card-item">
-                <div className="workout-card__X">x</div>
-                <div className="workout-card__reps">{rep}</div>
-              </li>
-            ))}
-          </ul>
-        </li>
+        {sets[id]?.map((set: number, setIndex: number) => (
+          <li
+            key={setIndex}
+            className="workout-card-item flex justify-center items-center"
+          >
+            <div className="workout-card__set-label">Set</div>
+            <div className="workout-card__set-id">{set}</div>
+          </li>
+        ))}
+      </ul>
+      <ul className="workout-card-list">
+        {lbs[id]?.map((lb: number, lbIndex: number) => (
+          <li
+            key={lbIndex}
+            className="workout-card-item flex justify-center items-center"
+          >
+            <div className="workout-card__lb">{lb}</div>
+            <div className="workout-card__lbs-label">lbs</div>
+          </li>
+        ))}
+      </ul>
+      <ul className="workout-card-list">
+        {reps[id]?.map((rep: number, repIndex: number) => (
+          <li
+            key={repIndex}
+            className="workout-card-item flex justify-center items-center"
+          >
+            <div className="workout-card__X">x</div>
+            <div className="workout-card__reps">{rep}</div>
+          </li>
+        ))}
       </ul>
     </div>
   ));

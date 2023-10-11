@@ -8,17 +8,11 @@ import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
 import { exampleWorkout } from "@/constants";
-import { WorkoutSession } from "@prisma/client";
 import { Workout } from "@/types";
+import { HiOutlineTrash } from "react-icons/hi";
 
 type WorkoutListProps = {
   items: Workout[];
-};
-
-type SortedWorkouts = {
-  sessionId: {
-    workouts: Workout[];
-  }[];
 };
 
 type Groups = {
@@ -52,7 +46,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
     groups[workout.workoutSessionId].push(workout);
     return groups;
   }, {} as Groups);
-  const sortedWorkouts = Object.entries(sorted);
+  const sortedWorkouts = Object.values(sorted);
   const workoutSession = sortedWorkouts.map((workout) => {
     const session: Session = {
       ids: [],
@@ -61,7 +55,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
       lbs: {},
       reps: {},
     };
-    workout[1].map(
+    workout.map(
       ({ id, exercise, sets, lbs, reps, createdAt, workoutSessionId }) => {
         session.sessionId = workoutSessionId;
         session.ids.push(id);
@@ -74,7 +68,6 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
     );
     return session;
   });
-  console.log("session: ", workoutSession);
 
   return (
     <section>
@@ -85,7 +78,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         {workoutSession?.length
           ? workoutSession.map(
               ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
-                <li key={index} className="container workoutlist-item">
+                <li key={index} className="container wrapper workoutlist-item">
                   <div className="workoutlist-btn">
                     <RemoveBtn
                       ids={ids}
@@ -111,25 +104,11 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
               ),
             )
           : exampleWorkout?.map(
-              ({
-                id,
-                exercise,
-                sets,
-                lbs,
-                reps,
-                createdAt,
-                workoutSessionId,
-              }) => (
+              ({ id, exercise, sets, lbs, reps, createdAt }) => (
                 <li key={id} className="container workoutlist-item">
                   <div className="workoutlist-btn">
-                    <RemoveBtn
-                      setWorkouts={setWorkouts}
-                      id={id}
-                      workoutSessionId={workoutSessionId}
-                    />
-                    <Link href={`/edit-workout/${id}`}>
-                      <HiPencilAlt />
-                    </Link>
+                    <HiOutlineTrash />
+                    <HiPencilAlt />
                   </div>
                   <div className="workoutlist-date">
                     {moment(createdAt).format("dddd, MMM Do")}

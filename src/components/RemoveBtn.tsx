@@ -6,17 +6,19 @@ import { deleteWorkout, getWorkouts, deleteSession } from "@/actions";
 import { Workout } from "@/types";
 
 type RemoveProps = {
-  id: string;
+  ids: string[];
   setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
-  workoutSessionId: string;
+  sessionId?: string;
 };
 
-const RemoveBtn = ({ id, setWorkouts, workoutSessionId }: RemoveProps) => {
+const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
   const router = useRouter();
 
   const removeWorkout = async () => {
-    await deleteWorkout(id);
-    await deleteSession(workoutSessionId);
+    ids.map(async (id: string) => await deleteWorkout(id));
+    if (sessionId) {
+      await deleteSession(sessionId);
+    }
     const items = await getWorkouts();
     if (items) {
       setWorkouts(items);
