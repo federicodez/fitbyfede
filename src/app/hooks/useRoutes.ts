@@ -17,7 +17,7 @@ const useRoutes = () => {
         active: pathname === "/profile",
       },
       {
-        label: "Start Workout",
+        label: "Workouts",
         href: "/workouts",
         icon: GiWeightLiftingUp,
         active: pathname === "/workouts",
