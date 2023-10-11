@@ -9,12 +9,20 @@ import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
 
 type SessionsProps = {
-  ids: string[];
-  exercises: string[];
-  sets: string[];
-  lbs: number[];
-  reps: number[];
-  workoutSessionId: string;
+  ids: any[];
+  exercises: {
+    id: string;
+  };
+  sets: {
+    id: string[];
+  };
+  lbs: {
+    id: number[];
+  };
+  reps: {
+    id: number[];
+  };
+  sessionId: string;
 };
 
 const Sessions = ({
@@ -23,22 +31,42 @@ const Sessions = ({
   sets,
   lbs,
   reps,
-  workoutSessionId,
-}: SessionsProps) => {
-  return (
-    <>
+  sessionId,
+}: SessionsProps) =>
+  ids?.map((id: string, idIndex: number) => (
+    <div key={idIndex} className="workout-card wrapper">
       <ul className="workout-card-list">
-        {exercises?.map((exercise: string, id: number) => (
-          <li key={id} className="workout-card-item">
-            <div className="workoutlist-exercise">
-              <strong className="workout-card__set-id">{exercise}</strong>
-            </div>
-            <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
-          </li>
-        ))}
+        <li className="workout-card-item">
+          <div className="workoutlist-exercise">
+            <strong>{exercises[id]}</strong>
+          </div>
+          <ul className="workout-card-list">
+            {sets[id]?.map((set: number, setIndex: number) => (
+              <li key={setIndex} className="workout-card-item">
+                <div className="workout-card__set-label">Set</div>
+                <div className="workout-card__set-id">{set}</div>
+              </li>
+            ))}
+          </ul>
+          <ul className="workout-card-list">
+            {lbs[id]?.map((lb: number, lbIndex: number) => (
+              <li key={lbIndex} className="workout-card-item">
+                <div className="workout-card__lb">{lb}</div>
+                <div className="workout-card__lbs-label">lbs</div>
+              </li>
+            ))}
+          </ul>
+          <ul className="workout-card-list">
+            {reps[id]?.map((rep: number, repIndex: number) => (
+              <li key={repIndex} className="workout-card-item">
+                <div className="workout-card__X">x</div>
+                <div className="workout-card__reps">{rep}</div>
+              </li>
+            ))}
+          </ul>
+        </li>
       </ul>
-    </>
-  );
-};
+    </div>
+  ));
 
 export default Sessions;

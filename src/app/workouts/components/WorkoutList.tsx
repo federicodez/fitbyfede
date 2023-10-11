@@ -26,22 +26,22 @@ type Groups = {
 };
 
 type Session = {
-  sessionId: string;
-  ids: string[];
-  exercises: string[];
+  sessionId?: string;
+  date?: Date;
+  ids: any[];
+  exercises: {
+    [key: string]: string;
+  };
   sets: {
-    id: string;
-    sets: string[];
+    [key: string]: string[];
   };
   lbs: {
-    id: string;
-    lbs: number[];
+    [key: string]: number[];
   };
   reps: {
-    id: string;
-    lbs: number[];
+    [key: string]: number[];
   };
-}[];
+};
 
 const WorkoutList = ({ items }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState(items);
@@ -55,10 +55,8 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
   const sortedWorkouts = Object.entries(sorted);
   const workoutSession = sortedWorkouts.map((workout) => {
     const session: Session = {
-      sessionId: "",
       ids: [],
-      date: "",
-      exercises: [],
+      exercises: {},
       sets: {},
       lbs: {},
       reps: {},
@@ -68,15 +66,15 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         session.sessionId = workoutSessionId;
         session.ids.push(id);
         session.date = createdAt;
-        session.exercises.push(exercise);
-        session.sets[id].push(sets);
-        session.lbs[id].push(lbs);
-        session.reps[id].push(reps);
+        session.exercises[id] = exercise;
+        session.sets[id] = [...sets];
+        session.lbs[id] = [...lbs];
+        session.reps[id] = [...reps];
       },
     );
     return session;
   });
-  console.log(workoutSession);
+  console.log("session: ", workoutSession);
 
   return (
     <section>
@@ -86,18 +84,15 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
       <ul className="workoutlist">
         {workoutSession?.length
           ? workoutSession.map(
-              (
-                { ids, exercises, sets, lbs, reps, date, workoutSessionId },
-                index,
-              ) => (
+              ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
                 <li key={index} className="container workoutlist-item">
                   <div className="workoutlist-btn">
                     <RemoveBtn
                       ids={ids}
-                      workoutSessionId={workoutSessionId}
+                      sessionId={sessionId}
                       setWorkouts={setWorkouts}
                     />
-                    <Link href={`/edit-workout/${workoutSessionId}`}>
+                    <Link href={`/edit-workout/${sessionId}`}>
                       <HiPencilAlt className="workoutlist__edit-btn" />
                     </Link>
                   </div>
@@ -110,7 +105,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                     sets={sets}
                     lbs={lbs}
                     reps={reps}
-                    workoutSessionId={workoutSessionId}
+                    sessionId={sessionId}
                   />
                 </li>
               ),
