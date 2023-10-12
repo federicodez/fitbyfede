@@ -23,6 +23,12 @@ const useRoutes = () => {
         active: pathname === "/workouts",
       },
       {
+        label: "Exercises",
+        href: "/exercises",
+        icon: GiStrongMan,
+        active: pathname == "/exercises",
+      },
+      {
         label: "Logout",
         onClick: () => signOut(),
         href: "#",

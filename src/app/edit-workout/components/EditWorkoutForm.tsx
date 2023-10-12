@@ -3,7 +3,7 @@
 import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
-import { CustomButton } from "@/components";
+import { CustomButton, SetOptions } from "@/components";
 import {
   updateWorkout,
   changeWorkoutSet,
@@ -159,6 +159,12 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
                       <HiOutlineTrash />
                     </button>
                     <div className="workout-form__label-input">
+                      <SetOptions
+                        id={id}
+                        setOptions={setOptions}
+                        setSetOptions={setSetOptions}
+                        changeSet={changeSet}
+                      />
                       <span>Set</span>
                       <CustomButton
                         title={set}
@@ -173,42 +179,6 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
                 ))}
               </ul>
 
-              <div
-                onMouseLeave={() => setSetOptions(null)}
-                className={
-                  setOptions === id
-                    ? `absolute bg-gray-800 text-white ml-20 px-2 rounded-lg`
-                    : "hidden"
-                }
-              >
-                <option
-                  value="w"
-                  onClick={(e) => {
-                    changeSet(id, e);
-                    setSetOptions(null);
-                  }}
-                >
-                  Warm-up
-                </option>
-                <option
-                  value="d"
-                  onClick={(e) => {
-                    changeSet(id, e);
-                    setSetOptions(null);
-                  }}
-                >
-                  Drop Set
-                </option>
-                <option
-                  value="f"
-                  onClick={(e) => {
-                    changeSet(id, e);
-                    setSetOptions(null);
-                  }}
-                >
-                  Failure
-                </option>
-              </div>
               <ul className="workout-form__list" id="lbs-list">
                 {lbs?.map((lb, id) => (
                   <li key={id} className="workout-form__item">
