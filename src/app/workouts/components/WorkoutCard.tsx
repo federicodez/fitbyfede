@@ -8,14 +8,12 @@ const WorkoutCard = ({ sets, lbs, reps }: WorkoutCardProps) => {
   return (
     <div className="workout-card wrapper">
       <ul className="workout-card-list">
-        {sets?.map((set: string, id: number) =>
-          set.map((s, id) => (
-            <li key={id} className="workout-card-item">
-              <div className="workout-card__set-id">{s}</div>
-              <div className="workout-card__lbs-label">lbs</div>
-            </li>
-          )),
-        )}
+        {sets?.map((set: string, idx: number) => (
+          <li key={idx} className="workout-card-item">
+            <div className="workout-card__set-id">{set}</div>
+            <div className="workout-card__lbs-label">lbs</div>
+          </li>
+        ))}
       </ul>
       <ul className="workout-card-list">
         {lbs?.map((lb: number, id: number) => (

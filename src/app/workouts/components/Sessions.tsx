@@ -1,13 +1,3 @@
-"use client";
-
-import { useState } from "react";
-import { RemoveBtn } from "@/components";
-import WorkoutCard from "./WorkoutCard";
-import { Workout } from "@/types";
-import Link from "next/link";
-import { HiPencilAlt } from "react-icons/hi";
-import moment from "moment";
-
 type SessionsProps = {
   ids: any[];
   exercises: {
@@ -25,24 +15,17 @@ type SessionsProps = {
   sessionId?: string;
 };
 
-const Sessions = ({
-  ids,
-  exercises,
-  sets,
-  lbs,
-  reps,
-  sessionId,
-}: SessionsProps) =>
+const Sessions = ({ ids, exercises, sets, lbs, reps }: SessionsProps) =>
   ids?.map((id: string, idIndex: number) => (
     <div key={idIndex} className="wrapper grid grid-cols-3 my-4">
-      <div className="grid col-span-3">
+      <div className="grid col-span-3 my-2">
         <strong>{exercises[id]}</strong>
       </div>
       <ul className="workout-card-list">
-        {sets[id]?.map((set: number, setIndex: number) => (
+        {sets[id]?.map((set: string, setIndex: number) => (
           <li
             key={setIndex}
-            className="workout-card-item flex justify-center items-center"
+            className="workout-card-item flex justify-end items-center"
           >
             <div className="workout-card__set-label">Set</div>
             <div className="workout-card__set-id">{set}</div>
@@ -64,7 +47,7 @@ const Sessions = ({
         {reps[id]?.map((rep: number, repIndex: number) => (
           <li
             key={repIndex}
-            className="workout-card-item flex justify-center items-center"
+            className="workout-card-item flex justify-start items-center"
           >
             <div className="workout-card__X">x</div>
             <div className="workout-card__reps">{rep}</div>

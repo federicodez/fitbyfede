@@ -98,7 +98,6 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                     sets={sets}
                     lbs={lbs}
                     reps={reps}
-                    sessionId={sessionId}
                   />
                 </li>
               ),

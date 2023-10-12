@@ -137,11 +137,15 @@ p {
 
 .workoutlist-btn {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
-.remove-btn:active {
-  background: #d90429;
+.remove-btn {
+  font-size: 1.5rem;
+}
+
+.workoutlist__edit-btn {
+  font-size: 1.5rem;
 }
 
 .searchbar-form {

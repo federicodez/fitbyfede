@@ -4,9 +4,15 @@ import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { type Workout } from "@/types";
 import { CustomButton } from "@/components";
-import { updateWorkout, changeWorkoutSet, deleteSet } from "@/actions";
+import {
+  updateWorkout,
+  changeWorkoutSet,
+  deleteSet,
+  updateWorkoutWithDate,
+} from "@/actions";
 import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi";
+import { SlOptions } from "react-icons/sl";
 import moment from "moment";
 
 type EditWorkoutFormProps = {
@@ -16,7 +22,7 @@ type EditWorkoutFormProps = {
 const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
   const date = items.findLast((item) => item);
   const [dateInput, setDateInput] = useState(false);
-  const [setOptions, setSetOptions] = useState(false);
+  const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
@@ -25,25 +31,28 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
-    const dataDate = data.get("date")?.valueOf();
-    console.log(typeof dataDate);
+    const date = data.get("date")?.valueOf();
 
-    workouts.map(({ id, lbs, reps, createdAt, updatedAt }) => {
-      lbs.map((lb, idx) => {
+    workouts.map(({ lbs, reps }) => {
+      lbs.map((_, idx) => {
         lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();
         reps.splice(idx, 1, Number(dataReps[0]));
         dataReps.shift();
       });
-      Object.assign(createdAt, dataDate);
-      console.log(createdAt);
     });
     setWorkouts(workouts);
 
     try {
-      workouts.map(async ({ id, sets, lbs, reps }) => {
-        await updateWorkout(id, sets, lbs, reps);
-      });
+      if (!date && date !== undefined) {
+        workouts.map(async ({ id, sets, lbs, reps }) => {
+          await updateWorkoutWithDate(id, sets, lbs, reps, date);
+        });
+      } else {
+        workouts.map(async ({ id, sets, lbs, reps }) => {
+          await updateWorkout(id, sets, lbs, reps);
+        });
+      }
       setIsLoading(true);
       router.push("/workouts");
     } catch (error) {
@@ -124,10 +133,15 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
               name="date"
               type="datetime-local"
               className="rounded-md text-white"
+              onMouseLeave={() => setDateInput(false)}
             />
           ) : (
-            <div onClick={() => setDateInput(!dateInput)}>
+            <div
+              onClick={() => setDateInput(true)}
+              className="flex flex-row gap-4 items-center"
+            >
               <span>{moment(date?.createdAt).calendar()}</span>
+              <SlOptions />
             </div>
           )}
         </div>
@@ -136,42 +150,6 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
             <h1 className="workout-form__title">{exercise}</h1>
             <div className="workout-form__container">
               <ul className="workout-form__list" id="sets-list">
-                <div
-                  onMouseLeave={() => setSetOptions(!setOptions)}
-                  className={
-                    setOptions
-                      ? "absolute bg-gray-800 text-white ml-20 px-2 rounded-lg"
-                      : "hidden"
-                  }
-                >
-                  <option
-                    value="w"
-                    onClick={(e) => {
-                      changeSet(id, e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Warm-up
-                  </option>
-                  <option
-                    value="d"
-                    onClick={(e) => {
-                      changeSet(id, e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Drop Set
-                  </option>
-                  <option
-                    value="f"
-                    onClick={(e) => {
-                      changeSet(id, e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Failure
-                  </option>
-                </div>
                 {sets?.map((set, setId) => (
                   <li key={setId} className="workout-form__item">
                     <button
@@ -186,7 +164,7 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
                         title={set}
                         containerStyles="workout-form__input"
                         handleClick={() => {
-                          setSetOptions(!setOptions);
+                          setSetOptions(id);
                           setSetIndex(setId);
                         }}
                       />
@@ -195,6 +173,42 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
                 ))}
               </ul>
 
+              <div
+                onMouseLeave={() => setSetOptions(null)}
+                className={
+                  setOptions === id
+                    ? `absolute bg-gray-800 text-white ml-20 px-2 rounded-lg`
+                    : "hidden"
+                }
+              >
+                <option
+                  value="w"
+                  onClick={(e) => {
+                    changeSet(id, e);
+                    setSetOptions(null);
+                  }}
+                >
+                  Warm-up
+                </option>
+                <option
+                  value="d"
+                  onClick={(e) => {
+                    changeSet(id, e);
+                    setSetOptions(null);
+                  }}
+                >
+                  Drop Set
+                </option>
+                <option
+                  value="f"
+                  onClick={(e) => {
+                    changeSet(id, e);
+                    setSetOptions(null);
+                  }}
+                >
+                  Failure
+                </option>
+              </div>
               <ul className="workout-form__list" id="lbs-list">
                 {lbs?.map((lb, id) => (
                   <li key={id} className="workout-form__item">
