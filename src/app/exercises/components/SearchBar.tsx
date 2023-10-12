@@ -150,19 +150,7 @@ const SearchBar = ({ data }: SearchBarProps) => {
                       {item}
                     </li>
                   ))}
-                  <h3 className="text-center underline">Body Part</h3>
-                  <div className="text-center" id="bodypart">
-                    {bodyPart}
-                  </div>
-                  <h3 className="text-center underline">Equipment</h3>
-                  <div className="text-center" id="equipment">
-                    {equipment}
-                  </div>
-                  <h3 className="text-center underline">Target</h3>
-                  <div className="text-center" id="target">
-                    {target}
-                  </div>
-                  <h3 className="text-center underline">Secondary Mucles</h3>
+                  <h3 className="underline m-2">Secondary Mucles</h3>
                   {secondaryMuscles.map((muscle, Id) => (
                     <li
                       className="list-disc list-inside"
