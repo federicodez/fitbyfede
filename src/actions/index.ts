@@ -3,6 +3,64 @@ import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { WorkoutSession, Workout } from "@prisma/client";
+import axios from "axios";
+
+export const getAllWorkouts = async () => {
+  try {
+    const options = {
+      method: "GET",
+      url: "https://exercisedb.p.rapidapi.com/exercises",
+      params: { limit: "10" },
+      headers: {
+        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
+      },
+    };
+
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSpecificBodyPart = async (query: string) => {
+  try {
+    const options = {
+      method: "GET",
+      url: `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${query}`,
+      params: { limit: "10" },
+      headers: {
+        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
+      },
+    };
+
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCategory = async (query: string) => {
+  try {
+    const options = {
+      method: "GET",
+      url: `https://exercisedb.p.rapidapi.com/exercises/equipment/${query}`,
+      params: { limit: "10" },
+      headers: {
+        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
+      },
+    };
+
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getWorkouts = async () => {
   try {
