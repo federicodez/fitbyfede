@@ -31,9 +31,9 @@ const SearchBar = ({ data }: SearchBarProps) => {
 
   const filteredExercises =
     query === ""
-      ? exercises
-      : exercises.filter((item) =>
-          item[0]
+      ? data
+      : data.filter(({ name }) =>
+          name
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, "")),
@@ -71,11 +71,10 @@ const SearchBar = ({ data }: SearchBarProps) => {
             Any Category
           </button>
         </div>
-        {data.map(
+        {filteredExercises.map(
           ({ bodyPart, gifUrl, id, name, secondaryMuscles, instructions }) => (
-            <>
+            <div key={id}>
               <div
-                key={id}
                 className={
                   !details
                     ? `grid grid-cols-6 gap-5 m-5 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
@@ -90,6 +89,7 @@ const SearchBar = ({ data }: SearchBarProps) => {
                   height={100}
                   width={100}
                   alt="exercise gif"
+                  priority={true}
                 />
                 <div className="grid grid-rows-2 col-span-5 items-center">
                   <strong id="name" className="row-span-1">
@@ -101,7 +101,6 @@ const SearchBar = ({ data }: SearchBarProps) => {
                 </div>
               </div>
               <div
-                key={id}
                 className={
                   details === id
                     ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
@@ -129,8 +128,8 @@ const SearchBar = ({ data }: SearchBarProps) => {
                   Instructions
                 </h3>
                 <ol className="px-10">
-                  {instructions.map((item, Id) => (
-                    <li key={Id} id="intructions" className="list-decimal">
+                  {instructions.map((item, itemId) => (
+                    <li key={itemId} id="intructions" className="list-decimal">
                       {item}
                     </li>
                   ))}
@@ -139,14 +138,18 @@ const SearchBar = ({ data }: SearchBarProps) => {
                   Secondary Mucles
                 </h3>
                 <ol className="px-10" type="1">
-                  {secondaryMuscles.map((muscle, Id) => (
-                    <li className="list-decimal" key={Id} id="secondary-muscle">
+                  {secondaryMuscles.map((muscle, muscleId) => (
+                    <li
+                      className="list-decimal"
+                      key={muscleId}
+                      id="secondary-muscle"
+                    >
                       {muscle}
                     </li>
                   ))}
                 </ol>
               </div>
-            </>
+            </div>
           ),
         )}
       </div>
