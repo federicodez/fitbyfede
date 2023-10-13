@@ -4,8 +4,7 @@ import SearchBar from "./components/SearchBar";
 const SearchWorkout = async () => {
   try {
     const workouts = (await getMostRecentWorkouts()) || [];
-    const { data } = await getAllWorkouts();
-    return <SearchBar workouts={workouts} data={data} />;
+    return <SearchBar workouts={workouts} />;
   } catch (err) {
     console.log(err);
   }
