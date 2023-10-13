@@ -4,7 +4,7 @@ import { getAllWorkouts } from "@/actions";
 
 const Exercises = async () => {
   try {
-    const { data } = await getAllWorkouts();
+    const data = await getAllWorkouts();
     return data ? (
       <Navbar>
         <SearchBar data={data} />
