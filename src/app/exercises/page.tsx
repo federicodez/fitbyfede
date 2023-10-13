@@ -1,20 +1,15 @@
 import SearchBar from "./components/SearchBar";
-import axios from "axios";
-
-const options = {
-  method: "GET",
-  url: "https://exercisedb.p.rapidapi.com/exercises/bodyPart/back",
-  params: { limit: "10" },
-  headers: {
-    "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
-    "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-  },
-};
+import Navbar from "@/components/navbar/Navbar";
+import { getAllWorkouts } from "@/actions";
 
 const Exercises = async () => {
   try {
-    const { data } = await axios.request(options);
-    return data ? <SearchBar data={data} /> : null;
+    const { data } = await getAllWorkouts();
+    return data ? (
+      <Navbar>
+        <SearchBar data={data} />
+      </Navbar>
+    ) : null;
   } catch (err) {
     console.log(err);
   }
