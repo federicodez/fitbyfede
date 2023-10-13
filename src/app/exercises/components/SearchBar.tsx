@@ -3,8 +3,8 @@
 import { useState, MouseEvent } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
-import { exercises } from "@/constants";
-import { getAllWorkouts, getSpecificBodyPart, getCategory } from "@/actions";
+import { exercises, bodyParts, categories } from "@/constants";
+import { getSpecificBodyPart, getCategory } from "@/actions";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -26,13 +26,38 @@ type SearchBarProps = {
 const SearchBar = ({ data }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
+  const [showParts, setShowParts] = useState(false);
+  const [workouts, setWorkouts] = useState(data);
+  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [showCategories, setShowCategories] = useState(false);
+  const [categoriesBtn, setCategoriesBtn] = useState("");
 
   const router = useRouter();
 
+  const handleParts = async (query: string) => {
+    try {
+      const data = await getSpecificBodyPart(query);
+      setBodyPartBtn(query);
+      setWorkouts(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCategories = async (query: string) => {
+    try {
+      const data = await getCategory(query);
+      setCategoriesBtn(query);
+      setWorkouts(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const filteredExercises =
     query === ""
-      ? data
-      : data.filter(({ name }) =>
+      ? workouts
+      : workouts.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -64,12 +89,62 @@ const SearchBar = ({ data }: SearchBarProps) => {
             !details ? `flex justify-evenly items-center my-2` : "hidden"
           }
         >
-          <button className="w-fit h-fit rounded-lg bg-gray-50 px-5">
-            Any Body Part
-          </button>
-          <button className="w-fit h-fit rounded-lg bg-gray-50 px-5">
-            Any Category
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                setShowParts(true);
+              }}
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+            >
+              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
+            </button>
+            <ul className="grid grid-cols-10">
+              {showParts
+                ? bodyParts.map((part, idx) => (
+                    <li key={idx}>
+                      <option
+                        onClick={() => {
+                          handleParts(part);
+                          setShowParts(false);
+                        }}
+                        className="flex flex-col"
+                        value={part}
+                      >
+                        {part}
+                      </option>
+                    </li>
+                  ))
+                : null}
+            </ul>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setShowCategories(true);
+              }}
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+            >
+              {categoriesBtn ? categoriesBtn : "Any Category"}
+            </button>
+            <ul>
+              {showCategories
+                ? categories.map((category, idx) => (
+                    <li key={idx}>
+                      <option
+                        onClick={() => {
+                          handleCategories(category);
+                          setShowCategories(false);
+                        }}
+                        className="flex flex-col"
+                        value={category}
+                      >
+                        {category}
+                      </option>
+                    </li>
+                  ))
+                : null}
+            </ul>
+          </div>
         </div>
         {filteredExercises.map(
           ({ bodyPart, gifUrl, id, name, secondaryMuscles, instructions }) => (
