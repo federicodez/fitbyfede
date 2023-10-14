@@ -1,7 +1,9 @@
 export const exampleWorkout = [
   {
     id: "1a3e5965-48b6-46a3-9251-2f565e1746f9",
-    exercise: ["Squat (Barbell)", "Legs"],
+    name: "Squat (Barbell)",
+    bodyParts: "upper legs",
+    gifUrl: "",
     sets: ["1", "2", "3"],
     lbs: [205, 195, 185],
     reps: [8, 7, 5],

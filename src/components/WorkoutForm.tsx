@@ -22,7 +22,7 @@ const WorkoutForm = ({ workout }: WorkoutFormProps) => {
   const [setOptions, setSetOptions] = useState(false);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { id, exercise, sets, lbs, reps } = workout;
+  const { id, name, sets, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -108,7 +108,7 @@ const WorkoutForm = ({ workout }: WorkoutFormProps) => {
       {isLoading && <LoadingModel />}
       <div className="wrapper container">
         <form className="workout-form" action={handleSubmit}>
-          <h1 className="workout-form__title">{exercise}</h1>
+          <h1 className="workout-form__title">{name}</h1>
           <div className="workout-form__container">
             <ul className="workout-form__list" id="sets-list">
               <div

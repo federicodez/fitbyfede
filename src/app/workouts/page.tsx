@@ -1,8 +1,4 @@
-import {
-  getWorkouts,
-  getAllWorkoutSessions,
-  getWorkoutsBySessionId,
-} from "@/actions";
+import { getWorkouts } from "@/actions";
 import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 

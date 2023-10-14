@@ -39,7 +39,10 @@ model User {
 
 model Workout {
   id               String         @id @default(auto()) @map("_id") @db.ObjectId
-  exercise         String
+  name             String
+  bodyPart         String
+  gifUrl           String?
+  target           String
   userId           String         @db.ObjectId
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt

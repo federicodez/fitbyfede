@@ -3,42 +3,28 @@
 import { useState, MouseEvent } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
-import { exercises, bodyParts, categories } from "@/constants";
-import { getSpecificBodyPart, getCategory } from "@/actions";
-import { useRouter } from "next/navigation";
+import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
+import { Data } from "@/types";
 
-type Data = {
-  bodyPart: string;
-  equipment: string;
-  gifUrl: string;
-  id: string;
-  name: string;
-  target: string;
-  secondaryMuscles: string[];
-  instructions: string[];
-}[];
-
-type SearchBarProps = {
+type SearchExercisesProps = {
   data: Data;
 };
 
-const SearchBar = ({ data }: SearchBarProps) => {
+const SearchExercises = ({ data }: SearchExercisesProps) => {
+  const [workouts, setWorkouts] = useState(data);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
   const [showParts, setShowParts] = useState(false);
-  const [workouts, setWorkouts] = useState(data);
   const [bodyPartBtn, setBodyPartBtn] = useState("");
   const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("");
 
-  const router = useRouter();
-
   const handleParts = async (query: string) => {
     try {
-      const data = await getSpecificBodyPart(query);
+      const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
       setBodyPartBtn(query);
-      setWorkouts(data);
+      setWorkouts(parts);
     } catch (error) {
       console.log(error);
     }
@@ -46,9 +32,11 @@ const SearchBar = ({ data }: SearchBarProps) => {
 
   const handleCategories = async (query: string) => {
     try {
-      const data = await getCategory(query);
+      const categories = workouts.filter(
+        ({ equipment }) => equipment === query,
+      );
       setCategoriesBtn(query);
-      setWorkouts(data);
+      setWorkouts(categories);
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +86,7 @@ const SearchBar = ({ data }: SearchBarProps) => {
             >
               {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
             </button>
-            <ul className="grid grid-cols-10">
+            <ul className="flex flex-col">
               {showParts
                 ? bodyParts.map((part, idx) => (
                     <li key={idx}>
@@ -232,4 +220,4 @@ const SearchBar = ({ data }: SearchBarProps) => {
   );
 };
 
-export default SearchBar;
+export default SearchExercises;

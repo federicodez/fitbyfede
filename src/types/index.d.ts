@@ -18,7 +18,10 @@ export type CurrentUser = {
 
 export type Workout = {
   id: string;
-  exercise: string;
+  name: string;
+  bodyPart: string;
+  gifUrl?: string | null;
+  target: string;
   sets: string[];
   lbs: number[];
   reps: number[];
@@ -27,3 +30,14 @@ export type Workout = {
   updatedAt: Date;
   workoutSessionId: string;
 };
+
+export type Data = {
+  bodyPart: string;
+  equipment: string;
+  gifUrl: string;
+  id: string;
+  name: string;
+  target: string;
+  secondaryMuscles: string[];
+  instructions: string[];
+}[];

@@ -2,30 +2,68 @@
 
 import { useState, MouseEvent } from "react";
 import { HiX } from "react-icons/hi";
+import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { exercises } from "@/constants";
-import { createExercise, createWorkoutSession, createMany } from "@/actions";
+import { createWorkoutSession, createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
+import { Data } from "@/types";
+import Image from "next/image";
 
 type SearchBarProps = {
-  workouts: Workout[];
+  recentWorkouts: Workout[];
+  data: Data;
 };
 
-const SearchBar = ({ workouts }: SearchBarProps) => {
+const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
   const [query, setQuery] = useState("");
+  const [details, setDetails] = useState<string | boolean>(false);
+  const [showParts, setShowParts] = useState(false);
+  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [showCategories, setShowCategories] = useState(false);
+  const [categoriesBtn, setCategoriesBtn] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [workouts, setWorkouts] = useState(data);
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
 
   const router = useRouter();
 
+  const handleParts = async (query: string) => {
+    try {
+      const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
+      setBodyPartBtn(query);
+      setWorkouts(parts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCategories = async (query: string) => {
+    try {
+      const categories = workouts.filter(
+        ({ equipment }) => equipment === query,
+      );
+      setCategoriesBtn(query);
+      setWorkouts(categories);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleClick = async () => {
     try {
       const session = await createWorkoutSession();
-
+      const exercises: Data = [];
+      workouts.filter((workout) => {
+        exerciseQueue.map((exercise) => {
+          if (exercise === workout.name) {
+            exercises.push(workout);
+          }
+        });
+      });
       if (session) {
-        await createMany(exerciseQueue, session);
+        await createMany(exercises, session);
         setIsLoading(true);
         router.push(`/finish-workout/${session.id}`);
       }
@@ -34,11 +72,11 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
     }
   };
 
-  const addToExercises = async (exercise: string) => {
-    if (!exerciseQueue.includes(exercise)) {
-      exerciseQueue.push(exercise);
+  const addToExercises = async (name: string) => {
+    if (!exerciseQueue.includes(name)) {
+      exerciseQueue.push(name);
     } else {
-      const index = exerciseQueue.indexOf(exercise);
+      const index = exerciseQueue.indexOf(name);
       exerciseQueue.splice(index, 1);
     }
     setExerciseQueue([...exerciseQueue]);
@@ -46,9 +84,9 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
 
   const filteredExercises =
     query === ""
-      ? exercises
-      : exercises.filter((item) =>
-          item[0]
+      ? workouts
+      : workouts.filter(({ name }) =>
+          name
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, "")),
@@ -57,8 +95,10 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
   return (
     <>
       {isLoading && <LoadingModel />}
-      <div className="searchbar wrapper container">
-        <div className="flex flex-row justify-between mt-8">
+      <div className="wrapper container">
+        <div
+          className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
+        >
           <button type="button" className="text-[#03045e]" id="create-btn">
             <Link href="/create-workout">New</Link>
           </button>
@@ -76,7 +116,7 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
             {`Add (${exerciseQueue?.length})`}
           </button>
         </div>
-        <form className="searchbar-form">
+        <form className={!details ? "searchbar-form" : "hidden"}>
           <input
             onChange={(e) => setQuery(e.target.value)}
             type="text"
@@ -86,41 +126,156 @@ const SearchBar = ({ workouts }: SearchBarProps) => {
           />
         </form>
         <ul className="filtered__list">
-          {workouts?.length ? (
+          {recentWorkouts?.length ? (
             <h3 className="most-recent-title">RECENT</h3>
           ) : null}
-          {workouts?.map((workout, id) => (
-            <li key={id} className="filtered__item">
-              <div>
-                <input
-                  type="checkbox"
-                  id="exercise"
-                  name="exercise"
-                  value={workout.exercise}
-                  onChange={() => addToExercises(workout.exercise)}
-                  className="filtered__item-checkbox"
+          {recentWorkouts?.map(({ bodyPart, gifUrl, id, name }) => (
+            <div key={id}>
+              <div
+                className={
+                  !details
+                    ? `grid grid-cols-6 gap-5 m-5 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                    : "hidden"
+                }
+                onClick={() => {
+                  addToExercises(name);
+                }}
+              >
+                <Image
+                  className="col-span-1"
+                  id="gif"
+                  src={gifUrl as any}
+                  alt="workout gif"
+                  height={100}
+                  width={100}
+                  priority={true}
                 />
-                <strong>{workout.exercise}</strong>
+                <div className="grid grid-rows-2 col-span-4 items-center">
+                  <strong id="name" className="row-span-1">
+                    {name}
+                  </strong>
+                  <div className="row-span-1" id="bodypart">
+                    {bodyPart}
+                  </div>
+                </div>
+                <div
+                  onClick={() => setDetails(id)}
+                  className="col-span-1 flex justify-center items-center"
+                >
+                  {exerciseQueue.includes(name) ? (
+                    <AiOutlineCheck />
+                  ) : (
+                    <AiOutlineQuestion />
+                  )}
+                </div>
               </div>
-            </li>
+            </div>
           ))}
           <h3 className="filtered-title">EXERCISES</h3>
-          {filteredExercises?.map((exercise, id) => (
-            <li key={id} className="filtered__item">
-              <div>
-                <input
-                  type="checkbox"
-                  id="exercise"
-                  name="exercise"
-                  value={exercise[0]}
-                  onChange={() => addToExercises(exercise[0])}
-                  className="filtered__item-checkbox"
-                />
-                <strong>{exercise[0]}</strong>
+          {filteredExercises.map(
+            ({
+              bodyPart,
+              gifUrl,
+              id,
+              name,
+              secondaryMuscles,
+              instructions,
+            }) => (
+              <div key={id}>
+                <div
+                  className={
+                    !details
+                      ? `grid grid-cols-6 gap-5 m-5 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                      : "hidden"
+                  }
+                  onClick={() => {
+                    addToExercises(name);
+                  }}
+                >
+                  <Image
+                    className="col-span-1"
+                    id="gif"
+                    src={gifUrl}
+                    height={100}
+                    width={100}
+                    alt="exercise gif"
+                    priority={true}
+                  />
+                  <div className="grid grid-rows-2 col-span-4 items-center">
+                    <strong id="name" className="row-span-1">
+                      {name}
+                    </strong>
+                    <div className="row-span-1" id="bodypart">
+                      {bodyPart}
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => setDetails(id)}
+                    className="col-span-1 flex justify-center items-center"
+                  >
+                    {exerciseQueue.includes(name) ? (
+                      <AiOutlineCheck />
+                    ) : (
+                      <AiOutlineQuestion />
+                    )}
+                  </div>
+                </div>
+                <div
+                  className={
+                    details === id
+                      ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                      : "hidden"
+                  }
+                >
+                  <button
+                    className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
+                    onClick={() => setDetails(false)}
+                  >
+                    <HiX />
+                  </button>
+                  <h3 className="text-center m-2 font-bold" id="name">
+                    {name}
+                  </h3>
+                  <Image
+                    className="flex self-center rounded-md"
+                    id="gif"
+                    src={gifUrl}
+                    height={400}
+                    width={400}
+                    alt="exercise gif"
+                  />
+                  <h3 className="text-center m-2 underline font-semibold">
+                    Instructions
+                  </h3>
+                  <ol className="px-10">
+                    {instructions.map((item, itemId) => (
+                      <li
+                        key={itemId}
+                        id="intructions"
+                        className="list-decimal"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ol>
+                  <h3 className="underline m-2 font-semibold">
+                    Secondary Mucles
+                  </h3>
+                  <ol className="px-10" type="1">
+                    {secondaryMuscles.map((muscle, muscleId) => (
+                      <li
+                        className="list-decimal"
+                        key={muscleId}
+                        id="secondary-muscle"
+                      >
+                        {muscle}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
               </div>
-              <div>{exercise[1]}</div>
-            </li>
-          ))}
+            ),
+          )}
         </ul>
       </div>
     </>

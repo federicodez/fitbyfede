@@ -56,11 +56,11 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
       reps: {},
     };
     workout.map(
-      ({ id, exercise, sets, lbs, reps, createdAt, workoutSessionId }) => {
+      ({ id, name, sets, lbs, reps, createdAt, workoutSessionId }) => {
         session.sessionId = workoutSessionId;
         session.ids.push(id);
         session.date = createdAt;
-        session.exercises[id] = exercise;
+        session.exercises[id] = name;
         session.sets[id] = [...sets];
         session.lbs[id] = [...lbs];
         session.reps[id] = [...reps];
@@ -102,23 +102,21 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                 </li>
               ),
             )
-          : exampleWorkout?.map(
-              ({ id, exercise, sets, lbs, reps, createdAt }) => (
-                <li key={id} className="container workoutlist-item">
-                  <div className="workoutlist-btn">
-                    <HiOutlineTrash />
-                    <HiPencilAlt />
-                  </div>
-                  <div className="workoutlist-date">
-                    {moment(createdAt).format("dddd, MMM Do")}
-                  </div>
-                  <div className="workoutlist-exercise">
-                    <strong>{exercise}</strong>
-                  </div>
-                  <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
-                </li>
-              ),
-            )}
+          : exampleWorkout?.map(({ id, name, sets, lbs, reps, createdAt }) => (
+              <li key={id} className="container workoutlist-item">
+                <div className="workoutlist-btn">
+                  <HiOutlineTrash />
+                  <HiPencilAlt />
+                </div>
+                <div className="workoutlist-date">
+                  {moment(createdAt).format("dddd, MMM Do")}
+                </div>
+                <div className="workoutlist-exercise">
+                  <strong>{name}</strong>
+                </div>
+                <WorkoutCard sets={sets} lbs={lbs} reps={reps} />
+              </li>
+            ))}
       </ul>
     </section>
   );

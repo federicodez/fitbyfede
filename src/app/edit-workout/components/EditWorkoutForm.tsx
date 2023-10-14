@@ -145,9 +145,9 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
             </div>
           )}
         </div>
-        {items.map(({ id, exercise, sets, lbs, reps }) => (
+        {items.map(({ id, name, sets, lbs, reps }) => (
           <div key={id}>
-            <h1 className="workout-form__title">{exercise}</h1>
+            <h1 className="workout-form__title">{name}</h1>
             <div className="workout-form__container">
               <ul className="workout-form__list" id="sets-list">
                 {sets?.map((set, setId) => (

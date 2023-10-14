@@ -38,7 +38,6 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
       });
     });
     setWorkouts(workouts);
-    console.log({ workouts });
 
     try {
       workouts.map(async ({ id, sets, lbs, reps }) => {
@@ -124,9 +123,9 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
     <div className="wrapper container">
       {isLoading && <LoadingModel />}
       <form action={handleSubmit}>
-        {items.map(({ id, exercise, sets, lbs, reps }) => (
+        {items.map(({ id, name, sets, lbs, reps }) => (
           <div key={id}>
-            <h1 className="workout-form__title">{exercise}</h1>
+            <h1 className="workout-form__title">{name}</h1>
             <div className="workout-form__container">
               <ul className="workout-form__list" id="sets-list">
                 <div
@@ -236,7 +235,7 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
         ))}
         <div className="workout-form__btn">
           <button className="workout-form__submit-btn" type="submit">
-            Create Button
+            Create Workout
           </button>
           <CustomButton
             title="Cancel Workout"

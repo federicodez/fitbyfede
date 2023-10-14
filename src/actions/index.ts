@@ -4,13 +4,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { WorkoutSession, Workout } from "@prisma/client";
 import axios from "axios";
+import { Data } from "@/types";
 
 export const getAllWorkouts = async () => {
   try {
     const options = {
       method: "GET",
       url: "https://exercisedb.p.rapidapi.com/exercises",
-      params: { limit: "10" },
+      params: { limit: "1000" },
       headers: {
         "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
         "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
@@ -211,10 +212,7 @@ export const getAllWorkoutSessions = async () => {
   }
 };
 
-export const createMany = async (
-  exerciseQueue: string[],
-  session: WorkoutSession,
-) => {
+export const createMany = async (exercises: Data, session: WorkoutSession) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -222,10 +220,13 @@ export const createMany = async (
       return null;
     }
     await Promise.all(
-      exerciseQueue.map(async (exercise: string) => {
+      exercises.map(async ({ name, bodyPart, gifUrl, target }) => {
         await prisma.workout.create({
           data: {
-            exercise,
+            name,
+            bodyPart,
+            gifUrl,
+            target,
             sets: ["1"],
             lbs: [0],
             reps: [0],
@@ -240,39 +241,10 @@ export const createMany = async (
   }
 };
 
-export const createExercise = async (
-  exercise: string,
-  session: WorkoutSession,
-) => {
-  const lbs = [0];
-  const reps = [0];
-  const sets = ["1"];
-  try {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser?.id) {
-      return null;
-    }
-
-    const workout = await prisma.workout.create({
-      data: {
-        exercise: exercise,
-        sets,
-        lbs,
-        reps,
-        userId: currentUser.id,
-        workoutSessionId: session.id,
-      },
-    });
-
-    return workout;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const createWorkout = async (
-  exercise: string,
+  name: string,
+  bodyPartBtn: string,
+  categoriesBtn: string,
   sets: string[],
   lbs: number[],
   reps: number[],
@@ -292,7 +264,9 @@ export const createWorkout = async (
 
     const workout = await prisma.workout.create({
       data: {
-        exercise: exercise,
+        name: name,
+        bodyPart: bodyPartBtn,
+        target: categoriesBtn,
         sets: sets,
         lbs: lbs,
         reps: reps,
@@ -394,7 +368,7 @@ export const getMostRecentWorkouts = async () => {
   }
 };
 
-export const getWorkoutByExercise = async (exercise: string) => {
+export const getWorkoutByExercise = async (name: string) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -405,7 +379,7 @@ export const getWorkoutByExercise = async (exercise: string) => {
     const exercises = await prisma.workout.findMany({
       where: {
         userId: currentUser.id,
-        exercise,
+        name,
       },
     });
 

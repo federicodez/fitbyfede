@@ -1,4 +1,4 @@
-import SearchBar from "./components/SearchBar";
+import SearchExercises from "./components/SearchExercises";
 import Navbar from "@/components/navbar/Navbar";
 import { getAllWorkouts } from "@/actions";
 
@@ -7,7 +7,7 @@ const Exercises = async () => {
     const data = await getAllWorkouts();
     return data ? (
       <Navbar>
-        <SearchBar data={data} />
+        <SearchExercises data={data} />
       </Navbar>
     ) : null;
   } catch (err) {
