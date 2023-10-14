@@ -1,23 +1,29 @@
+"use client";
+
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
-import { deleteWorkout, getWorkouts } from "@/actions";
+import { deleteWorkout, getWorkouts, deleteSession } from "@/actions";
 import { Workout } from "@/types";
 
 type RemoveProps = {
-  id: string;
+  ids: string[];
   setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
+  sessionId?: string;
 };
 
-const RemoveBtn = ({ id, setWorkouts }: RemoveProps) => {
+const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
   const router = useRouter();
 
   const removeWorkout = async () => {
-    await deleteWorkout(id);
-    const workouts = await getWorkouts();
-    if (workouts) {
-      setWorkouts(workouts);
+    ids.map(async (id: string) => await deleteWorkout(id));
+    if (sessionId) {
+      await deleteSession(sessionId);
     }
-    router.refresh();
+    const items = await getWorkouts();
+    if (items) {
+      setWorkouts(items);
+      router.refresh();
+    }
   };
   return (
     <button className="remove-btn" onClick={removeWorkout}>

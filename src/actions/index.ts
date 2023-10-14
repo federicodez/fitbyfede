@@ -2,7 +2,67 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { WorkoutSession } from "@prisma/client";
+
+import { WorkoutSession, Workout } from "@prisma/client";
+import axios from "axios";
+import { Data } from "@/types";
+
+export const getAllWorkouts = async () => {
+  try {
+    const options = {
+      method: "GET",
+      url: "https://exercisedb.p.rapidapi.com/exercises",
+      params: { limit: "1000" },
+      headers: {
+        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
+      },
+    };
+
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSpecificBodyPart = async (query: string) => {
+  try {
+    const options = {
+      method: "GET",
+      url: `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${query}`,
+      params: { limit: "10" },
+      headers: {
+        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
+      },
+    };
+
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCategory = async (query: string) => {
+  try {
+    const options = {
+      method: "GET",
+      url: `https://exercisedb.p.rapidapi.com/exercises/equipment/${query}`,
+      params: { limit: "10" },
+      headers: {
+        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
+      },
+    };
+
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getWorkouts = async () => {
   try {
@@ -50,6 +110,29 @@ export const updateWorkout = async (
     console.log(error);
   }
 };
+
+export const updateWorkoutWithDate = async (
+  id: string,
+  sets: string[],
+  lbs: number[],
+  reps: number[],
+  date: string,
+) => {
+  try {
+    const updated = await prisma.workout.update({
+      where: {
+        id,
+      },
+      data: {
+        sets,
+        lbs,
+        reps,
+        createdAt: new Date(date),
+      },
+    });
+    return updated;
+  } catch (error) {
+    console.log(error);
 
 export const updateWorkoutReps = async (id: string, reps: number[]) => {
   try {
@@ -119,6 +202,7 @@ export const getWorkoutsBySessionId = async (id: string) => {
 };
 
 export const createWorkoutSession = async () => {
+
   try {
     const currentUser = await getCurrentUser();
 
@@ -182,6 +266,26 @@ export const createExercise = async (exercise: string) => {
         userId: currentUser.id,
       },
     });
+    return session;
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const getAllWorkoutSessions = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+
+    const sessions = prisma.workoutSession.findMany({
+      where: {
+      data: {
+        userId: currentUser.id,
+      },
+    });
 
     const workout = await prisma.workout.create({
       data: {
@@ -194,14 +298,49 @@ export const createExercise = async (exercise: string) => {
       },
     });
 
-    return workout;
+    if (!sessions) {
+      return null;
+    }
+
+    return sessions;
   } catch (error) {
     console.log(error);
   }
 };
 
+export const createMany = async (exercises: Data, session: WorkoutSession) => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+    await Promise.all(
+      exercises.map(async ({ name, bodyPart, gifUrl, target }) => {
+        await prisma.workout.create({
+          data: {
+            name,
+            bodyPart,
+            gifUrl,
+            target,
+            sets: ["1"],
+            lbs: [0],
+            reps: [0],
+            userId: currentUser.id,
+            workoutSessionId: session.id,
+          },
+        });
+      }),
+    );
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
 export const createWorkout = async (
-  exercise: string,
+  name: string,
+  bodyPartBtn: string,
+  categoriesBtn: string,
   sets: string[],
   lbs: number[],
   reps: number[],
@@ -221,7 +360,9 @@ export const createWorkout = async (
 
     const workout = await prisma.workout.create({
       data: {
-        exercise: exercise,
+        name: name,
+        bodyPart: bodyPartBtn,
+        target: categoriesBtn,
         sets: sets,
         lbs: lbs,
         reps: reps,
@@ -323,7 +464,7 @@ export const getMostRecentWorkouts = async () => {
   }
 };
 
-export const getWorkoutByExercise = async (exercise: string) => {
+export const getWorkoutByExercise = async (name: string) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -334,7 +475,7 @@ export const getWorkoutByExercise = async (exercise: string) => {
     const exercises = await prisma.workout.findMany({
       where: {
         userId: currentUser.id,
-        exercise,
+        name,
       },
     });
 

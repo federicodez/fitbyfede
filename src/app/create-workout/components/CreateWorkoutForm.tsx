@@ -6,6 +6,7 @@ import { createWorkout } from "@/actions";
 import { CustomButton } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { bodyParts, categories } from "@/constants";
 import { WorkoutSession } from "@prisma/client";
 import { createWorkoutSession } from "@/actions";
 
@@ -17,8 +18,28 @@ const CreateWorkoutForm = () => {
   const [setOptions, setSetOptions] = useState(false);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [showParts, setShowParts] = useState(false);
+  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [showCategories, setShowCategories] = useState(false);
+  const [categoriesBtn, setCategoriesBtn] = useState("");
 
   const router = useRouter();
+
+  const handleParts = async (query: string) => {
+    try {
+      setBodyPartBtn(query);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCategories = async (query: string) => {
+    try {
+      setCategoriesBtn(query);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSubmit = async (data: FormData) => {
     const dataLbs = data.getAll("lbs")?.valueOf();
@@ -42,7 +63,14 @@ const CreateWorkoutForm = () => {
     setReps([...reps]);
 
     try {
-      await createWorkout(exercise, sets, lbs, reps);
+      await createWorkout(
+        exercise,
+        bodyPartBtn,
+        categoriesBtn,
+        sets,
+        lbs,
+        reps,
+      );
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -118,6 +146,61 @@ const CreateWorkoutForm = () => {
               id="exercise"
               className="bg-white border rounded-lg col-start-2 col-span-2 mr-5"
             />
+          </div>
+
+          <div className="flex justify-center items-center flex-row gap-5 m-5">
+            <button
+              onClick={() => {
+                setShowParts(!showParts);
+              }}
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+            >
+              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
+            </button>
+            <ul className="flex flex-col">
+              {showParts
+                ? bodyParts.map((part, idx) => (
+                    <li key={idx}>
+                      <option
+                        onClick={() => {
+                          handleParts(part);
+                          setShowParts(false);
+                        }}
+                        className="flex flex-col"
+                        value={part}
+                      >
+                        {part}
+                      </option>
+                    </li>
+                  ))
+                : null}
+            </ul>
+            <button
+              onClick={() => {
+                setShowCategories(!categories);
+              }}
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+            >
+              {categoriesBtn ? categoriesBtn : "Any Category"}
+            </button>
+            <ul>
+              {showCategories
+                ? categories.map((category, idx) => (
+                    <li key={idx}>
+                      <option
+                        onClick={() => {
+                          handleCategories(category);
+                          setShowCategories(false);
+                        }}
+                        className="flex flex-col"
+                        value={category}
+                      >
+                        {category}
+                      </option>
+                    </li>
+                  ))
+                : null}
+            </ul>
           </div>
 
           <div

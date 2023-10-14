@@ -14,7 +14,7 @@ type Tally = {
 
 const PieChart = async ({ workouts }: PieChartProps) => {
   const tally = workouts.reduce((tally: Tally, curr: Workout) => {
-    tally[curr.exercise] = (tally[curr.exercise] || 0) + 1;
+    tally[curr.name] = (tally[curr.name] || 0) + 1;
     return tally;
   }, {} as Tally);
   const labelData = Object.keys(tally);

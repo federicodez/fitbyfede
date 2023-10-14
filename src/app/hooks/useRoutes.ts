@@ -17,10 +17,16 @@ const useRoutes = () => {
         active: pathname === "/profile",
       },
       {
-        label: "Start Workout",
+        label: "Workouts",
         href: "/workouts",
         icon: GiWeightLiftingUp,
         active: pathname === "/workouts",
+      },
+      {
+        label: "Exercises",
+        href: "/exercises",
+        icon: GiStrongMan,
+        active: pathname == "/exercises",
       },
       {
         label: "Logout",

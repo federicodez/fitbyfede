@@ -24,7 +24,7 @@ type BarChartProps = {
 };
 
 const BarChart = async ({ workouts }: BarChartProps) => {
-  const labels = workouts.map((workout) => workout.exercise);
+  const labels = workouts.map((workout) => workout.name);
   const data = {
     labels,
     datasets: [

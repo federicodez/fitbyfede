@@ -1,10 +1,11 @@
-import { getMostRecentWorkouts } from "@/actions";
+import { getMostRecentWorkouts, getAllWorkouts } from "@/actions";
 import SearchBar from "./components/SearchBar";
 
 const SearchWorkout = async () => {
   try {
-    const workouts = (await getMostRecentWorkouts()) || [];
-    return <SearchBar workouts={workouts} />;
+    const data = await getAllWorkouts();
+    const recentWorkouts = (await getMostRecentWorkouts()) || [];
+    return <SearchBar recentWorkouts={recentWorkouts} data={data} />;
   } catch (err) {
     console.log(err);
   }

@@ -1,13 +1,61 @@
 export const exampleWorkout = [
   {
     id: "1a3e5965-48b6-46a3-9251-2f565e1746f9",
-    exercise: ["Squat (Barbell)", "Legs"],
+    name: "Squat (Barbell)",
+    bodyParts: "upper legs",
+    gifUrl: "",
     sets: ["1", "2", "3"],
     lbs: [205, 195, 185],
     reps: [8, 7, 5],
     createdAt: "2023-09-07T21:03:14.326Z",
+    workoutSessionId: "651afd00cf4c35iebfuebgh3",
   },
 ];
+
+export const bodyParts = [
+  "back",
+  "cardio",
+  "chest",
+  "lower arms",
+  "lower legs",
+  "neck",
+  "Shoulders",
+  "upper arms",
+  "upper legs",
+  "waist",
+];
+
+export const categories = [
+  "assisted",
+  "band",
+  "barbell",
+  "body weight",
+  "bosu ball",
+  "cable",
+  "dumbbell",
+  "elliptical machine",
+  "ez barbell",
+  "hammer",
+  "kettlebell",
+  "leverage machine",
+  "medicine ball",
+  "olympic barbell",
+  "resistance band",
+  "roller",
+  "rope",
+  "skierg machine",
+  "sled machine",
+  "smith machine",
+  "stability ball",
+  "stationary bike",
+  "stepmill machine",
+  "tire",
+  "trap bar",
+  "upper body ergometer",
+  "weighted",
+  "wheel roller",
+];
+
 export const exercises = [
   ["Ab Wheel", "Core"],
   ["Aerobics", "Cardio"],

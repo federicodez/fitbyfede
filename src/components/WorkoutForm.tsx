@@ -2,7 +2,8 @@
 
 import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { type Workout } from "@/types";
+// import { type Workout } from "@/types";
+import { Workout } from "@prisma/client";
 import { CustomButton, Button } from "@/components";
 import {
   updateWorkout,
@@ -14,15 +15,14 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi";
 
 type WorkoutFormProps = {
-  formtype: string;
   workout: Workout;
 };
 
-const WorkoutForm = ({ formtype, workout }: WorkoutFormProps) => {
+const WorkoutForm = ({ workout }: WorkoutFormProps) => {
   const [setOptions, setSetOptions] = useState(false);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { id, exercise, sets, lbs, reps } = workout;
+  const { id, name, sets, lbs, reps } = workout;
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -108,7 +108,7 @@ const WorkoutForm = ({ formtype, workout }: WorkoutFormProps) => {
       {isLoading && <LoadingModel />}
       <div className="wrapper container">
         <form className="workout-form" action={handleSubmit}>
-          <h1 className="workout-form__title">{exercise}</h1>
+          <h1 className="workout-form__title">{name}</h1>
           <div className="workout-form__container">
             <ul className="workout-form__list" id="sets-list">
               <div
@@ -205,16 +205,6 @@ const WorkoutForm = ({ formtype, workout }: WorkoutFormProps) => {
               title="Add Set"
               handleClick={addSet}
               containerStyles="workout-form__add-btn"
-            />
-            <Button disabled={isLoading} fullWidth type="submit">
-              {formtype}
-            </Button>
-            <CustomButton
-              title="Cancel"
-              handleClick={() => {
-                router.push("/workouts");
-              }}
-              containerStyles="workout-form__cancel-btn"
             />
           </div>
         </form>
