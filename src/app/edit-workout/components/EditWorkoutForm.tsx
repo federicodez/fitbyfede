@@ -2,7 +2,7 @@
 
 import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { type Workout } from "@/types";
+import { Workout } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
 import {
   updateWorkout,
