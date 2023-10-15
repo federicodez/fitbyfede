@@ -20,7 +20,7 @@ export type Workout = {
   id: string;
   name: string;
   bodyPart: string;
-  gifUrl?: string | null;
+  gifId?: string | null;
   target: string;
   sets: string[];
   lbs: number[];
@@ -34,7 +34,6 @@ export type Workout = {
 export type Data = {
   bodyPart: string;
   equipment: string;
-  gifUrl: string;
   id: string;
   name: string;
   target: string;

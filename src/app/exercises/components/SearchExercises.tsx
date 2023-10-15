@@ -5,13 +5,14 @@ import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
-import { Data } from "@/types";
+import { Data, Workout } from "@/types";
+import data from "@/constants/exerciseData.json";
 
 type SearchExercisesProps = {
-  data: Data;
+  recentWorkouts: Workout[];
 };
 
-const SearchExercises = ({ data }: SearchExercisesProps) => {
+const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [workouts, setWorkouts] = useState(data);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
@@ -135,7 +136,7 @@ const SearchExercises = ({ data }: SearchExercisesProps) => {
           </div>
         </div>
         {filteredExercises.map(
-          ({ bodyPart, gifUrl, id, name, secondaryMuscles, instructions }) => (
+          ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
             <div key={id}>
               <div
                 className={
@@ -148,7 +149,7 @@ const SearchExercises = ({ data }: SearchExercisesProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={gifUrl}
+                  src={`/1080/${id}.gif`}
                   height={100}
                   width={100}
                   alt="exercise gif"
@@ -182,7 +183,7 @@ const SearchExercises = ({ data }: SearchExercisesProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  src={gifUrl}
+                  src={`/1080/${id}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"

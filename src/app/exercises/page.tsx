@@ -1,13 +1,13 @@
 import SearchExercises from "./components/SearchExercises";
 import Navbar from "@/components/navbar/Navbar";
-import { getAllWorkouts } from "@/actions";
+import { getMostRecentWorkouts } from "@/actions";
 
 const Exercises = async () => {
   try {
-    const data = await getAllWorkouts();
-    return data ? (
+    const recentWorkouts = (await getMostRecentWorkouts()) || [];
+    return recentWorkouts ? (
       <Navbar>
-        <SearchExercises data={data} />
+        <SearchExercises recentWorkouts={recentWorkouts} />
       </Navbar>
     ) : null;
   } catch (err) {

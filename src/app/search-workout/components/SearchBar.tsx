@@ -10,13 +10,13 @@ import { Workout } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import { Data } from "@/types";
 import Image from "next/image";
+import data from "@/constants/exerciseData.json";
 
 type SearchBarProps = {
   recentWorkouts: Workout[];
-  data: Data;
 };
 
-const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
+const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
   const [showParts, setShowParts] = useState(false);
@@ -129,7 +129,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
           {recentWorkouts?.length ? (
             <h3 className="most-recent-title">RECENT</h3>
           ) : null}
-          {recentWorkouts?.map(({ bodyPart, gifUrl, id, name }) => (
+          {recentWorkouts?.map(({ bodyPart, gifId, id, name }) => (
             <div key={id}>
               <div
                 className={
@@ -144,7 +144,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={gifUrl as any}
+                  src={`/${gifId}.gif`}
                   alt="workout gif"
                   height={100}
                   width={100}
@@ -173,14 +173,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
           ))}
           <h3 className="filtered-title">EXERCISES</h3>
           {filteredExercises.map(
-            ({
-              bodyPart,
-              gifUrl,
-              id,
-              name,
-              secondaryMuscles,
-              instructions,
-            }) => (
+            ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
               <div key={id}>
                 <div
                   className={
@@ -195,7 +188,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    src={gifUrl}
+                    src={`/${id}.gif`}
                     height={100}
                     width={100}
                     alt="exercise gif"
@@ -239,7 +232,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    src={gifUrl}
+                    src={`/${id}.gif`}
                     height={400}
                     width={400}
                     alt="exercise gif"
