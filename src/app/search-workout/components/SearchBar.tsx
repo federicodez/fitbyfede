@@ -209,7 +209,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`/${gifId}.gif`}
+                  src={`/1080/${gifId}.gif`}
                   alt="workout gif"
                   height={100}
                   width={100}
@@ -253,7 +253,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    src={`/${id}.gif`}
+                    src={`/1080/${id}.gif`}
                     height={100}
                     width={100}
                     alt="exercise gif"
@@ -297,7 +297,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    src={`/${id}.gif`}
+                    src={`/1080/${id}.gif`}
                     height={400}
                     width={400}
                     alt="exercise gif"

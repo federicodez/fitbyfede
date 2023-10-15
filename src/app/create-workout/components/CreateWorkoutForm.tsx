@@ -7,6 +7,8 @@ import { CustomButton } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi2";
 import { bodyParts, categories } from "@/constants";
+import { WorkoutSession } from "@prisma/client";
+import { createWorkoutSession } from "@/actions";
 
 const CreateWorkoutForm = () => {
   const [exercise, setExercise] = useState("");

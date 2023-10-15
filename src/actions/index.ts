@@ -3,7 +3,7 @@ import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { WorkoutSession } from "@prisma/client";
-import { Data, Workout } from "@/types";
+import { Data } from "@/types";
 
 export const getWorkouts = async () => {
   try {
