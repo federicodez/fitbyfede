@@ -41,7 +41,7 @@ model Workout {
   id               String         @id @default(auto()) @map("_id") @db.ObjectId
   name             String
   bodyPart         String
-  gifUrl           String?
+  gifId            String?
   target           String
   userId           String         @db.ObjectId
   createdAt        DateTime       @default(now())

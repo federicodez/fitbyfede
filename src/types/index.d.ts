@@ -20,7 +20,7 @@ export type Workout = {
   id: string;
   name: string;
   bodyPart: string;
-  gifUrl?: string | null;
+  gifId?: string | null;
   target: string;
   sets: string[];
   lbs: number[];

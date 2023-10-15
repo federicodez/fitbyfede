@@ -2,66 +2,8 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { WorkoutSession, Workout } from "@prisma/client";
-import axios from "axios";
+import { WorkoutSession } from "@prisma/client";
 import { Data } from "@/types";
-
-export const getAllWorkouts = async () => {
-  try {
-    const options = {
-      method: "GET",
-      url: "https://exercisedb.p.rapidapi.com/exercises",
-      params: { limit: "1000" },
-      headers: {
-        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
-        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      },
-    };
-
-    const { data } = await axios.request(options);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getSpecificBodyPart = async (query: string) => {
-  try {
-    const options = {
-      method: "GET",
-      url: `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${query}`,
-      params: { limit: "10" },
-      headers: {
-        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
-        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      },
-    };
-
-    const { data } = await axios.request(options);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getCategory = async (query: string) => {
-  try {
-    const options = {
-      method: "GET",
-      url: `https://exercisedb.p.rapidapi.com/exercises/equipment/${query}`,
-      params: { limit: "10" },
-      headers: {
-        "X-RapidAPI-Key": process.env.X_RAPIDAPI_KEY,
-        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      },
-    };
-
-    const { data } = await axios.request(options);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const getWorkouts = async () => {
   try {
@@ -146,15 +88,6 @@ export const changeWorkoutSet = async (id: string, sets: string[]) => {
   }
 };
 
-export const getWorkoutById = async (id: string) => {
-  try {
-    const workout = await prisma.workout.findUnique({ where: { id: id } });
-    return workout;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getWorkoutsBySessionId = async (id: string) => {
   try {
     const workouts = await prisma.workout.findMany({
@@ -188,30 +121,6 @@ export const createWorkoutSession = async () => {
   }
 };
 
-export const getAllWorkoutSessions = async () => {
-  try {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser?.id) {
-      return null;
-    }
-
-    const sessions = prisma.workoutSession.findMany({
-      where: {
-        userId: currentUser.id,
-      },
-    });
-
-    if (!sessions) {
-      return null;
-    }
-
-    return sessions;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const createMany = async (exercises: Data, session: WorkoutSession) => {
   try {
     const currentUser = await getCurrentUser();
@@ -220,16 +129,13 @@ export const createMany = async (exercises: Data, session: WorkoutSession) => {
       return null;
     }
     await Promise.all(
-      exercises.map(async ({ name, bodyPart, gifUrl, target }) => {
+      exercises.map(async ({ name, bodyPart, id, target }) => {
         await prisma.workout.create({
           data: {
             name,
             bodyPart,
-            gifUrl,
+            gifId: id,
             target,
-            sets: ["1"],
-            lbs: [0],
-            reps: [0],
             userId: currentUser.id,
             workoutSessionId: session.id,
           },
@@ -363,27 +269,6 @@ export const getMostRecentWorkouts = async () => {
     });
 
     return workouts;
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
-export const getWorkoutByExercise = async (name: string) => {
-  try {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser?.id) {
-      return null;
-    }
-
-    const exercises = await prisma.workout.findMany({
-      where: {
-        userId: currentUser.id,
-        name,
-      },
-    });
-
-    return exercises;
   } catch (err: any) {
     console.log(err);
   }
