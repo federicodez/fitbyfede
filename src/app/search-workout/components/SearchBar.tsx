@@ -64,8 +64,6 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
       });
       if (session) {
         await createMany(exercises, session);
-      const workout = await createExercise(exercise);
-      if (workout) {
         setIsLoading(true);
         router.push(`/finish-workout/${session.id}`);
       }
