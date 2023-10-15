@@ -143,7 +143,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`/1080/${gifId}.gif`}
+                  src={`/${gifId}.gif`}
                   alt="workout gif"
                   height={100}
                   width={100}
