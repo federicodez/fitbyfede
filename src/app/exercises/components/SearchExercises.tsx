@@ -20,12 +20,15 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [bodyPartBtn, setBodyPartBtn] = useState("");
   const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("");
+  const [recent, setRecent] = useState(recentWorkouts);
 
   const handleParts = async (query: string) => {
     try {
+      const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
       const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
       setBodyPartBtn(query);
       setWorkouts(parts);
+      setRecent(recentParts);
     } catch (error) {
       console.log(error);
     }
@@ -81,13 +84,13 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
           <div>
             <button
               onClick={() => {
-                setShowParts(true);
+                setShowParts(!showParts);
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
               {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
             </button>
-            <ul className="flex flex-col">
+            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showParts
                 ? bodyParts.map((part, idx) => (
                     <li key={idx}>
@@ -109,13 +112,13 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
           <div>
             <button
               onClick={() => {
-                setShowCategories(true);
+                setShowCategories(!showCategories);
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
               {categoriesBtn ? categoriesBtn : "Any Category"}
             </button>
-            <ul>
+            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showCategories
                 ? categories.map((category, idx) => (
                     <li key={idx}>

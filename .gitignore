@@ -36,5 +36,5 @@ next-env.d.ts
 
 .env
 
-/public
+/public/1080/*
 /src/constants/exerciseData.json

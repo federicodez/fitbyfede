@@ -10,6 +10,7 @@ import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
 import data from "@/constants/exerciseData.json";
+import { bodyParts, categories } from "@/constants";
 
 type SearchBarProps = {
   recentWorkouts: Workout[];
@@ -25,14 +26,17 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState(data);
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
+  const [recent, setRecent] = useState(recentWorkouts);
 
   const router = useRouter();
 
   const handleParts = async (query: string) => {
     try {
+      const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
       const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
       setBodyPartBtn(query);
       setWorkouts(parts);
+      setRecent(recentParts);
     } catch (error) {
       console.log(error);
     }
@@ -124,11 +128,73 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             className="searchbar-form__input"
           />
         </form>
+        <div
+          className={
+            !details ? `flex justify-evenly items-center my-2` : "hidden"
+          }
+        >
+          <div>
+            <button
+              onClick={() => {
+                setShowParts(!showParts);
+              }}
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+            >
+              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
+            </button>
+            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
+              {showParts
+                ? bodyParts.map((part, idx) => (
+                    <li key={idx}>
+                      <option
+                        onClick={() => {
+                          handleParts(part);
+                          setShowParts(false);
+                        }}
+                        className="flex flex-col"
+                        value={part}
+                      >
+                        {part}
+                      </option>
+                    </li>
+                  ))
+                : null}
+            </ul>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setShowCategories(!showCategories);
+              }}
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+            >
+              {categoriesBtn ? categoriesBtn : "Any Category"}
+            </button>
+            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
+              {showCategories
+                ? categories.map((category, idx) => (
+                    <li key={idx}>
+                      <option
+                        onClick={() => {
+                          handleCategories(category);
+                          setShowCategories(false);
+                        }}
+                        className="flex flex-col"
+                        value={category}
+                      >
+                        {category}
+                      </option>
+                    </li>
+                  ))
+                : null}
+            </ul>
+          </div>
+        </div>
         <ul className="filtered__list">
-          {recentWorkouts?.length ? (
+          {recent?.length ? (
             <h3 className="most-recent-title">RECENT</h3>
           ) : null}
-          {recentWorkouts?.map(({ bodyPart, gifId, id, name }) => (
+          {recent?.map(({ bodyPart, gifId, id, name }) => (
             <div key={id}>
               <div
                 className={
