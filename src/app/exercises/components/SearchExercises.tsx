@@ -6,13 +6,13 @@ import Link from "next/link";
 import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
 import { Data, Workout } from "@/types";
-import data from "@/constants/exerciseData.json";
 
 type SearchExercisesProps = {
   recentWorkouts: Workout[];
+  data: Data;
 };
 
-const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
+const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
   const [workouts, setWorkouts] = useState(data);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
@@ -138,7 +138,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
             </ul>
           </div>
         </div>
-        {filteredExercises.map(
+        {filteredExercises?.map(
           ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
             <div key={id}>
               <div
@@ -152,7 +152,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`/1080/${id}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={100}
                   width={100}
                   alt="exercise gif"
@@ -186,7 +186,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  src={`/1080/${id}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"

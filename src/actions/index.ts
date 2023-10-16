@@ -4,6 +4,20 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { WorkoutSession } from "@prisma/client";
 import { Data } from "@/types";
+import axios from "axios";
+
+export const getExerciseData = async () => {
+  try {
+    const options = {
+      method: "GET",
+      url: process.env.EXERCISE_DB_URL as string,
+    };
+    const { data } = await axios.request(options);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getWorkouts = async () => {
   try {
