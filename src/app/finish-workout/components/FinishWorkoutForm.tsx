@@ -234,6 +234,11 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
           </div>
         ))}
         <div className="workout-form__btn">
+          <CustomButton
+            title="Add Exercise"
+            containerStyles="workout-form__submit-btn"
+            handleClick={() => {}}
+          />
           <button className="workout-form__submit-btn" type="submit">
             Create Workout
           </button>

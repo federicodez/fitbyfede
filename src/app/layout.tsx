@@ -7,7 +7,7 @@ import ToasterContext from "@/context/ToasterContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "fitfede",
+  title: "FitbyFede",
   description: "Fitness App",
 };
 
