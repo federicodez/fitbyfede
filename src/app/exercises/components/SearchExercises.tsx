@@ -152,7 +152,7 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`${process.env.GIFURL}/${id}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={100}
                   width={100}
                   alt="exercise gif"
@@ -186,7 +186,7 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  src={`${process.env.GIFURL}/${id}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"
