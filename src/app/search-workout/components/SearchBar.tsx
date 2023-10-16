@@ -9,14 +9,14 @@ import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
-import data from "@/constants/exerciseData.json";
 import { bodyParts, categories } from "@/constants";
 
 type SearchBarProps = {
   recentWorkouts: Workout[];
+  data: Data;
 };
 
-const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
+const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
   const [showParts, setShowParts] = useState(false);
@@ -209,7 +209,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`/1080/${gifId}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   alt="workout gif"
                   height={100}
                   width={100}
@@ -253,7 +253,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    src={`/1080/${id}.gif`}
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={100}
                     width={100}
                     alt="exercise gif"
@@ -297,7 +297,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    src={`/1080/${id}.gif`}
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={400}
                     width={400}
                     alt="exercise gif"
