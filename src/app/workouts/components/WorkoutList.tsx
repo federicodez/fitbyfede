@@ -71,7 +71,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
 
   return (
     <section>
-      <Link href="/search-workout" className="home-link">
+      <Link href="/search-workout" as="/search-workout" className="home-link">
         Start a Workout
       </Link>
       <ul className="workoutlist">

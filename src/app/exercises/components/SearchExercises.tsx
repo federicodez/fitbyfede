@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
 import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
+import { CustomButton } from "@/components";
+import LoadingModel from "@/components/models/LoadingModel";
 
 type SearchExercisesProps = {
   recentWorkouts: Workout[];
 };
 
 const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
-  const [workouts, setWorkouts] = useState(data);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
   const [showParts, setShowParts] = useState(false);
@@ -21,6 +22,18 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("");
   const [recent, setRecent] = useState(recentWorkouts);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [workoutsPerPage] = useState(50);
+
+  const indexOfLastWorkout = currentPage * workoutsPerPage;
+  const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
+  const numberOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
+  const [workouts, setWorkouts] = useState(numberOfWorkouts);
+
+  const paginate = (currentPage: number) => {
+    setCurrentPage(currentPage + 1);
+    setWorkouts(numberOfWorkouts);
+  };
 
   const handleParts = async (query: string) => {
     try {
@@ -57,7 +70,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
         );
 
   return (
-    <>
+    <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div
           className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
@@ -221,8 +234,15 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
             </div>
           ),
         )}
+        <div className="flex justify-center items-center">
+          <CustomButton
+            title="Show More"
+            containerStyles="w-fit mb-10 py-2 px-5 bg-blue-500 rounded-lg"
+            handleClick={() => paginate(currentPage)}
+          />
+        </div>
       </div>
-    </>
+    </Suspense>
   );
 };
 

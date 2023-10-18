@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import dynamic from "next/dynamic";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import { createWorkoutSession, createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
+import { CustomButton, ShowMore } from "@/components";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
@@ -24,10 +24,20 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [bodyPartBtn, setBodyPartBtn] = useState("");
   const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [workouts, setWorkouts] = useState(data);
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
   const [recent, setRecent] = useState(recentWorkouts);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [workoutsPerPage] = useState(50);
+
+  const indexOfLastWorkout = currentPage * workoutsPerPage;
+  const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
+  const numberOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
+  const [workouts, setWorkouts] = useState(numberOfWorkouts);
+
+  const paginate = (currentPage: number) => {
+    setCurrentPage(currentPage + 1);
+    setWorkouts(numberOfWorkouts);
+  };
 
   const router = useRouter();
 
@@ -68,7 +78,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
       });
       if (session) {
         await createMany(exercises, session.id);
-        setIsLoading(true);
         router.push(`/finish-workout/${session.id}`);
       }
     } catch (error) {
@@ -100,7 +109,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div
-          className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
+          className={!details ? `flex flex-row justify-between my-8` : "hidden"}
         >
           <button type="button" className="text-[#03045e]" id="create-btn">
             <Link href="/create-workout">New</Link>
@@ -125,7 +134,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             type="text"
             name="query"
             placeholder="Search"
-            className="searchbar-form__input"
+            className="w-full bg-white rounded-lg"
           />
         </form>
         <div
@@ -138,7 +147,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               onClick={() => {
                 setShowParts(!showParts);
               }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+              className="w-fit h-fit rounded-lg bg-gray-50 px-5 my-5"
             >
               {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
             </button>
@@ -209,12 +218,12 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`/1080/${gifId}.gif`}
+                  src={`/1080/${gifId}.gif` as string}
                   // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   alt="workout gif"
                   height={100}
                   width={100}
-                  priority={true}
+                  priority
                   blurDataURL="URL"
                   placeholder="blur"
                 />
@@ -256,12 +265,12 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    src={`/1080/${id}.gif`}
+                    src={`/1080/${id}.gif` as string}
                     // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={100}
                     width={100}
                     alt="exercise gif"
-                    priority={true}
+                    priority
                     blurDataURL="URL"
                     placeholder="blur"
                   />
@@ -303,7 +312,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    src={`/1080/${id}.gif`}
+                    src={`/1080/${id}.gif` as string}
                     // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={400}
                     width={400}
@@ -343,6 +352,11 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               </div>
             ),
           )}
+          <CustomButton
+            title="Show More"
+            containerStyles="flex self-center w-fit mb-10 py-2 px-5 bg-blue-500 rounded-lg"
+            handleClick={() => paginate(currentPage)}
+          />
         </ul>
       </div>
     </Suspense>

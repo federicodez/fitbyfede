@@ -38,7 +38,6 @@ body {
   color: #000;
   font-size: var(--fs-400);
   line-height: 1.5;
-  scroll-behavior: smooth;
   background: var(--bg-primary);
 }
 

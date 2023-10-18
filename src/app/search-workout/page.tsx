@@ -1,18 +1,18 @@
 import { getMostRecentWorkouts } from "@/actions";
 import dynamic from "next/dynamic";
+import Navbar from "@/components/navbar/Navbar";
 const SearchBar = dynamic(() => import("./components/SearchBar"), {
   ssr: false,
 });
-const Navbar = dynamic(() => import("@/components/navbar/Navbar"), {
-  ssr: false,
-});
-// import SearchBar from "./components/SearchBar";
-// import Navbar from "@/components/navbar/Navbar";
 
 const SearchWorkout = async () => {
   try {
     const recentWorkouts = (await getMostRecentWorkouts()) || [];
-    return <SearchBar recentWorkouts={recentWorkouts} />;
+    return (
+      <Navbar>
+        <SearchBar recentWorkouts={recentWorkouts} />
+      </Navbar>
+    );
   } catch (err) {
     console.log(err);
   }

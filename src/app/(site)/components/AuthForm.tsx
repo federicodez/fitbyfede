@@ -192,7 +192,7 @@ const AuthForm = () => {
         >
           <div>
             {variant === "LOGIN"
-              ? "New to fitfede?"
+              ? "New to FitbyFede?"
               : "Already have an account?"}
           </div>
           <div onClick={toggleVariant} className="underline cursor-pointer">

@@ -3,13 +3,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import NextAuthProvider from "@/context/Provider";
 import ToasterContext from "@/context/ToasterContext";
-import dynamic from "next/dynamic";
-const Navbar = dynamic(() => import("@/components/navbar/Navbar"));
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Fit by Fede",
+  title: "FitbyFede",
   description: "Fitness App",
 };
 
@@ -23,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthProvider>
           <ToasterContext />
-          <Navbar>{children}</Navbar>
+          {children}
         </NextAuthProvider>
       </body>
     </html>
