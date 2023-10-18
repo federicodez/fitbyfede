@@ -1,4 +1,5 @@
-import { type Workout } from "@/types";
+"use client";
+import { Workout } from "@/types";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
@@ -12,7 +13,7 @@ type Tally = {
   [key: string]: number;
 };
 
-const PieChart = async ({ workouts }: PieChartProps) => {
+const PieChart = ({ workouts }: PieChartProps) => {
   const tally = workouts.reduce((tally: Tally, curr: Workout) => {
     tally[curr.name] = (tally[curr.name] || 0) + 1;
     return tally;

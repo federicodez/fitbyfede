@@ -2,27 +2,36 @@
 
 import { useState, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Workout } from "@prisma/client";
-import { Button, CustomButton, WorkoutForm } from "@/components";
+import { Workout, Data } from "@/types";
+import { CustomButton } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
+import AddExercise from "./AddExercise";
 import {
   updateWorkout,
   deleteSession,
   deleteSet,
   changeWorkoutSet,
+  deleteWorkout,
 } from "@/actions";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { SlOptions } from "react-icons/sl";
 
 type FinishWorkoutFormProps = {
   sessionId: string;
   items: Workout[];
+  recentWorkouts: Workout[];
 };
 
-const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
+const FinishWorkoutForm = ({
+  sessionId,
+  items,
+  recentWorkouts,
+}: FinishWorkoutFormProps) => {
   const [setOptions, setSetOptions] = useState(false);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
+  const [addExercise, setAddExercise] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
@@ -119,13 +128,25 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
     router.push("/workouts");
   };
 
-  return (
+  const removeExercise = async (id: string) => {
+    await deleteWorkout(id);
+    router.refresh();
+  };
+
+  return !addExercise ? (
     <div className="wrapper container">
       {isLoading && <LoadingModel />}
       <form action={handleSubmit}>
         {items.map(({ id, name, sets, lbs, reps }) => (
           <div key={id}>
-            <h1 className="workout-form__title">{name}</h1>
+            <div className="grid grid-cols-3">
+              <h1 className="flex justify-center text-2xl font-bold col-span-2">
+                {name}
+              </h1>
+              <button className="col-span-1" onClick={() => removeExercise(id)}>
+                <HiOutlineTrash />
+              </button>
+            </div>
             <div className="workout-form__container">
               <ul className="workout-form__list" id="sets-list">
                 <div
@@ -234,6 +255,11 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
           </div>
         ))}
         <div className="workout-form__btn">
+          <CustomButton
+            title="Add Exercise"
+            containerStyles="workout-form__submit-btn"
+            handleClick={() => setAddExercise(true)}
+          />
           <button className="workout-form__submit-btn" type="submit">
             Create Workout
           </button>
@@ -245,6 +271,12 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
         </div>
       </form>
     </div>
+  ) : (
+    <AddExercise
+      sessionId={sessionId}
+      setAddExercise={setAddExercise}
+      recentWorkouts={recentWorkouts}
+    />
   );
 };
 

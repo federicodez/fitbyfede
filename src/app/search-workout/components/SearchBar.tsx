@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, Suspense } from "react";
+import dynamic from "next/dynamic";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
@@ -10,13 +11,13 @@ import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
+import data from "@/constants/exerciseData.json";
 
 type SearchBarProps = {
   recentWorkouts: Workout[];
-  data: Data;
 };
 
-const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
+const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
   const [showParts, setShowParts] = useState(false);
@@ -66,7 +67,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
         });
       });
       if (session) {
-        await createMany(exercises, session);
+        await createMany(exercises, session.id);
         setIsLoading(true);
         router.push(`/finish-workout/${session.id}`);
       }
@@ -88,7 +89,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
   const filteredExercises =
     query === ""
       ? workouts
-      : workouts.filter(({ name }) =>
+      : workouts?.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -96,8 +97,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
         );
 
   return (
-    <>
-      {isLoading && <LoadingModel />}
+    <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div
           className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
@@ -209,11 +209,14 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
+                  src={`/1080/${gifId}.gif`}
+                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   alt="workout gif"
                   height={100}
                   width={100}
                   priority={true}
+                  blurDataURL="URL"
+                  placeholder="blur"
                 />
                 <div className="grid grid-rows-2 col-span-4 items-center">
                   <strong id="name" className="row-span-1">
@@ -237,7 +240,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
             </div>
           ))}
           <h3 className="filtered-title">EXERCISES</h3>
-          {filteredExercises.map(
+          {filteredExercises?.map(
             ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
               <div key={id}>
                 <div
@@ -253,11 +256,14 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    src={`/1080/${id}.gif`}
+                    // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={100}
                     width={100}
                     alt="exercise gif"
                     priority={true}
+                    blurDataURL="URL"
+                    placeholder="blur"
                   />
                   <div className="grid grid-rows-2 col-span-4 items-center">
                     <strong id="name" className="row-span-1">
@@ -297,10 +303,13 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    src={`/1080/${id}.gif`}
+                    // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={400}
                     width={400}
                     alt="exercise gif"
+                    blurDataURL="URL"
+                    placeholder="blur"
                   />
                   <h3 className="text-center m-2 underline font-semibold">
                     Instructions
@@ -336,7 +345,7 @@ const SearchBar = ({ recentWorkouts, data }: SearchBarProps) => {
           )}
         </ul>
       </div>
-    </>
+    </Suspense>
   );
 };
 

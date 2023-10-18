@@ -94,7 +94,7 @@ p {
   border-radius: 20px;
   color: #495057;
   background-color: #fff;
-  padding: 16px 32px;
+  padding: 5px 32px;
   width: 15rem;
   margin: 1rem;
   margin-bottom: 3rem;
@@ -150,7 +150,7 @@ p {
 
 .searchbar-form {
   display: flex;
-  margin: 1rem;
+  /* margin: 1rem; */
 }
 
 .searchbar-form__input {

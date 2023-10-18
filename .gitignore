@@ -35,4 +35,5 @@ yarn-error.log*
 next-env.d.ts
 
 .env
-
+public/1080/*
+src/constants/exerciseData.json

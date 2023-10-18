@@ -2,22 +2,20 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { WorkoutSession } from "@prisma/client";
 import { Data } from "@/types";
-import axios from "axios";
 
-export const getExerciseData = async () => {
-  try {
-    const options = {
-      method: "GET",
-      url: process.env.EXERCISE_DB_URL as string,
-    };
-    const { data } = await axios.request(options);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const getExerciseData = async () => {
+//   try {
+//     const res = await fetch(process.env.EXERCISE_DB_URL as string);
+//
+//     if (!res.ok) {
+//       throw new Error("Failed to fetch data");
+//     }
+//     return res.json();
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const getWorkouts = async () => {
   try {
@@ -62,7 +60,7 @@ export const updateWorkout = async (
     });
     return updated;
   } catch (error) {
-    console.log(error);
+    console.log("Error updating workout: ", error);
   }
 };
 
@@ -87,7 +85,7 @@ export const updateWorkoutWithDate = async (
     });
     return updated;
   } catch (error) {
-    console.log(error);
+    console.log("Error updating workout date: ", error);
   }
 };
 
@@ -112,7 +110,7 @@ export const getWorkoutsBySessionId = async (id: string) => {
 
     return workouts;
   } catch (err: any) {
-    console.log(err);
+    console.log("Error loading workouts by session id: ", err);
   }
 };
 
@@ -131,11 +129,11 @@ export const createWorkoutSession = async () => {
     });
     return session;
   } catch (err: any) {
-    console.log(err);
+    console.log("Error creating workout session: ", err);
   }
 };
 
-export const createMany = async (exercises: Data, session: WorkoutSession) => {
+export const createMany = async (exercises: Data, sessionId: string) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -150,14 +148,17 @@ export const createMany = async (exercises: Data, session: WorkoutSession) => {
             bodyPart,
             gifId: id,
             target,
+            sets: ["1"],
+            lbs: [0],
+            reps: [0],
             userId: currentUser.id,
-            workoutSessionId: session.id,
+            workoutSessionId: sessionId,
           },
         });
       }),
     );
   } catch (err: any) {
-    console.log(err);
+    console.log("Error creating many workouts: ", err);
   }
 };
 
@@ -197,7 +198,7 @@ export const createWorkout = async (
 
     return workout;
   } catch (error) {
-    console.log(error);
+    console.log("Error creating workout: ", error);
   }
 };
 
@@ -232,7 +233,7 @@ export const deleteSession = async (sessionId: string) => {
       where: { id: sessionId },
     });
   } catch (err: any) {
-    console.log(err);
+    console.log("Error deleting session: ", err);
   }
 };
 
@@ -240,7 +241,7 @@ export const deleteWorkout = async (id: string) => {
   try {
     await prisma.workout.delete({ where: { id } });
   } catch (error) {
-    console.log(error);
+    console.log("Error deleting workout: ", error);
   }
 };
 
@@ -260,7 +261,7 @@ export const deleteSet = async (
       },
     });
   } catch (err: any) {
-    console.log(err);
+    console.log("Error deleting set: ", err);
   }
 };
 
@@ -284,6 +285,6 @@ export const getMostRecentWorkouts = async () => {
 
     return workouts;
   } catch (err: any) {
-    console.log(err);
+    console.log("Error loading most recent workouts: ", err);
   }
 };
