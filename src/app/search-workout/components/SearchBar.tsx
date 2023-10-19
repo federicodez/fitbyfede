@@ -8,7 +8,8 @@ import { createWorkoutSession, createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
-import { CustomButton, Pagination } from "@/components";
+// import { CustomButton } from "@/components";
+import { Pagination, paginate } from "@/components/Pagination";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
@@ -29,30 +30,34 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
   const [totalWorkouts, setTotalWorkouts] = useState(data.length);
+  const router = useRouter();
 
-  const indexOfLastWorkout = currentPage * workoutsPerPage;
-  const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
-  const pageOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
-  const [workouts, setWorkouts] = useState(pageOfWorkouts);
+  const startIndex = (currentPage - 1) * workoutsPerPage;
+  // const startIndex = (currentPage - 1) * workoutsPerPage;
+  // return workouts.slice(startIndex, startIndex + workoutsPerPage);
+  // const pageOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
 
-  const paginate = (currentPage: number) => {
-    setCurrentPage(currentPage);
-    setWorkouts(pageOfWorkouts);
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const router = useRouter();
+  const paginatedPosts = paginate(data, currentPage, workoutsPerPage);
+  const [workouts, setWorkouts] = useState(paginatedPosts);
+  console.log(paginatedPosts[paginatedPosts.length - 1].name);
 
   const handleParts = async (query: string) => {
     try {
       if (query === "Any Body Part") {
         setBodyPartBtn(query);
-        setWorkouts(data.slice(indexOfFirstWorkout, indexOfLastWorkout));
+        setWorkouts(
+          paginatedPosts.slice(startIndex, startIndex + workoutsPerPage),
+        );
         return;
       }
       const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
       const filtered = data
         .filter(({ bodyPart }) => bodyPart === query)
-        .slice(indexOfFirstWorkout, indexOfLastWorkout);
+        .slice(startIndex, startIndex + workoutsPerPage);
       setBodyPartBtn(query);
       setWorkouts(filtered);
       setRecent(recentParts);
@@ -113,8 +118,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const filteredExercises =
     query === ""
-      ? workouts
-      : workouts?.filter(({ name }) =>
+      ? paginatedPosts
+      : paginatedPosts?.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -374,8 +379,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
-              totalWorkouts={totalWorkouts}
-              paginate={paginate}
+              workouts={data.length}
+              onPageChange={onPageChange}
             />
           </div>
         </ul>
