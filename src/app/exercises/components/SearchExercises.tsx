@@ -7,7 +7,7 @@ import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
 import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
-import { CustomButton } from "@/components";
+import { CustomButton, Pagination } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 
 type SearchExercisesProps = {
@@ -31,7 +31,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [workouts, setWorkouts] = useState(numberOfWorkouts);
 
   const paginate = (currentPage: number) => {
-    setCurrentPage(currentPage + 1);
+    setCurrentPage(currentPage);
     setWorkouts(numberOfWorkouts);
   };
 
@@ -234,11 +234,12 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
             </div>
           ),
         )}
-        <div className="flex justify-center items-center">
-          <CustomButton
-            title="Show More"
-            containerStyles="w-fit mb-10 py-2 px-5 bg-blue-500 rounded-lg"
-            handleClick={() => paginate(currentPage)}
+        <div className="mb-10 pb-10">
+          <Pagination
+            currentPage={currentPage}
+            workoutsPerPage={workoutsPerPage}
+            totalWorkouts={data.length}
+            paginate={paginate}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ import { createWorkoutSession, createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
-import { CustomButton, ShowMore } from "@/components";
+import { CustomButton, Pagination } from "@/components";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
@@ -28,26 +28,37 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [recent, setRecent] = useState(recentWorkouts);
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
+  const [totalWorkouts, setTotalWorkouts] = useState(data.length);
 
   const indexOfLastWorkout = currentPage * workoutsPerPage;
   const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
-  const numberOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
-  const [workouts, setWorkouts] = useState(numberOfWorkouts);
+  const pageOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
+  const [workouts, setWorkouts] = useState(pageOfWorkouts);
 
   const paginate = (currentPage: number) => {
-    setCurrentPage(currentPage + 1);
-    setWorkouts(numberOfWorkouts);
+    setCurrentPage(currentPage);
+    setWorkouts(pageOfWorkouts);
   };
 
   const router = useRouter();
 
   const handleParts = async (query: string) => {
     try {
+      if (query === "Any Body Part") {
+        setBodyPartBtn(query);
+        setWorkouts(data.slice(indexOfFirstWorkout, indexOfLastWorkout));
+        return;
+      }
       const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
-      const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
+      const filtered = data
+        .filter(({ bodyPart }) => bodyPart === query)
+        .slice(indexOfFirstWorkout, indexOfLastWorkout);
       setBodyPartBtn(query);
-      setWorkouts(parts);
+      setWorkouts(filtered);
       setRecent(recentParts);
+      setTotalWorkouts(
+        data.filter(({ bodyPart }) => bodyPart === query).length,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -55,6 +66,11 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const handleCategories = async (query: string) => {
     try {
+      if (query === "Any Category") {
+        setCategoriesBtn(query);
+        setWorkouts(data.slice(indexOfFirstWorkout, indexOfLastWorkout));
+        return;
+      }
       const categories = workouts.filter(
         ({ equipment }) => equipment === query,
       );
@@ -151,10 +167,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             >
               {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
             </button>
-            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
+            <ul className="fixed bg-gray-800 text-white rounded-lg m-5">
               {showParts
                 ? bodyParts.map((part, idx) => (
-                    <li key={idx}>
+                    <li key={idx} className="cursor-pointer p-2">
                       <option
                         onClick={() => {
                           handleParts(part);
@@ -201,7 +217,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         </div>
         <ul className="filtered__list">
           {recent?.length ? (
-            <h3 className="most-recent-title">RECENT</h3>
+            <h3 className={!details ? "most-recent-title" : "hidden"}>
+              RECENT
+            </h3>
           ) : null}
           {recent?.map(({ bodyPart, gifId, id, name }) => (
             <div key={id}>
@@ -248,7 +266,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               </div>
             </div>
           ))}
-          <h3 className="filtered-title">EXERCISES</h3>
+          <h3 className={!details ? "filtered-title" : "hidden"}>EXERCISES</h3>
           {filteredExercises?.map(
             ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
               <div key={id}>
@@ -352,11 +370,14 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               </div>
             ),
           )}
-          <CustomButton
-            title="Show More"
-            containerStyles="flex self-center w-fit mb-10 py-2 px-5 bg-blue-500 rounded-lg"
-            handleClick={() => paginate(currentPage)}
-          />
+          <div className="mb-10 pb-10">
+            <Pagination
+              currentPage={currentPage}
+              workoutsPerPage={workoutsPerPage}
+              totalWorkouts={totalWorkouts}
+              paginate={paginate}
+            />
+          </div>
         </ul>
       </div>
     </Suspense>
