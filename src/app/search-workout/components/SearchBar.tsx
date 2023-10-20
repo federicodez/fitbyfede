@@ -121,7 +121,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     try {
       const session = await createWorkoutSession();
       const exercises: Data = [];
-      workouts.filter((workout) => {
+      data.filter((workout) => {
         exerciseQueue.map((exercise) => {
           if (exercise === workout.name) {
             exercises.push(workout);
