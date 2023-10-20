@@ -70,14 +70,20 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         console.log("firing part third", filtered.length);
         setWorkouts(filtered);
         setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
       } else {
         filtered = data.filter(({ bodyPart }) => bodyPart === query);
         console.log("firing part last", filtered.length);
         setWorkouts(filtered);
         setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
       }
-      const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
-      setRecent(recentParts);
     } catch (error) {
       console.log(error);
     }
@@ -91,6 +97,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         setCategoriesBtn("Any Category");
         setWorkouts(data);
         setCategoryActivated(false);
+        setRecent(recentWorkouts);
       } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
         console.log("firing cat second");
         setCategoriesBtn("Any Category");
@@ -110,6 +117,11 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         });
         setWorkouts(filtered);
         setCategoriesBtn(query);
+
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === bodyPartBtn,
+        );
+        setRecent(recentParts);
       } else {
         categories = data.filter(({ equipment }) => equipment === query);
         console.log("firing cat last", categories.length);
