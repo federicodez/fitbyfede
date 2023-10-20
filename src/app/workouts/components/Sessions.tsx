@@ -16,7 +16,7 @@ type SessionsProps = {
 };
 
 const Sessions = ({ ids, exercises, sets, lbs, reps }: SessionsProps) =>
-  ids?.map((id: string, idIndex: number) => (
+  ids?.reverse().map((id: string, idIndex: number) => (
     <div key={idIndex} className="wrapper grid grid-cols-3 my-4">
       <div className="grid col-span-3 my-2">
         <strong>{exercises[id]}</strong>
