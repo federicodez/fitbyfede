@@ -19,18 +19,23 @@ type SearchBarProps = {
 };
 
 const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
+
   const [showParts, setShowParts] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("");
   const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("");
+
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
   const [recent, setRecent] = useState(recentWorkouts);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [totalWorkouts, setTotalWorkouts] = useState(data.length);
-  const router = useRouter();
+  const [workouts, setWorkouts] = useState(data);
+
+  const paginatedPosts = paginate(workouts, currentPage, workoutsPerPage);
 
   const startIndex = (currentPage - 1) * workoutsPerPage;
   // const startIndex = (currentPage - 1) * workoutsPerPage;
@@ -41,29 +46,18 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     setCurrentPage(page);
   };
 
-  const paginatedPosts = paginate(data, currentPage, workoutsPerPage);
-  const [workouts, setWorkouts] = useState(paginatedPosts);
-  console.log(paginatedPosts[paginatedPosts.length - 1].name);
-
   const handleParts = async (query: string) => {
     try {
-      if (query === "Any Body Part") {
-        setBodyPartBtn(query);
-        setWorkouts(
-          paginatedPosts.slice(startIndex, startIndex + workoutsPerPage),
-        );
+      if (query === "any") {
+        setBodyPartBtn("Any Body Part");
+        setWorkouts(data);
         return;
       }
       const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
-      const filtered = data
-        .filter(({ bodyPart }) => bodyPart === query)
-        .slice(startIndex, startIndex + workoutsPerPage);
-      setBodyPartBtn(query);
+      const filtered = data.filter(({ bodyPart }) => bodyPart === query);
       setWorkouts(filtered);
       setRecent(recentParts);
-      setTotalWorkouts(
-        data.filter(({ bodyPart }) => bodyPart === query).length,
-      );
+      setBodyPartBtn(query);
     } catch (error) {
       console.log(error);
     }
@@ -71,9 +65,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const handleCategories = async (query: string) => {
     try {
-      if (query === "Any Category") {
-        setCategoriesBtn(query);
-        setWorkouts(data.slice(indexOfFirstWorkout, indexOfLastWorkout));
+      if (query === "any") {
+        setCategoriesBtn("Any Category");
+        setWorkouts(workouts.slice(startIndex, startIndex + workoutsPerPage));
         return;
       }
       const categories = workouts.filter(
@@ -379,7 +373,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
-              workouts={data.length}
+              workouts={workouts.length}
               onPageChange={onPageChange}
             />
           </div>
