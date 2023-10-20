@@ -25,10 +25,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const [showParts, setShowParts] = useState(false);
   const [partsActivated, setPartsActivated] = useState(false);
-  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
   const [categoryActivated, setCategoryActivated] = useState(false);
-  const [categoriesBtn, setCategoriesBtn] = useState("");
+  const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
   const [recent, setRecent] = useState(recentWorkouts);
@@ -47,27 +47,32 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const handleParts = async (query: string) => {
     let filtered;
     try {
-      if (query === "any" && categoriesBtn === "") {
-        console.log("firing part first", categoriesBtn);
-        setBodyPartBtn("any");
-        setWorkouts(data);
+      if (query === "any" && categoriesBtn === "Any Category") {
+        console.log("firing part first");
         setPartsActivated(false);
-      } else if (query === "any") {
+        setBodyPartBtn("Any Body Part");
+        setWorkouts(data);
+      } else if (query === "any" && categoriesBtn !== "Any Category") {
         console.log("firing part second", categoriesBtn);
-        setBodyPartBtn("");
+        setBodyPartBtn("Any Body Part");
         const categories = data.filter(
           ({ equipment }) => equipment === categoriesBtn,
         );
         setWorkouts(categories);
         setPartsActivated(false);
-      } else if (partsActivated && !categoryActivated) {
-        console.log("firing part third");
-        filtered = data.filter(({ bodyPart }) => bodyPart === query);
+      } else if (categoriesBtn !== "Any Category") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.bodyPart === query && item.equipment === categoriesBtn) {
+            filtered.push(item);
+          }
+        });
+        console.log("firing part third", filtered.length);
         setWorkouts(filtered);
         setBodyPartBtn(query);
       } else {
-        console.log("firing part last");
-        filtered = workouts.filter(({ bodyPart }) => bodyPart === query);
+        filtered = data.filter(({ bodyPart }) => bodyPart === query);
+        console.log("firing part last", filtered.length);
         setWorkouts(filtered);
         setBodyPartBtn(query);
       }
@@ -81,24 +86,33 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const handleCategories = async (query: string) => {
     let categories;
     try {
-      if (query === "any" && bodyPartBtn === "any") {
+      if (query === "any" && bodyPartBtn === "Any Body Part") {
         console.log("firing cat first");
-        setCategoriesBtn("");
+        setCategoriesBtn("Any Category");
         setWorkouts(data);
         setCategoryActivated(false);
-      } else if (query === "any" && bodyPartBtn !== "any") {
+      } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
         console.log("firing cat second");
-        setCategoriesBtn("");
-        const filtered = data.filter(({ bodyPart }) => bodyPart === query);
+        setCategoriesBtn("Any Category");
+        const filtered = data.filter(
+          ({ bodyPart }) => bodyPart === bodyPartBtn,
+        );
         setWorkouts(filtered);
-      } else if (!partsActivated && categoryActivated) {
+        setCategoryActivated(false);
+      } else if (bodyPartBtn !== "Any Body Part") {
         console.log("firing cat third");
-        categories = data.filter(({ equipment }) => equipment === query);
-        setWorkouts(categories);
+
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.equipment === query && item.bodyPart === bodyPartBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkouts(filtered);
         setCategoriesBtn(query);
       } else {
-        console.log("firing cat last");
-        categories = workouts.filter(({ equipment }) => equipment === query);
+        categories = data.filter(({ equipment }) => equipment === query);
+        console.log("firing cat last", categories.length);
         setWorkouts(categories);
         setCategoriesBtn(query);
       }
@@ -191,7 +205,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5 my-5"
             >
-              {partsActivated ? bodyPartBtn : "Any Body Part"}
+              {bodyPartBtn}
             </button>
             <ul className="fixed bg-gray-800 text-white rounded-lg m-5">
               {showParts
@@ -220,7 +234,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
-              {categoryActivated ? categoriesBtn : "Any Category"}
+              {categoriesBtn}
             </button>
             <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showCategories
