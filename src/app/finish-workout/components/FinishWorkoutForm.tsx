@@ -30,7 +30,7 @@ const FinishWorkoutForm = ({
   const [setOptions, setSetOptions] = useState(false);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [workouts, setWorkouts] = useState<Workout[]>(items);
+  const [workouts, setWorkouts] = useState<Workout[]>(items.reverse());
   const [addExercise, setAddExercise] = useState(false);
   const router = useRouter();
 
@@ -38,11 +38,11 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    workouts.map(({ id, lbs, reps }) => {
-      lbs.map((lb, idx) => {
-        lbs.splice(idx, 1, Number(dataLbs[0]));
+    workouts.map(({ lbs, reps }) => {
+      lbs.map((_, id) => {
+        lbs.splice(id, 1, Number(dataLbs[0]));
         dataLbs.shift();
-        reps.splice(idx, 1, Number(dataReps[0]));
+        reps.splice(id, 1, Number(dataReps[0]));
         dataReps.shift();
       });
     });
@@ -61,6 +61,7 @@ const FinishWorkoutForm = ({
 
   const addSet = async (id: string) => {
     const workout = workouts.filter((workout) => workout.id === id);
+    console.log({ workouts });
     const { sets, lbs, reps } = workout[0];
     try {
       const lastSet = sets[sets.length - 1];
@@ -275,6 +276,7 @@ const FinishWorkoutForm = ({
     <AddExercise
       sessionId={sessionId}
       setAddExercise={setAddExercise}
+      setWorkouts={setWorkouts}
       recentWorkouts={recentWorkouts}
     />
   );
