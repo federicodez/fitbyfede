@@ -37,7 +37,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [workoutsPerPage] = useState(50);
   const [workouts, setWorkouts] = useState(data);
 
-  console.log(workouts.length);
   const paginatedPosts = paginate(workouts, currentPage, workoutsPerPage);
 
   const onPageChange = (page: number) => {
@@ -48,12 +47,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     let filtered;
     try {
       if (query === "any" && categoriesBtn === "Any Category") {
-        console.log("firing part first");
         setPartsActivated(false);
         setBodyPartBtn("Any Body Part");
         setWorkouts(data);
       } else if (query === "any" && categoriesBtn !== "Any Category") {
-        console.log("firing part second", categoriesBtn);
         setBodyPartBtn("Any Body Part");
         const categories = data.filter(
           ({ equipment }) => equipment === categoriesBtn,
@@ -67,7 +64,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             filtered.push(item);
           }
         });
-        console.log("firing part third", filtered.length);
         setWorkouts(filtered);
         setBodyPartBtn(query);
         const recentParts = recentWorkouts.filter(
@@ -76,7 +72,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         setRecent(recentParts);
       } else {
         filtered = data.filter(({ bodyPart }) => bodyPart === query);
-        console.log("firing part last", filtered.length);
         setWorkouts(filtered);
         setBodyPartBtn(query);
         const recentParts = recentWorkouts.filter(
@@ -93,13 +88,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     let categories;
     try {
       if (query === "any" && bodyPartBtn === "Any Body Part") {
-        console.log("firing cat first");
         setCategoriesBtn("Any Category");
         setWorkouts(data);
         setCategoryActivated(false);
-        setRecent(recentWorkouts);
       } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
-        console.log("firing cat second");
         setCategoriesBtn("Any Category");
         const filtered = data.filter(
           ({ bodyPart }) => bodyPart === bodyPartBtn,
@@ -107,8 +99,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         setWorkouts(filtered);
         setCategoryActivated(false);
       } else if (bodyPartBtn !== "Any Body Part") {
-        console.log("firing cat third");
-
         const filtered: Data = [];
         data.filter((item) => {
           if (item.equipment === query && item.bodyPart === bodyPartBtn) {
@@ -117,14 +107,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         });
         setWorkouts(filtered);
         setCategoriesBtn(query);
-
-        const recentParts = recentWorkouts.filter(
-          ({ bodyPart }) => bodyPart === bodyPartBtn,
-        );
-        setRecent(recentParts);
       } else {
         categories = data.filter(({ equipment }) => equipment === query);
-        console.log("firing cat last", categories.length);
         setWorkouts(categories);
         setCategoriesBtn(query);
       }
@@ -318,6 +302,35 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   )}
                 </div>
               </div>
+
+              <div
+                className={
+                  details === id
+                    ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                    : "hidden"
+                }
+              >
+                <button
+                  className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
+                  onClick={() => setDetails(false)}
+                >
+                  <HiX />
+                </button>
+                <h3 className="text-center m-2 font-bold" id="name">
+                  {name}
+                </h3>
+                <Image
+                  className="flex self-center rounded-md"
+                  id="gif"
+                  src={`/1080/${gifId}.gif` as string}
+                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                  height={400}
+                  width={400}
+                  alt="exercise gif"
+                  blurDataURL="URL"
+                  placeholder="blur"
+                />
+              </div>
             </div>
           ))}
           <h3 className={!details ? "filtered-title" : "hidden"}>EXERCISES</h3>
@@ -424,7 +437,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               </div>
             ),
           )}
-          <div className="mb-10 pb-10">
+          <div className={!details ? "mb-10 pb-10" : "hidden"}>
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
