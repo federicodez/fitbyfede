@@ -13,7 +13,7 @@ export const exampleWorkout = [
 ];
 
 export const bodyParts = [
-  "Any Body Part",
+  "any",
   "back",
   "cardio",
   "chest",
@@ -27,7 +27,7 @@ export const bodyParts = [
 ];
 
 export const categories = [
-  "Any Category",
+  "any",
   "assisted",
   "band",
   "barbell",
