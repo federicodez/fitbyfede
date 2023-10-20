@@ -1,60 +1,124 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { createWorkoutSession, createMany } from "@/actions";
+import { createMany, getWorkoutsBySessionId } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
+import { Pagination, paginate } from "@/components/Pagination";
 
 type AddExerciseProps = {
   sessionId: string;
   recentWorkouts: Workout[];
   setAddExercise: React.Dispatch<React.SetStateAction<boolean>>;
+  setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
 };
 
 const AddExercise = ({
   sessionId,
   recentWorkouts,
   setAddExercise,
+  setWorkouts,
 }: AddExerciseProps) => {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
+
   const [showParts, setShowParts] = useState(false);
-  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [partsActivated, setPartsActivated] = useState(false);
+  const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoriesBtn, setCategoriesBtn] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [workouts, setWorkouts] = useState(data);
+  const [categoryActivated, setCategoryActivated] = useState(false);
+  const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
+
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
   const [recent, setRecent] = useState(recentWorkouts);
 
-  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [workoutsPerPage] = useState(50);
+  const [workoutData, setWorkoutData] = useState(data);
+
+  const paginatedWorkouts = paginate(workoutData, currentPage, workoutsPerPage);
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const handleParts = async (query: string) => {
+    let filtered;
     try {
-      const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
-      const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
-      setBodyPartBtn(query);
-      setWorkouts(parts);
-      setRecent(recentParts);
+      if (query === "any" && categoriesBtn === "Any Category") {
+        setPartsActivated(false);
+        setBodyPartBtn("Any Body Part");
+        setWorkoutData(data);
+      } else if (query === "any" && categoriesBtn !== "Any Category") {
+        setBodyPartBtn("Any Body Part");
+        const categories = data.filter(
+          ({ equipment }) => equipment === categoriesBtn,
+        );
+        setWorkoutData(categories);
+        setPartsActivated(false);
+      } else if (categoriesBtn !== "Any Category") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.bodyPart === query && item.equipment === categoriesBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkoutData(filtered);
+        setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
+      } else {
+        filtered = data.filter(({ bodyPart }) => bodyPart === query);
+        setWorkoutData(filtered);
+        setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleCategories = async (query: string) => {
+    let categories;
     try {
-      const categories = workouts.filter(
-        ({ equipment }) => equipment === query,
-      );
-      setCategoriesBtn(query);
-      setWorkouts(categories);
+      if (query === "any" && bodyPartBtn === "Any Body Part") {
+        setCategoriesBtn("Any Category");
+        setWorkoutData(data);
+        setCategoryActivated(false);
+      } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
+        setCategoriesBtn("Any Category");
+        const filtered = data.filter(
+          ({ bodyPart }) => bodyPart === bodyPartBtn,
+        );
+        setWorkoutData(filtered);
+        setCategoryActivated(false);
+      } else if (bodyPartBtn !== "Any Body Part") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.equipment === query && item.bodyPart === bodyPartBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkoutData(filtered);
+        setCategoriesBtn(query);
+      } else {
+        categories = data.filter(({ equipment }) => equipment === query);
+        setWorkoutData(categories);
+        setCategoriesBtn(query);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +127,7 @@ const AddExercise = ({
   const handleClick = async () => {
     try {
       const exercises: Data = [];
-      workouts.filter((workout) => {
+      workoutData.filter((workout) => {
         exerciseQueue.map((exercise) => {
           if (exercise === workout.name) {
             exercises.push(workout);
@@ -71,6 +135,10 @@ const AddExercise = ({
         });
       });
       await createMany(exercises, sessionId);
+      const newWorkouts = await getWorkoutsBySessionId(sessionId);
+      if (newWorkouts) {
+        setWorkouts(newWorkouts);
+      }
       router.refresh();
       setAddExercise(false);
     } catch (error) {
@@ -90,8 +158,8 @@ const AddExercise = ({
 
   const filteredExercises =
     query === ""
-      ? workouts
-      : workouts?.filter(({ name }) =>
+      ? paginatedWorkouts
+      : paginatedWorkouts?.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -99,8 +167,7 @@ const AddExercise = ({
         );
 
   return (
-    <>
-      {isLoading && <LoadingModel />}
+    <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div
           className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
@@ -146,7 +213,7 @@ const AddExercise = ({
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
-              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
+              {bodyPartBtn}
             </button>
             <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showParts
@@ -156,6 +223,7 @@ const AddExercise = ({
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
+                          setPartsActivated(true);
                         }}
                         className="flex flex-col"
                         value={part}
@@ -174,7 +242,7 @@ const AddExercise = ({
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
-              {categoriesBtn ? categoriesBtn : "Any Category"}
+              {categoriesBtn}
             </button>
             <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showCategories
@@ -184,6 +252,7 @@ const AddExercise = ({
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
+                          setCategoryActivated(true);
                         }}
                         className="flex flex-col"
                         value={category}
@@ -340,9 +409,17 @@ const AddExercise = ({
               </div>
             ),
           )}
+          <div className={!details ? "mb-10 pb-10" : "hidden"}>
+            <Pagination
+              currentPage={currentPage}
+              workoutsPerPage={workoutsPerPage}
+              workouts={workoutData.length}
+              onPageChange={onPageChange}
+            />
+          </div>
         </ul>
       </div>
-    </>
+    </Suspense>
   );
 };
 
