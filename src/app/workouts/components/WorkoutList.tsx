@@ -10,6 +10,7 @@ import moment from "moment";
 import { exampleWorkout } from "@/constants";
 import { Workout } from "@/types";
 import { HiOutlineTrash } from "react-icons/hi";
+import { SlOptions } from "react-icons/sl";
 
 type WorkoutListProps = {
   items: Workout[];
@@ -39,6 +40,7 @@ type Session = {
 
 const WorkoutList = ({ items }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState(items);
+  const [showOptions, setShowOptions] = useState<string>();
   const sorted = items.reduce((groups: Groups, workout: Workout) => {
     if (!groups[workout.workoutSessionId])
       groups[workout.workoutSessionId] = [];
@@ -79,18 +81,26 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
           ? workoutSession.map(
               ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
                 <li key={index} className="container wrapper workoutlist-item">
-                  <div className="workoutlist-btn">
-                    <RemoveBtn
-                      ids={ids}
-                      sessionId={sessionId}
-                      setWorkouts={setWorkouts}
-                    />
-                    <Link href={`/edit-workout/${sessionId}`}>
-                      <HiPencilAlt className="workoutlist__edit-btn" />
-                    </Link>
-                  </div>
-                  <div className="workoutlist-date">
+                  <div className="flex justify-between">
                     {moment(date).format("dddd, MMM Do")}
+                    <button onClick={() => setShowOptions(sessionId)}>
+                      <SlOptions />
+                    </button>
+
+                    <div
+                      className={
+                        showOptions === sessionId ? "workoutlist-btn" : "hidden"
+                      }
+                    >
+                      <RemoveBtn
+                        ids={ids}
+                        sessionId={sessionId}
+                        setWorkouts={setWorkouts}
+                      />
+                      <Link href={`/edit-workout/${sessionId}`}>
+                        <HiPencilAlt className="workoutlist__edit-btn" />
+                      </Link>
+                    </div>
                   </div>
                   <Sessions
                     ids={ids}
