@@ -161,6 +161,8 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
                     <div className="workout-form__label-input">
                       <SetOptions
                         id={id}
+                        setId={setId}
+                        setIndex={setIndex}
                         setOptions={setOptions}
                         setSetOptions={setSetOptions}
                         changeSet={changeSet}
