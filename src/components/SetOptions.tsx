@@ -5,20 +5,29 @@ type SetOptionProps = {
   setOptions: string | null;
   setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
   changeSet: (id: string, e: MouseEvent) => void;
+  setId: number;
+  setIndex: number;
 };
 
 const SetOptions = ({
+  id,
   setOptions,
   setSetOptions,
   changeSet,
-  id,
+  setId,
+  setIndex,
 }: SetOptionProps) => {
+  const options = [
+    { type: "w", label: "Warm-up" },
+    { type: "d", label: "Drop Set" },
+    { type: "f", label: "Failure" },
+  ];
   return (
     <div
       onMouseLeave={() => setSetOptions(null)}
       className={
-        setOptions === id
-          ? `absolute bg-gray-800 text-white ml-20 px-2 rounded-lg`
+        setOptions === id && setIndex === setId
+          ? `absolute bg-gray-800 text-white rounded-lg cursor-pointer`
           : "hidden"
       }
     >
@@ -31,6 +40,7 @@ const SetOptions = ({
       >
         Warm-up
       </option>
+
       <option
         value="d"
         onClick={(e) => {
@@ -40,6 +50,7 @@ const SetOptions = ({
       >
         Drop Set
       </option>
+
       <option
         value="f"
         onClick={(e) => {
