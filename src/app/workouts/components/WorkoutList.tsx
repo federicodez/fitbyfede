@@ -4,6 +4,7 @@ import { useState } from "react";
 import { RemoveBtn } from "@/components";
 import WorkoutCard from "./WorkoutCard";
 import Sessions from "./Sessions";
+import Detailed from "./Detailed";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
@@ -41,9 +42,11 @@ type Session = {
 
 const WorkoutList = ({ items }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState(items);
-  const [showOptions, setShowOptions] = useState<string>();
+  const [showSessions, setShowSessions] = useState(true);
+  const [showOptions, setShowOptions] = useState<string | boolean>(false);
   const [showWorkouts, setShowWorkouts] = useState<string | boolean>(false);
-  const sorted = items.reduce((groups: Groups, workout: Workout) => {
+
+  const sorted = workouts.reduce((groups: Groups, workout: Workout) => {
     if (!groups[workout.workoutSessionId])
       groups[workout.workoutSessionId] = [];
 
@@ -84,16 +87,17 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
               ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
                 <li
                   key={index}
-                  onClick={() => {
-                    sessionId ? setShowWorkouts(sessionId) : null;
-                  }}
-                  className="container wrapper workoutlist-item"
+                  className="container wrapper workoutlist-item rounded-lg"
                 >
                   <div className="flex justify-between">
                     {moment(date).format("dddd, MMM Do")}
                     <button
                       className={showOptions ? "hidden" : ""}
-                      onClick={() => setShowOptions(sessionId)}
+                      onClick={() => {
+                        if (sessionId) {
+                          setShowOptions(sessionId);
+                        }
+                      }}
                     >
                       <SlOptions />
                     </button>
@@ -104,7 +108,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                           ? "workoutlist-btn absolute right-7 flex flex-col bg-white rounded-md p-2"
                           : "hidden"
                       }
-                      onMouseLeave={() => setShowOptions("")}
+                      onMouseLeave={() => setShowOptions(false)}
                     >
                       <Link
                         href={`/edit-workout/${sessionId}`}
@@ -120,22 +124,34 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                       />
                     </div>
                   </div>
-                  <div className={showWorkouts === sessionId ? "" : "hidden"}>
-                    <button
-                      className="bg-gray-400 px-2 py-1 rounded-md"
-                      onClick={() => {
-                        setShowWorkouts(false);
-                        console.log(showWorkouts);
-                      }}
-                    >
-                      <HiX />
-                    </button>
+                  <div
+                    onClick={() => {
+                      sessionId ? setShowWorkouts(sessionId) : null;
+                      setShowSessions(false);
+                    }}
+                  >
                     <Sessions
                       ids={ids}
                       exercises={exercises}
                       sets={sets}
                       lbs={lbs}
                       reps={reps}
+                    />
+                  </div>
+                  <div
+                    className={
+                      showWorkouts === sessionId ? "relative" : "hidden"
+                    }
+                  >
+                    <Detailed
+                      ids={ids}
+                      exercises={exercises}
+                      sets={sets}
+                      lbs={lbs}
+                      reps={reps}
+                      sessionId={sessionId}
+                      setShowWorkouts={setShowWorkouts}
+                      setShowSessions={setShowSessions}
                     />
                   </div>
                 </li>
