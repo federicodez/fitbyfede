@@ -235,7 +235,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showCategories
                 ? categories.map((category, idx) => (
-                    <li key={idx}>
+                    <li key={idx} className="cursor-pointer">
                       <option
                         onClick={() => {
                           handleCategories(category);
