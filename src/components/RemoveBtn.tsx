@@ -26,8 +26,9 @@ const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
     }
   };
   return (
-    <button className="remove-btn" onClick={removeWorkout}>
-      <HiOutlineTrash />
+    <button className="remove-btn flex flex-row" onClick={removeWorkout}>
+      <HiOutlineTrash className="text-red-500" />
+      <span className="text-lg">Delete</span>
     </button>
   );
 };

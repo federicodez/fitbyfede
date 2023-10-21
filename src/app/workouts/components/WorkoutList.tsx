@@ -11,6 +11,7 @@ import { exampleWorkout } from "@/constants";
 import { Workout } from "@/types";
 import { HiOutlineTrash } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
+import { HiX } from "react-icons/hi";
 
 type WorkoutListProps = {
   items: Workout[];
@@ -41,6 +42,7 @@ type Session = {
 const WorkoutList = ({ items }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState(items);
   const [showOptions, setShowOptions] = useState<string>();
+  const [showWorkouts, setShowWorkouts] = useState<string | boolean>(false);
   const sorted = items.reduce((groups: Groups, workout: Workout) => {
     if (!groups[workout.workoutSessionId])
       groups[workout.workoutSessionId] = [];
@@ -80,35 +82,62 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         {workoutSession?.length
           ? workoutSession.map(
               ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
-                <li key={index} className="container wrapper workoutlist-item">
+                <li
+                  key={index}
+                  onClick={() => {
+                    sessionId ? setShowWorkouts(sessionId) : null;
+                  }}
+                  className="container wrapper workoutlist-item"
+                >
                   <div className="flex justify-between">
                     {moment(date).format("dddd, MMM Do")}
-                    <button onClick={() => setShowOptions(sessionId)}>
+                    <button
+                      className={showOptions ? "hidden" : ""}
+                      onClick={() => setShowOptions(sessionId)}
+                    >
                       <SlOptions />
                     </button>
 
                     <div
                       className={
-                        showOptions === sessionId ? "workoutlist-btn" : "hidden"
+                        showOptions === sessionId
+                          ? "workoutlist-btn absolute right-7 flex flex-col bg-white rounded-md p-2"
+                          : "hidden"
                       }
+                      onMouseLeave={() => setShowOptions("")}
                     >
+                      <Link
+                        href={`/edit-workout/${sessionId}`}
+                        className="flex flex-row"
+                      >
+                        <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
+                        <span className="text-lg">Edit Workout</span>
+                      </Link>
                       <RemoveBtn
                         ids={ids}
                         sessionId={sessionId}
                         setWorkouts={setWorkouts}
                       />
-                      <Link href={`/edit-workout/${sessionId}`}>
-                        <HiPencilAlt className="workoutlist__edit-btn" />
-                      </Link>
                     </div>
                   </div>
-                  <Sessions
-                    ids={ids}
-                    exercises={exercises}
-                    sets={sets}
-                    lbs={lbs}
-                    reps={reps}
-                  />
+                  <div className={showWorkouts === sessionId ? "" : "hidden"}>
+                    <button
+                      className="bg-gray-400 px-2 py-1 rounded-md"
+                      onClick={() => {
+                        setShowWorkouts(false);
+                        console.log(showWorkouts);
+                      }}
+                    >
+                      <HiX />
+                    </button>
+                    <Sessions
+                      ids={ids}
+                      exercises={exercises}
+                      sets={sets}
+                      lbs={lbs}
+                      reps={reps}
+                    />
+                  </div>
                 </li>
               ),
             )
