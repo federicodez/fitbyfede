@@ -7,7 +7,8 @@ import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
 import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
-import { CustomButton, Pagination } from "@/components";
+import { CustomButton } from "@/components";
+import { Pagination, paginate } from "@/components/Pagination";
 import LoadingModel from "@/components/models/LoadingModel";
 
 type SearchExercisesProps = {
@@ -17,43 +18,94 @@ type SearchExercisesProps = {
 const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
+
   const [showParts, setShowParts] = useState(false);
-  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [partsActivated, setPartsActivated] = useState(false);
+  const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoriesBtn, setCategoriesBtn] = useState("");
+  const [categoryActivated, setCategoryActivated] = useState(false);
+  const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
+
   const [recent, setRecent] = useState(recentWorkouts);
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
+  const [workouts, setWorkouts] = useState(data);
 
-  const indexOfLastWorkout = currentPage * workoutsPerPage;
-  const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
-  const numberOfWorkouts = data.slice(indexOfFirstWorkout, indexOfLastWorkout);
-  const [workouts, setWorkouts] = useState(numberOfWorkouts);
+  const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
-  const paginate = (currentPage: number) => {
-    setCurrentPage(currentPage);
-    setWorkouts(numberOfWorkouts);
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const handleParts = async (query: string) => {
+    let filtered;
     try {
-      const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
-      const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
-      setBodyPartBtn(query);
-      setWorkouts(parts);
-      setRecent(recentParts);
+      if (query === "any" && categoriesBtn === "Any Category") {
+        setPartsActivated(false);
+        setBodyPartBtn("Any Body Part");
+        setWorkouts(data);
+      } else if (query === "any" && categoriesBtn !== "Any Category") {
+        setBodyPartBtn("Any Body Part");
+        const categories = data.filter(
+          ({ equipment }) => equipment === categoriesBtn,
+        );
+        setWorkouts(categories);
+        setPartsActivated(false);
+      } else if (categoriesBtn !== "Any Category") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.bodyPart === query && item.equipment === categoriesBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkouts(filtered);
+        setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
+      } else {
+        filtered = data.filter(({ bodyPart }) => bodyPart === query);
+        setWorkouts(filtered);
+        setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleCategories = async (query: string) => {
+    let categories;
     try {
-      const categories = workouts.filter(
-        ({ equipment }) => equipment === query,
-      );
-      setCategoriesBtn(query);
-      setWorkouts(categories);
+      if (query === "any" && bodyPartBtn === "Any Body Part") {
+        setCategoriesBtn("Any Category");
+        setWorkouts(data);
+        setCategoryActivated(false);
+      } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
+        setCategoriesBtn("Any Category");
+        const filtered = data.filter(
+          ({ bodyPart }) => bodyPart === bodyPartBtn,
+        );
+        setWorkouts(filtered);
+        setCategoryActivated(false);
+      } else if (bodyPartBtn !== "Any Body Part") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.equipment === query && item.bodyPart === bodyPartBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkouts(filtered);
+        setCategoriesBtn(query);
+      } else {
+        categories = data.filter(({ equipment }) => equipment === query);
+        setWorkouts(categories);
+        setCategoriesBtn(query);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -61,8 +113,8 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
 
   const filteredExercises =
     query === ""
-      ? workouts
-      : workouts.filter(({ name }) =>
+      ? paginatedWorkouts
+      : paginatedWorkouts.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -101,7 +153,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
-              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
+              {bodyPartBtn}
             </button>
             <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showParts
@@ -111,6 +163,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
+                          setPartsActivated(true);
                         }}
                         className="flex flex-col"
                         value={part}
@@ -129,7 +182,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
               }}
               className="w-fit h-fit rounded-lg bg-gray-50 px-5"
             >
-              {categoriesBtn ? categoriesBtn : "Any Category"}
+              {categoriesBtn}
             </button>
             <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showCategories
@@ -139,6 +192,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
+                          setCategoryActivated(true);
                         }}
                         className="flex flex-col"
                         value={category}
@@ -234,12 +288,12 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
             </div>
           ),
         )}
-        <div className="mb-10 pb-10">
+        <div className={!details ? "mb-10 pb-10" : "hidden"}>
           <Pagination
             currentPage={currentPage}
             workoutsPerPage={workoutsPerPage}
-            totalWorkouts={data.length}
-            paginate={paginate}
+            workouts={workouts.length}
+            onPageChange={onPageChange}
           />
         </div>
       </div>
