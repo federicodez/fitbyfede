@@ -196,20 +196,24 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             >
               {showParts
                 ? bodyParts.map((part, idx) => (
-                    <li key={idx} className="cursor-pointer p-2">
+                    <li
+                      key={idx}
+                      className={`flex flex-row cursor-pointer p-2 ${
+                        bodyPartBtn === part ? "bg-gray-500" : ""
+                      }`}
+                    >
                       <option
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
                         }}
-                        className={`flex flex-col ${
-                          bodyPartBtn === part ? "bg-gray-500" : ""
-                        }`}
+                        className={`flex flex-col w-full 
+`}
                         value={part}
                       >
                         {part}
-                        {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                       </option>
+                      {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                     </li>
                   ))
                 : null}
@@ -225,27 +229,30 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               {bodyPartBtn}
             </button>
           </div>
-          <div className="relative">
+          <div className="relative w-full">
             <ul
               onMouseLeave={() => setShowCategories(!showCategories)}
               className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
             >
               {showCategories
                 ? categories.map((category, idx) => (
-                    <li key={idx} className="cursor-pointer p-2">
+                    <li
+                      key={idx}
+                      className={`flex flex-row cursor-pointer p-2 ${
+                        categoriesBtn === category ? "bg-gray-500" : ""
+                      }`}
+                    >
                       <option
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
                         }}
-                        className={`flex flex-col ${
-                          categoriesBtn === category ? "bg-gray-500" : ""
-                        }`}
+                        className={`flex flex-col w-full`}
                         value={category}
                       >
                         {category}
-                        {categoriesBtn === category ? <AiOutlineCheck /> : null}
                       </option>
+                      {categoriesBtn === category ? <AiOutlineCheck /> : null}
                     </li>
                   ))
                 : null}
