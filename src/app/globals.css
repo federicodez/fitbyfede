@@ -240,7 +240,7 @@ p {
   display: flex;
   width: 5rem;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: lightgrey;
   color: #000;
 }
 
@@ -264,8 +264,8 @@ p {
   }
 
   .workout-form__add-btn {
-    background-color: darkgrey;
-    color: #fff;
+    background-color: lightgrey;
+    color: #000;
     border-radius: 10px;
   }
 

@@ -33,6 +33,8 @@ const FinishWorkoutForm = ({
   const [addExercise, setAddExercise] = useState(false);
   const router = useRouter();
 
+  console.log("workouts: ", workouts);
+
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
@@ -145,7 +147,7 @@ const FinishWorkoutForm = ({
                   className="col-span-1"
                   onClick={() => removeExercise(id)}
                 >
-                  <HiOutlineTrash />
+                  <SlOptions />
                 </button>
               </div>
               <div className="workout-form__container">

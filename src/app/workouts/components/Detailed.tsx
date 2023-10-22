@@ -50,7 +50,7 @@ const Detailed = ({
         </Link>
       </div>
       {moment(date).format("llll")}
-      {ids?.reverse().map((id: string, idIndex: number) => (
+      {ids?.map((id: string, idIndex: number) => (
         <div key={idIndex} className="flex flex-col my-4 ">
           <div className="my-2">
             <strong>{exercises[id]}</strong>

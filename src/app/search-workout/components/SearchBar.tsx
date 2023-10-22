@@ -288,16 +288,14 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 }}
               >
                 <Image
-                  className="col-span-1"
+                  className="col-span-1 object-cover"
                   id="gif"
-                  src={`/1080/${gifId}.gif` as string}
-                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
+                  // src={`/1080/${gifId}.gif` as string}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   alt="workout gif"
-                  height={100}
-                  width={100}
+                  height={200}
+                  width={200}
                   priority
-                  blurDataURL="URL"
-                  placeholder="blur"
                 />
                 <div className="grid grid-rows-2 col-span-4 items-center">
                   <strong id="name" className="row-span-1">
@@ -338,8 +336,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  src={`/1080/${gifId}.gif` as string}
-                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                  // src={`/1080/${gifId}.gif` as string}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"
@@ -366,10 +364,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    src={`/1080/${id}.gif` as string}
-                    // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
-                    height={100}
-                    width={100}
+                    // src={`/1080/${id}.gif` as string}
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    height={200}
+                    width={200}
                     alt="exercise gif"
                     priority
                     blurDataURL="URL"
@@ -413,8 +411,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    src={`/1080/${id}.gif` as string}
-                    // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    // src={`/1080/${id}.gif` as string}
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={400}
                     width={400}
                     alt="exercise gif"
