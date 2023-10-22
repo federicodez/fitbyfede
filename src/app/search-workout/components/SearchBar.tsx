@@ -8,7 +8,6 @@ import { createWorkoutSession, createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
-// import { CustomButton } from "@/components";
 import { Pagination, paginate } from "@/components/Pagination";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
@@ -24,10 +23,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [details, setDetails] = useState<string | boolean>(false);
 
   const [showParts, setShowParts] = useState(false);
-  const [partsActivated, setPartsActivated] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoryActivated, setCategoryActivated] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
@@ -47,7 +44,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     let filtered;
     try {
       if (query === "any" && categoriesBtn === "Any Category") {
-        setPartsActivated(false);
         setBodyPartBtn("Any Body Part");
         setWorkouts(data);
       } else if (query === "any" && categoriesBtn !== "Any Category") {
@@ -56,7 +52,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
           ({ equipment }) => equipment === categoriesBtn,
         );
         setWorkouts(categories);
-        setPartsActivated(false);
       } else if (categoriesBtn !== "Any Category") {
         const filtered: Data = [];
         data.filter((item) => {
@@ -90,14 +85,12 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
       if (query === "any" && bodyPartBtn === "Any Body Part") {
         setCategoriesBtn("Any Category");
         setWorkouts(data);
-        setCategoryActivated(false);
       } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
         setCategoriesBtn("Any Category");
         const filtered = data.filter(
           ({ bodyPart }) => bodyPart === bodyPartBtn,
         );
         setWorkouts(filtered);
-        setCategoryActivated(false);
       } else if (bodyPartBtn !== "Any Body Part") {
         const filtered: Data = [];
         data.filter((item) => {
@@ -208,12 +201,14 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
-                          setPartsActivated(true);
                         }}
-                        className="flex flex-col"
+                        className={`flex flex-col ${
+                          bodyPartBtn === part ? "bg-gray-500" : ""
+                        }`}
                         value={part}
                       >
                         {part}
+                        {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                       </option>
                     </li>
                   ))
@@ -224,7 +219,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 setShowParts(!showParts);
               }}
               className={`w-full rounded-lg px-5 ${
-                partsActivated ? "bg-blue-300" : "bg-gray-50"
+                bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
               }`}
             >
               {bodyPartBtn}
@@ -242,12 +237,14 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
-                          setCategoryActivated(true);
                         }}
-                        className="flex flex-col"
+                        className={`flex flex-col ${
+                          categoriesBtn === category ? "bg-gray-500" : ""
+                        }`}
                         value={category}
                       >
                         {category}
+                        {categoriesBtn === category ? <AiOutlineCheck /> : null}
                       </option>
                     </li>
                   ))
@@ -258,7 +255,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 setShowCategories(!showCategories);
               }}
               className={`w-full rounded-lg px-5 ${
-                categoryActivated ? "bg-blue-300" : "bg-gray-50"
+                categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
               }`}
             >
               {categoriesBtn}
