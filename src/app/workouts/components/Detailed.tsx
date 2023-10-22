@@ -1,7 +1,9 @@
+import moment from "moment";
 import Link from "next/link";
 import { HiX } from "react-icons/hi";
 
 type DetailedProps = {
+  date: Date;
   ids: any[];
   exercises: {
     [key: string]: string;
@@ -21,6 +23,7 @@ type DetailedProps = {
 };
 
 const Detailed = ({
+  date,
   ids,
   exercises,
   sets,
@@ -31,7 +34,7 @@ const Detailed = ({
   setShowSessions,
 }: DetailedProps) => {
   return (
-    <div className="absolute wrapper z-10 rounded-md bg-white shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+    <div className="absolute z-10 rounded-md bg-gray-100 w-full shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
       <div className="flex flex-row justify-between m-2">
         <button
           className="bg-gray-400 px-2 py-1 rounded-md"
@@ -46,42 +49,24 @@ const Detailed = ({
           <span className="text-lg text-blue-500">Edit</span>
         </Link>
       </div>
-
+      {moment(date).format("llll")}
       {ids?.reverse().map((id: string, idIndex: number) => (
-        <div key={idIndex} className="grid grid-cols-3 my-4 ">
-          <div className="grid col-span-3 my-2">
+        <div key={idIndex} className="flex flex-col my-4 ">
+          <div className="my-2">
             <strong>{exercises[id]}</strong>
           </div>
-          <ul className="workout-card-list">
-            {sets[id]?.map((set: string, setIndex: number) => (
-              <li
-                key={setIndex}
-                className="workout-card-item flex justify-end items-center"
-              >
-                <div className="workout-card__set-label">Set</div>
-                <div className="workout-card__set-id">{set}</div>
-              </li>
-            ))}
-          </ul>
           <ul className="workout-card-list">
             {lbs[id]?.map((lb: number, lbIndex: number) => (
               <li
                 key={lbIndex}
                 className="workout-card-item flex justify-center items-center"
               >
-                <div className="workout-card__lb">{lb}</div>
-                <div className="workout-card__lbs-label">lbs</div>
-              </li>
-            ))}
-          </ul>
-          <ul className="workout-card-list">
-            {reps[id]?.map((rep: number, repIndex: number) => (
-              <li
-                key={repIndex}
-                className="workout-card-item flex justify-start items-center"
-              >
-                <div className="workout-card__X">x</div>
-                <div className="workout-card__reps">{rep}</div>
+                <div className="">{sets[id][lbIndex]}</div>
+                <div className="">
+                  {lb
+                    ? `${lb} lbs x ${reps[id][lbIndex]}`
+                    : `${reps[id][lbIndex]} reps`}
+                </div>
               </li>
             ))}
           </ul>

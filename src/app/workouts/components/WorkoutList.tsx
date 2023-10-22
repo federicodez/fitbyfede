@@ -24,7 +24,7 @@ type Groups = {
 
 type Session = {
   sessionId?: string;
-  date?: Date;
+  date: Date;
   ids: any[];
   exercises: {
     [key: string]: string;
@@ -56,6 +56,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
   const sortedWorkouts = Object.values(sorted);
   const workoutSession = sortedWorkouts.map((workout) => {
     const session: Session = {
+      date: new Date(),
       ids: [],
       exercises: {},
       sets: {},
@@ -85,65 +86,14 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
         {workoutSession?.length
           ? workoutSession.map(
               ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
-                <li
-                  key={index}
-                  className="container wrapper workoutlist-item rounded-lg"
-                >
-                  <div className="flex justify-between">
-                    {moment(date).format("dddd, MMM Do")}
-                    <button
-                      className={showOptions ? "hidden" : ""}
-                      onClick={() => {
-                        if (sessionId) {
-                          setShowOptions(sessionId);
-                        }
-                      }}
-                    >
-                      <SlOptions />
-                    </button>
-
-                    <div
-                      className={
-                        showOptions === sessionId
-                          ? "workoutlist-btn absolute right-7 flex flex-col bg-white rounded-md p-2"
-                          : "hidden"
-                      }
-                      onMouseLeave={() => setShowOptions(false)}
-                    >
-                      <Link
-                        href={`/edit-workout/${sessionId}`}
-                        className="flex flex-row"
-                      >
-                        <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
-                        <span className="text-lg">Edit Workout</span>
-                      </Link>
-                      <RemoveBtn
-                        ids={ids}
-                        sessionId={sessionId}
-                        setWorkouts={setWorkouts}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    onClick={() => {
-                      sessionId ? setShowWorkouts(sessionId) : null;
-                      setShowSessions(false);
-                    }}
-                  >
-                    <Sessions
-                      ids={ids}
-                      exercises={exercises}
-                      sets={sets}
-                      lbs={lbs}
-                      reps={reps}
-                    />
-                  </div>
+                <div key={index} className="wrapper">
                   <div
                     className={
-                      showWorkouts === sessionId ? "relative" : "hidden"
+                      showWorkouts === sessionId ? "relative w-full" : "hidden"
                     }
                   >
                     <Detailed
+                      date={date}
                       ids={ids}
                       exercises={exercises}
                       sets={sets}
@@ -154,7 +104,58 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                       setShowSessions={setShowSessions}
                     />
                   </div>
-                </li>
+                  <li className="container wrapper workoutlist-item rounded-lg">
+                    <div className="flex justify-between">
+                      {moment(date).format("dddd, MMM Do")}
+                      <button
+                        className={showOptions ? "hidden" : ""}
+                        onClick={() => {
+                          if (sessionId) {
+                            setShowOptions(sessionId);
+                          }
+                        }}
+                      >
+                        <SlOptions />
+                      </button>
+
+                      <div
+                        className={
+                          showOptions === sessionId
+                            ? "workoutlist-btn absolute right-7 flex flex-col bg-white rounded-md p-2"
+                            : "hidden"
+                        }
+                        onMouseLeave={() => setShowOptions(false)}
+                      >
+                        <Link
+                          href={`/edit-workout/${sessionId}`}
+                          className="flex flex-row"
+                        >
+                          <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
+                          <span className="text-lg">Edit Workout</span>
+                        </Link>
+                        <RemoveBtn
+                          ids={ids}
+                          sessionId={sessionId}
+                          setWorkouts={setWorkouts}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => {
+                        sessionId ? setShowWorkouts(sessionId) : null;
+                        setShowSessions(false);
+                      }}
+                    >
+                      <Sessions
+                        ids={ids}
+                        exercises={exercises}
+                        sets={sets}
+                        lbs={lbs}
+                        reps={reps}
+                      />
+                    </div>
+                  </li>
+                </div>
               ),
             )
           : exampleWorkout?.map(({ id, name, sets, lbs, reps, createdAt }) => (
