@@ -191,19 +191,16 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         </form>
         <div
           className={
-            !details ? `flex justify-evenly items-center my-2` : "hidden"
+            !details
+              ? `grid grid-cols-2 justify-center items-center gap-3 my-2`
+              : "hidden"
           }
         >
-          <div>
-            <button
-              onClick={() => {
-                setShowParts(!showParts);
-              }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5 my-5"
+          <div className="relative w-full">
+            <ul
+              onMouseLeave={() => setShowParts(!showParts)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
             >
-              {bodyPartBtn}
-            </button>
-            <ul className="fixed bg-gray-800 text-white rounded-lg m-5">
               {showParts
                 ? bodyParts.map((part, idx) => (
                     <li key={idx} className="cursor-pointer p-2">
@@ -222,20 +219,25 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   ))
                 : null}
             </ul>
-          </div>
-          <div>
             <button
               onClick={() => {
-                setShowCategories(!showCategories);
+                setShowParts(!showParts);
               }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+              className={`w-full rounded-lg px-5 ${
+                partsActivated ? "bg-blue-300" : "bg-gray-50"
+              }`}
             >
-              {categoriesBtn}
+              {bodyPartBtn}
             </button>
-            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
+          </div>
+          <div className="relative">
+            <ul
+              onMouseLeave={() => setShowCategories(!showCategories)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
+            >
               {showCategories
                 ? categories.map((category, idx) => (
-                    <li key={idx} className="cursor-pointer">
+                    <li key={idx} className="cursor-pointer p-2">
                       <option
                         onClick={() => {
                           handleCategories(category);
@@ -251,6 +253,16 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   ))
                 : null}
             </ul>
+            <button
+              onClick={() => {
+                setShowCategories(!showCategories);
+              }}
+              className={`w-full rounded-lg px-5 ${
+                categoryActivated ? "bg-blue-300" : "bg-gray-50"
+              }`}
+            >
+              {categoriesBtn}
+            </button>
           </div>
         </div>
         <ul className="filtered__list">
