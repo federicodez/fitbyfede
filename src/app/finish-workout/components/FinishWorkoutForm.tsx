@@ -142,10 +142,10 @@ const FinishWorkoutForm = ({
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
+        <StartTimer />
         <form action={handleSubmit}>
           {items.map(({ id, name, sets, lbs, reps }) => (
             <div key={id}>
-              <StartTimer />
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
                 <div className="flex-initial w-fit">

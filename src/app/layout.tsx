@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import NextAuthProvider from "@/context/Provider";
 import ToasterContext from "@/context/ToasterContext";
+import TimerContextProvider from "@/context/TimerContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthProvider>
           <ToasterContext />
-          {children}
+          <TimerContextProvider>{children}</TimerContextProvider>
         </NextAuthProvider>
       </body>
     </html>

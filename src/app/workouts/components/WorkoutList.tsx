@@ -12,7 +12,6 @@ import { exampleWorkout } from "@/constants";
 import { Workout } from "@/types";
 import { HiOutlineTrash } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
-import { HiX } from "react-icons/hi";
 
 type WorkoutListProps = {
   items: Workout[];
