@@ -121,9 +121,21 @@ export const createWorkoutSession = async () => {
     if (!currentUser?.id) {
       return null;
     }
+    const date = new Date().getHours();
+    let time;
+    if (date < 12) {
+      time = "Morning Workout";
+    } else if (date < 15) {
+      time = "Midday Workout";
+    } else if (date < 18) {
+      time = "Afternoon Workout";
+    } else {
+      time = "Evening Workout";
+    }
     const session = await prisma.workoutSession.create({
       data: {
         userId: currentUser.id,
+        name: time,
       },
     });
     return session;
@@ -140,21 +152,25 @@ export const createMany = async (exercises: Data, sessionId: string) => {
       return null;
     }
     await Promise.all(
-      exercises.map(async ({ name, bodyPart, id, target }) => {
-        await prisma.workout.create({
-          data: {
-            name,
-            bodyPart,
-            gifId: id,
-            target,
-            sets: ["1"],
-            lbs: [0],
-            reps: [0],
-            userId: currentUser.id,
-            workoutSessionId: sessionId,
-          },
-        });
-      }),
+      exercises.map(
+        async ({ name, bodyPart, id, target, equipment, instructions }) => {
+          await prisma.workout.create({
+            data: {
+              name,
+              bodyPart,
+              gifId: id,
+              target,
+              equipment,
+              instructions,
+              sets: ["1"],
+              lbs: [0],
+              reps: [0],
+              userId: currentUser.id,
+              workoutSessionId: sessionId,
+            },
+          });
+        },
+      ),
     );
   } catch (err: any) {
     console.log("Error creating many workouts: ", err);

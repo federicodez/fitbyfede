@@ -1,9 +1,8 @@
 import { exampleWorkout } from "@/constants";
 import Link from "next/link";
-import { HiPencilAlt } from "react-icons/hi";
-import { HiOutlineTrash } from "react-icons/hi";
 import moment from "moment";
 import WorkoutCard from "@/app/workouts/components/WorkoutCard";
+import { SlOptions } from "react-icons/sl";
 
 const EmptyState = () => {
   return (
@@ -12,11 +11,11 @@ const EmptyState = () => {
         Start a Workout
       </Link>
       <ul className="workoutlist">
+        <p>Example Workout</p>
         {exampleWorkout?.map(({ id, name, sets, lbs, reps, createdAt }) => (
           <li key={id} className="container workoutlist-item">
             <div className="workoutlist-btn">
-              <HiOutlineTrash />
-              <HiPencilAlt />
+              <SlOptions />
             </div>
             <div className="workoutlist-date">
               {moment(createdAt).format("dddd, MMM Do")}

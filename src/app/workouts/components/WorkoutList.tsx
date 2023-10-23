@@ -160,8 +160,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
           : exampleWorkout?.map(({ id, name, sets, lbs, reps, createdAt }) => (
               <li key={id} className="container workoutlist-item">
                 <div className="workoutlist-btn">
-                  <HiOutlineTrash />
-                  <HiPencilAlt />
+                  <SlOptions />
                 </div>
                 <div className="workoutlist-date">
                   {moment(createdAt).format("dddd, MMM Do")}

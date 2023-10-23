@@ -42,9 +42,9 @@ model Workout {
   name             String
   bodyPart         String
   gifId            String?
-  target           String
-  equipment        String
-  intructions      String[]
+  target           String?
+  equipment        String?
+  instructions     String[]
   userId           String         @db.ObjectId
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
