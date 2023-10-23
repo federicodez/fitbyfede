@@ -37,7 +37,7 @@ const FinishWorkoutForm = ({
   const [setIndex, setSetIndex] = useState<number>(0);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const [addExercise, setAddExercise] = useState(false);
-  const [openMenu, setOpenMenu] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState(false);
   const router = useRouter();
 
@@ -152,7 +152,7 @@ const FinishWorkoutForm = ({
                   <div
                     onMouseLeave={() => setOpenMenu(false)}
                     className={
-                      openMenu
+                      openMenu === id
                         ? "absolute z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
                         : "hidden"
                     }
@@ -182,7 +182,7 @@ const FinishWorkoutForm = ({
                         setOpenMenu(false);
                       }}
                     >
-                      <TbReplace className="text-blue-500" />
+                      <TbReplace className="text-blue-499" />
                       <span>Replace</span>
                       <span>Exercise</span>
                     </div>
@@ -206,7 +206,7 @@ const FinishWorkoutForm = ({
                       <span>Exercise</span>
                     </div>
                   </div>
-                  <div onClick={() => setOpenMenu(true)}>
+                  <div onClick={() => setOpenMenu(id)}>
                     <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
                   </div>
                 </div>
