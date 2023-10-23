@@ -22,7 +22,7 @@ export type Workout = {
   bodyPart: string;
   gifId?: string | null;
   target: string;
-  equipment: string;
+  equipment?: string | null;
   instructions: string[];
   sets: string[];
   lbs: number[];
