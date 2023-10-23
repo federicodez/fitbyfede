@@ -43,6 +43,8 @@ model Workout {
   bodyPart         String
   gifId            String?
   target           String
+  equipment        String
+  intructions      String[]
   userId           String         @db.ObjectId
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
@@ -56,6 +58,7 @@ model Workout {
 
 model WorkoutSession {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
   userId     String    @db.ObjectId
   createdAt  DateTime  @default(now())
   workoutIds String[]  @db.ObjectId
