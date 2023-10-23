@@ -19,6 +19,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
+import StartTimer from "@/components/Timer";
 
 type FinishWorkoutFormProps = {
   sessionId: string;
@@ -144,6 +145,7 @@ const FinishWorkoutForm = ({
         <form action={handleSubmit}>
           {items.map(({ id, name, sets, lbs, reps }) => (
             <div key={id}>
+              <StartTimer />
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
                 <div className="flex-initial w-fit">
@@ -331,7 +333,7 @@ const FinishWorkoutForm = ({
           <div className="workout-form__btn">
             <CustomButton
               title="Add Exercise"
-              containerStyles="workout-form__submit-btn"
+              containerStyles="rounded-lg bg-purple-100 text-purple-900"
               handleClick={() => setAddExercise(true)}
             />
             <button className="workout-form__submit-btn" type="submit">

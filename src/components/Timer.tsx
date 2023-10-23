@@ -1,67 +1,78 @@
-type State = "new" | "running" | "stopped";
-let state: State = "new"; // new, running, stopped
-let interval: any;
-let startTime: number;
-let stopTime: number;
+"use client";
 
-export const start = () => {
-  if (state === "running") {
-    return;
-  }
+import { useState } from "react";
 
-  interval = setInterval(displayTime, 100); // increase miliseconds by 10
+const StartTimer = () => {
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [tens, setTens] = useState(0o0);
+  const [appendMinutes, setAppendMinutes] = useState("");
+  const [appendTens, setAppendTens] = useState<number | string>("");
+  const [appendSeconds, setAppendSeconds] = useState<number | string>("");
+  const [startBtn, setStartBtn] = useState("");
+  const [stopBtn, setStopBtn] = useState("");
+  const [resetBtn, setResetBtn] = useState("");
+  let Interval: any;
 
-  if (state === "new") {
-    startTime = Date.now();
-  } else {
-    startTime += Date.now() - stopTime;
-  }
+  const startTimer = () => {
+    setTens(tens + 1);
+    if (tens <= 9) {
+      setAppendTens("0" + tens);
+    }
+    if (tens > 9) {
+      setAppendTens(tens);
+    }
 
-  state = "running";
+    if (tens > 99) {
+      setSeconds(seconds + 1);
+      setAppendSeconds("0" + seconds);
+      setTens(0);
+      setAppendTens("0" + 0);
+    }
 
-  displayTime();
+    if (seconds > 9) {
+      setAppendSeconds(seconds);
+    }
+
+    if (seconds > 59) {
+      setMinutes(minutes + 1);
+      setAppendMinutes("0" + minutes);
+      setSeconds(0);
+      setAppendSeconds("0" + 0);
+    }
+  };
+
+  return (
+    <>
+      <div
+        id="startBtn"
+        onClick={() => {
+          clearInterval(Interval);
+          Interval = setInterval(startTimer, 10);
+        }}
+      >
+        Start
+        {Interval}
+      </div>
+      <div id="stopBtn" onClick={() => clearInterval(Interval)}>
+        Stop
+      </div>
+      <div
+        id="resetBtn"
+        onClick={() => {
+          clearInterval(Interval);
+          setTens(0o0);
+          setSeconds(0o0);
+          setMinutes(0o0);
+          setAppendTens(tens);
+          setAppendSeconds(seconds);
+          setAppendMinutes(`${minutes}`);
+        }}
+      >
+        Reset
+      </div>
+    </>
+  );
 };
 
-export const stop = () => {
-  if (state === "stopped" || state === "new") {
-    return;
-  }
-
-  stopTime = Date.now();
-
-  state = "stopped";
-
-  clearInterval(interval);
-};
-
-export const reset = () => {
-  stopTime = Date.now();
-  startTime = Date.now();
-
-  if (state === "running") {
-    clearInterval(interval);
-  }
-
-  state = "new";
-
-  displayTime();
-};
-
-export const displayTime = () => {
-  let now = Date.now() - startTime;
-  let hours = Math.floor(now / (60 * 60 * 1000));
-  let minutes = Math.floor((now / (60 * 1000)) % 60);
-  let seconds = Math.floor((now / 1000) % 60);
-  let milliseconds = now % 1000;
-
-  let timeString =
-    hours.toString().padStart(2, "0") +
-    ":" +
-    minutes.toString().padStart(2, "0") +
-    ":" +
-    seconds.toString().padStart(2, "0") +
-    "." +
-    milliseconds.toString().padStart(3, "0");
-
-  return <div>{timeString}</div>;
-};
+export default StartTimer;
