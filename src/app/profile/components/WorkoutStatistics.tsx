@@ -1,8 +1,4 @@
-"use client";
-
-import { type Workout } from "@/types";
-import BarChart from "./BarChart";
-import LineChart from "./LineChart";
+import { Workout } from "@/types";
 import PieChart from "./PieChart";
 
 type StatisticsProps = {

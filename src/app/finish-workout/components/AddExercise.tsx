@@ -1,30 +1,40 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { Suspense, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { createWorkoutSession, createMany } from "@/actions";
+import { createMany, getWorkoutsBySessionId } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
-import { Pagination, paginate } from "@/components/Pagination";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
+import { Pagination, paginate } from "@/components/Pagination";
 
-type SearchBarProps = {
+type AddExerciseProps = {
+  sessionId: string;
   recentWorkouts: Workout[];
+  setAddExercise: React.Dispatch<React.SetStateAction<boolean>>;
+  setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
 };
 
-const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
+const AddExercise = ({
+  sessionId,
+  recentWorkouts,
+  setAddExercise,
+  setWorkouts,
+}: AddExerciseProps) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
 
   const [showParts, setShowParts] = useState(false);
+  const [partsActivated, setPartsActivated] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
+  const [categoryActivated, setCategoryActivated] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
@@ -32,9 +42,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [workouts, setWorkouts] = useState(data);
+  const [workoutData, setWorkoutData] = useState(data);
 
-  const paginatedPosts = paginate(workouts, currentPage, workoutsPerPage);
+  const paginatedWorkouts = paginate(workoutData, currentPage, workoutsPerPage);
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
@@ -44,14 +54,16 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     let filtered;
     try {
       if (query === "any" && categoriesBtn === "Any Category") {
+        setPartsActivated(false);
         setBodyPartBtn("Any Body Part");
-        setWorkouts(data);
+        setWorkoutData(data);
       } else if (query === "any" && categoriesBtn !== "Any Category") {
         setBodyPartBtn("Any Body Part");
         const categories = data.filter(
           ({ equipment }) => equipment === categoriesBtn,
         );
-        setWorkouts(categories);
+        setWorkoutData(categories);
+        setPartsActivated(false);
       } else if (categoriesBtn !== "Any Category") {
         const filtered: Data = [];
         data.filter((item) => {
@@ -59,7 +71,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             filtered.push(item);
           }
         });
-        setWorkouts(filtered);
+        setWorkoutData(filtered);
         setBodyPartBtn(query);
         const recentParts = recentWorkouts.filter(
           ({ bodyPart }) => bodyPart === query,
@@ -67,7 +79,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         setRecent(recentParts);
       } else {
         filtered = data.filter(({ bodyPart }) => bodyPart === query);
-        setWorkouts(filtered);
+        setWorkoutData(filtered);
         setBodyPartBtn(query);
         const recentParts = recentWorkouts.filter(
           ({ bodyPart }) => bodyPart === query,
@@ -84,13 +96,15 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     try {
       if (query === "any" && bodyPartBtn === "Any Body Part") {
         setCategoriesBtn("Any Category");
-        setWorkouts(data);
+        setWorkoutData(data);
+        setCategoryActivated(false);
       } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
         setCategoriesBtn("Any Category");
         const filtered = data.filter(
           ({ bodyPart }) => bodyPart === bodyPartBtn,
         );
-        setWorkouts(filtered);
+        setWorkoutData(filtered);
+        setCategoryActivated(false);
       } else if (bodyPartBtn !== "Any Body Part") {
         const filtered: Data = [];
         data.filter((item) => {
@@ -98,11 +112,11 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             filtered.push(item);
           }
         });
-        setWorkouts(filtered);
+        setWorkoutData(filtered);
         setCategoriesBtn(query);
       } else {
         categories = data.filter(({ equipment }) => equipment === query);
-        setWorkouts(categories);
+        setWorkoutData(categories);
         setCategoriesBtn(query);
       }
     } catch (error) {
@@ -112,19 +126,21 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const handleClick = async () => {
     try {
-      const session = await createWorkoutSession();
       const exercises: Data = [];
-      data.filter((workout) => {
+      workoutData.filter((workout) => {
         exerciseQueue.map((exercise) => {
           if (exercise === workout.name) {
             exercises.push(workout);
           }
         });
       });
-      if (session) {
-        await createMany(exercises, session.id);
-        router.push(`/finish-workout/${session.id}`);
+      await createMany(exercises, sessionId);
+      const newWorkouts = await getWorkoutsBySessionId(sessionId);
+      if (newWorkouts) {
+        setWorkouts(newWorkouts);
       }
+      router.refresh();
+      setAddExercise(false);
     } catch (error) {
       console.log(error);
     }
@@ -142,8 +158,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const filteredExercises =
     query === ""
-      ? paginatedPosts
-      : paginatedPosts?.filter(({ name }) =>
+      ? paginatedWorkouts
+      : paginatedWorkouts?.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -154,15 +170,18 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div
-          className={!details ? `flex flex-row justify-between my-8` : "hidden"}
+          className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
         >
           <button type="button" className="text-[#03045e]" id="create-btn">
             <Link href="/create-workout">New</Link>
           </button>
-          <button type="button" className="text-[#c1121f]" id="cancel-btn">
-            <Link href="/workouts">
-              <HiX />
-            </Link>
+          <button
+            type="button"
+            className="text-[#c1121f]"
+            id="cancel-btn"
+            onClick={() => setAddExercise(false)}
+          >
+            <HiX />
           </button>
           <button
             type="button"
@@ -270,9 +289,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         </div>
         <ul className="filtered__list">
           {recent?.length ? (
-            <h3 className={!details ? "most-recent-title" : "hidden"}>
-              RECENT
-            </h3>
+            <h3 className="most-recent-title">RECENT</h3>
           ) : null}
           {recent?.map(({ bodyPart, gifId, id, name }) => (
             <div key={id}>
@@ -287,14 +304,13 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 }}
               >
                 <Image
-                  className="col-span-1 object-cover"
+                  className="col-span-1"
                   id="gif"
-                  // src={`/1080/${gifId}.gif` as string}
                   src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   alt="workout gif"
-                  height={200}
-                  width={200}
-                  priority
+                  height={100}
+                  width={100}
+                  priority={true}
                 />
                 <div className="grid grid-rows-2 col-span-4 items-center">
                   <strong id="name" className="row-span-1">
@@ -315,38 +331,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   )}
                 </div>
               </div>
-
-              <div
-                className={
-                  details === id
-                    ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
-                    : "hidden"
-                }
-              >
-                <button
-                  className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
-                  onClick={() => setDetails(false)}
-                >
-                  <HiX />
-                </button>
-                <h3 className="text-center m-2 font-bold" id="name">
-                  {name}
-                </h3>
-                <Image
-                  className="flex self-center rounded-md"
-                  id="gif"
-                  // src={`/1080/${gifId}.gif` as string}
-                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
-                  height={400}
-                  width={400}
-                  alt="exercise gif"
-                  blurDataURL="URL"
-                  placeholder="blur"
-                />
-              </div>
             </div>
           ))}
-          <h3 className={!details ? "filtered-title" : "hidden"}>EXERCISES</h3>
+          <h3 className="filtered-title">EXERCISES</h3>
           {filteredExercises?.map(
             ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
               <div key={id}>
@@ -363,14 +350,11 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    // src={`/1080/${id}.gif` as string}
                     src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
-                    height={200}
-                    width={200}
+                    height={100}
+                    width={100}
                     alt="exercise gif"
-                    priority
-                    blurDataURL="URL"
-                    placeholder="blur"
+                    priority={true}
                   />
                   <div className="grid grid-rows-2 col-span-4 items-center">
                     <strong id="name" className="row-span-1">
@@ -410,13 +394,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="flex self-center rounded-md"
                     id="gif"
-                    // src={`/1080/${id}.gif` as string}
                     src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={400}
                     width={400}
                     alt="exercise gif"
-                    blurDataURL="URL"
-                    placeholder="blur"
                   />
                   <h3 className="text-center m-2 underline font-semibold">
                     Instructions
@@ -454,7 +435,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
-              workouts={workouts.length}
+              workouts={workoutData.length}
               onPageChange={onPageChange}
             />
           </div>
@@ -464,4 +445,4 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   );
 };
 
-export default SearchBar;
+export default AddExercise;

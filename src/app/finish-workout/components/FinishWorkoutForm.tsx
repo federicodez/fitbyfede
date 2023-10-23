@@ -1,39 +1,55 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { Workout } from "@prisma/client";
-import { Button, CustomButton, WorkoutForm } from "@/components";
+import { Workout, Data } from "@/types";
+import { CustomButton, SetOptions } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
+import AddExercise from "./AddExercise";
 import {
   updateWorkout,
   deleteSession,
   deleteSet,
   changeWorkoutSet,
+  deleteWorkout,
 } from "@/actions";
-import { HiOutlineTrash } from "react-icons/hi2";
+import { SlOptions } from "react-icons/sl";
+import { HiX } from "react-icons/hi";
+import { AiFillEdit } from "react-icons/ai";
+import { MdAdd } from "react-icons/md";
+import { TbReplace } from "react-icons/tb";
+import { BiTimer } from "react-icons/bi";
+import StartTimer from "@/components/Timer";
 
 type FinishWorkoutFormProps = {
   sessionId: string;
   items: Workout[];
+  recentWorkouts: Workout[];
 };
 
-const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
-  const [setOptions, setSetOptions] = useState(false);
+const FinishWorkoutForm = ({
+  sessionId,
+  items,
+  recentWorkouts,
+}: FinishWorkoutFormProps) => {
+  const [notes, setNotes] = useState<string | boolean>(false);
+  const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
+  const [addExercise, setAddExercise] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | boolean>(false);
+  const [replace, setReplace] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    workouts.map(({ id, lbs, reps }) => {
-      lbs.map((lb, idx) => {
-        lbs.splice(idx, 1, Number(dataLbs[0]));
+    workouts.map(({ lbs, reps }) => {
+      lbs.map((_, id) => {
+        lbs.splice(id, 1, Number(dataLbs[0]));
         dataLbs.shift();
-        reps.splice(idx, 1, Number(dataReps[0]));
+        reps.splice(id, 1, Number(dataReps[0]));
         dataReps.shift();
       });
     });
@@ -43,7 +59,6 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
       workouts.map(async ({ id, sets, lbs, reps }) => {
         await updateWorkout(id, sets, lbs, reps);
       });
-      setIsLoading(true);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -52,6 +67,7 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
 
   const addSet = async (id: string) => {
     const workout = workouts.filter((workout) => workout.id === id);
+    console.log({ workouts });
     const { sets, lbs, reps } = workout[0];
     try {
       const lastSet = sets[sets.length - 1];
@@ -115,141 +131,230 @@ const FinishWorkoutForm = ({ sessionId, items }: FinishWorkoutFormProps) => {
 
   const removeWorkout = async () => {
     await deleteSession(sessionId);
-    setIsLoading(true);
     router.push("/workouts");
   };
 
-  return (
-    <div className="wrapper container">
-      {isLoading && <LoadingModel />}
-      <form action={handleSubmit}>
-        {items.map(({ id, name, sets, lbs, reps }) => (
-          <div key={id}>
-            <h1 className="workout-form__title">{name}</h1>
-            <div className="workout-form__container">
-              <ul className="workout-form__list" id="sets-list">
+  const removeExercise = async (id: string) => {
+    await deleteWorkout(id);
+    router.refresh();
+  };
+
+  return !addExercise ? (
+    <Suspense fallback={<LoadingModel />}>
+      <div className="wrapper container">
+        <StartTimer />
+        <form action={handleSubmit}>
+          {items.map(({ id, name, sets, lbs, reps }) => (
+            <div key={id}>
+              <div className="flex flex-row  my-4">
+                <h1 className="flex-1 text-2xl font-bold">{name}</h1>
+                <div className="flex-initial w-fit">
+                  <div
+                    onMouseLeave={() => setOpenMenu(false)}
+                    className={
+                      openMenu === id
+                        ? "absolute z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
+                        : "hidden"
+                    }
+                  >
+                    <div
+                      onClick={() => {
+                        setNotes(" ");
+                        setOpenMenu(false);
+                      }}
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <AiFillEdit className="text-blue-500" />
+                      <span>Add</span>
+                      <span>a</span>
+                      <span>Note</span>
+                    </div>
+                    <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
+                      <MdAdd className="text-blue-500" />
+                      <span>Add</span>
+                      <span>Warm-up</span>
+                      <span>Sets</span>
+                    </div>
+                    <div
+                      className="flex flex-row items-center gap-2 my-5"
+                      onClick={() => {
+                        setReplace(!replace);
+                        setOpenMenu(false);
+                      }}
+                    >
+                      <TbReplace className="text-blue-499" />
+                      <span>Replace</span>
+                      <span>Exercise</span>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 my-5">
+                      <BiTimer className="text-blue-500" />
+                      <span>Auto</span>
+                      <span>Rest</span>
+                      <span>Timer</span>
+                    </div>
+                    <div
+                      className={
+                        openMenu ? "flex flex-row items-center gap-2" : "hidden"
+                      }
+                      onClick={() => {
+                        removeExercise(id);
+                        setOpenMenu(false);
+                      }}
+                    >
+                      <HiX className="text-red-500" />
+                      <span>Remove</span>
+                      <span>Exercise</span>
+                    </div>
+                  </div>
+                  <div onClick={() => setOpenMenu(id)}>
+                    <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
+                  </div>
+                </div>
+              </div>
+              <div className={!notes ? "hidden" : ""}>
+                <input
+                  type="text"
+                  className="bg-white rounded-md w-full"
+                  onChange={(e) => setNotes(e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-3">
                 <div
-                  onMouseLeave={() => setSetOptions(!setOptions)}
                   className={
-                    setOptions
-                      ? "absolute bg-gray-800 text-white ml-20 px-2 rounded-lg"
+                    replace
+                      ? "absolute top-10 z-10 bg-white rounded-lg grid grid-cols-2 p-4"
                       : "hidden"
                   }
                 >
-                  <option
-                    value="w"
-                    onClick={(e) => {
-                      changeSet(id, e);
-                      setSetOptions(!setOptions);
+                  <h3 className="col-span-2 text-center">Replace Exercise?</h3>
+                  <span className="col-span-2">
+                    All previously entered sets will be replaced.
+                  </span>
+                  <button
+                    className="m-1 px-4 bg-gray-300 rounded-md"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setReplace(!replace);
                     }}
                   >
-                    Warm-up
-                  </option>
-                  <option
-                    value="d"
-                    onClick={(e) => {
-                      changeSet(id, e);
-                      setSetOptions(!setOptions);
+                    Cancel
+                  </button>
+                  <button
+                    className="m-1 px-4 bg-red-500 rounded-md"
+                    onClick={() => {
+                      removeExercise(id);
+                      setReplace(!replace);
+                      setAddExercise(true);
                     }}
                   >
-                    Drop Set
-                  </option>
-                  <option
-                    value="f"
-                    onClick={(e) => {
-                      changeSet(id, e);
-                      setSetOptions(!setOptions);
-                    }}
-                  >
-                    Failure
-                  </option>
+                    Replace
+                  </button>
                 </div>
-                {sets?.map((set, setId) => (
-                  <li key={setId} className="workout-form__item">
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSet(id, setId)}
-                    >
-                      <HiOutlineTrash />
-                    </button>
-                    <div className="workout-form__label-input">
-                      <span>Set</span>
-                      <CustomButton
-                        title={set}
-                        containerStyles="workout-form__input"
-                        handleClick={() => {
-                          setSetOptions(!setOptions);
-                          setSetIndex(setId);
-                        }}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <ul className="workout-form__list">
-                {lbs?.map((lb, id) => (
-                  <li key={id} className="workout-form__item">
-                    <div className="workout-form__label-input">
-                      <label htmlFor="lbs">Weight (lbs): </label>
-                      <input
-                        type="number"
-                        name="lbs"
-                        id="lbs"
-                        defaultValue={`${lb ? lb : 0}`}
-                        placeholder={`${lb}`}
-                        className="workout-form__input"
-                        required
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              </div>
+              <div className="workout-form__container">
+                <ul className="workout-form__list" id="sets-list">
+                  {sets?.map((set, setId) => (
+                    <li key={setId} className="workout-form__item">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSet(id, setId)}
+                      >
+                        <HiX className="text-red-500" />
+                      </button>
+                      <div className="workout-form__label-input">
+                        <SetOptions
+                          id={id}
+                          setId={setId}
+                          setIndex={setIndex}
+                          setOptions={setOptions}
+                          setSetOptions={setSetOptions}
+                          changeSet={changeSet}
+                        />
+                        <span>Set</span>
+                        <CustomButton
+                          title={set}
+                          containerStyles="workout-form__input"
+                          handleClick={() => {
+                            setSetOptions(id);
+                            setSetIndex(setId);
+                          }}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="workout-form__list">
+                  {lbs?.map((lb, id) => (
+                    <li key={id} className="workout-form__item">
+                      <div className="workout-form__label-input">
+                        <label htmlFor="lbs">Weight (lbs): </label>
+                        <input
+                          type="number"
+                          name="lbs"
+                          id="lbs"
+                          defaultValue={`${lb ? lb : 0}`}
+                          placeholder={`${lb}`}
+                          className="workout-form__input"
+                          required
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
 
-              <ul className="workout-form__list">
-                {reps?.map((rep, id) => (
-                  <li key={id} className="workout-form__item">
-                    <div className="workout-form__label-input">
-                      <label htmlFor="reps">Reps: </label>
-                      <input
-                        type="number"
-                        name="reps"
-                        id="reps"
-                        defaultValue={`${rep ? rep : 0}`}
-                        placeholder={`${rep}`}
-                        className="workout-form__input"
-                        required
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                <ul className="workout-form__list">
+                  {reps?.map((rep, id) => (
+                    <li key={id} className="workout-form__item">
+                      <div className="workout-form__label-input">
+                        <label htmlFor="reps">Reps: </label>
+                        <input
+                          type="number"
+                          name="reps"
+                          id="reps"
+                          defaultValue={`${rep ? rep : 0}`}
+                          placeholder={`${rep}`}
+                          className="workout-form__input"
+                          required
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="workout-form__btn">
+                <CustomButton
+                  title="Add Set"
+                  containerStyles="workout-form__add-btn"
+                  handleClick={() => addSet(id)}
+                />
+              </div>
             </div>
-            <div className="workout-form__btn">
-              <CustomButton
-                title="Add Set"
-                containerStyles="workout-form__add-btn"
-                handleClick={() => addSet(id)}
-              />
-            </div>
+          ))}
+          <div className="workout-form__btn">
+            <CustomButton
+              title="Add Exercise"
+              containerStyles="rounded-lg bg-purple-100 text-purple-900"
+              handleClick={() => setAddExercise(true)}
+            />
+            <button className="workout-form__submit-btn" type="submit">
+              Create Workout
+            </button>
+            <CustomButton
+              title="Cancel Workout"
+              containerStyles="workout-form__cancel-btn"
+              handleClick={removeWorkout}
+            />
           </div>
-        ))}
-        <div className="workout-form__btn">
-          <CustomButton
-            title="Add Exercise"
-            containerStyles="workout-form__submit-btn"
-            handleClick={() => {}}
-          />
-          <button className="workout-form__submit-btn" type="submit">
-            Create Workout
-          </button>
-          <CustomButton
-            title="Cancel Workout"
-            containerStyles="workout-form__cancel-btn"
-            handleClick={removeWorkout}
-          />
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Suspense>
+  ) : (
+    <AddExercise
+      sessionId={sessionId}
+      setAddExercise={setAddExercise}
+      setWorkouts={setWorkouts}
+      recentWorkouts={recentWorkouts}
+    />
   );
 };
 

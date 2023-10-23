@@ -1,4 +1,5 @@
 import Navbar from "@/components/navbar/Navbar";
+import TimerContextProvider from "@/context/TimerContext";
 
 export default async function FinishLayout({
   children,
@@ -7,7 +8,9 @@ export default async function FinishLayout({
 }) {
   return (
     <Navbar>
-      <div className="h-full">{children}</div>
+      <div className="h-full">
+        <TimerContextProvider>{children}</TimerContextProvider>
+      </div>
     </Navbar>
   );
 }

@@ -1,14 +1,17 @@
-import SearchExercises from "./components/SearchExercises";
+import dynamic from "next/dynamic";
+const SearchExercises = dynamic(() => import("./components/SearchExercises"), {
+  ssr: false,
+});
+// import SearchExercises from "./components/SearchExercises";
 import Navbar from "@/components/navbar/Navbar";
-import { getMostRecentWorkouts, getExerciseData } from "@/actions";
+import { getMostRecentWorkouts } from "@/actions";
 
 const Exercises = async () => {
   try {
-    const data = await getExerciseData();
     const recentWorkouts = (await getMostRecentWorkouts()) || [];
     return recentWorkouts ? (
       <Navbar>
-        <SearchExercises recentWorkouts={recentWorkouts} data={data} />
+        <SearchExercises recentWorkouts={recentWorkouts} />
       </Navbar>
     ) : null;
   } catch (err) {

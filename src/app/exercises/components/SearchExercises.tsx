@@ -1,46 +1,111 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
 import { Data, Workout } from "@/types";
+import data from "@/constants/exerciseData.json";
+import { Pagination, paginate } from "@/components/Pagination";
+import LoadingModel from "@/components/models/LoadingModel";
+import { AiOutlineCheck } from "react-icons/ai";
 
 type SearchExercisesProps = {
   recentWorkouts: Workout[];
-  data: Data;
 };
 
-const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
-  const [workouts, setWorkouts] = useState(data);
+const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
+
   const [showParts, setShowParts] = useState(false);
-  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [partsActivated, setPartsActivated] = useState(false);
+  const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoriesBtn, setCategoriesBtn] = useState("");
+  const [categoryActivated, setCategoryActivated] = useState(false);
+  const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
+
   const [recent, setRecent] = useState(recentWorkouts);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [workoutsPerPage] = useState(50);
+  const [workouts, setWorkouts] = useState(data);
+
+  const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const handleParts = async (query: string) => {
+    let filtered;
     try {
-      const recentParts = recent.filter(({ bodyPart }) => bodyPart === query);
-      const parts = workouts.filter(({ bodyPart }) => bodyPart === query);
-      setBodyPartBtn(query);
-      setWorkouts(parts);
-      setRecent(recentParts);
+      if (query === "any" && categoriesBtn === "Any Category") {
+        setPartsActivated(false);
+        setBodyPartBtn("Any Body Part");
+        setWorkouts(data);
+      } else if (query === "any" && categoriesBtn !== "Any Category") {
+        setBodyPartBtn("Any Body Part");
+        const categories = data.filter(
+          ({ equipment }) => equipment === categoriesBtn,
+        );
+        setWorkouts(categories);
+        setPartsActivated(false);
+      } else if (categoriesBtn !== "Any Category") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.bodyPart === query && item.equipment === categoriesBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkouts(filtered);
+        setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
+      } else {
+        filtered = data.filter(({ bodyPart }) => bodyPart === query);
+        setWorkouts(filtered);
+        setBodyPartBtn(query);
+        const recentParts = recentWorkouts.filter(
+          ({ bodyPart }) => bodyPart === query,
+        );
+        setRecent(recentParts);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleCategories = async (query: string) => {
+    let categories;
     try {
-      const categories = workouts.filter(
-        ({ equipment }) => equipment === query,
-      );
-      setCategoriesBtn(query);
-      setWorkouts(categories);
+      if (query === "any" && bodyPartBtn === "Any Body Part") {
+        setCategoriesBtn("Any Category");
+        setWorkouts(data);
+        setCategoryActivated(false);
+      } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
+        setCategoriesBtn("Any Category");
+        const filtered = data.filter(
+          ({ bodyPart }) => bodyPart === bodyPartBtn,
+        );
+        setWorkouts(filtered);
+        setCategoryActivated(false);
+      } else if (bodyPartBtn !== "Any Body Part") {
+        const filtered: Data = [];
+        data.filter((item) => {
+          if (item.equipment === query && item.bodyPart === bodyPartBtn) {
+            filtered.push(item);
+          }
+        });
+        setWorkouts(filtered);
+        setCategoriesBtn(query);
+      } else {
+        categories = data.filter(({ equipment }) => equipment === query);
+        setWorkouts(categories);
+        setCategoriesBtn(query);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -48,8 +113,8 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
 
   const filteredExercises =
     query === ""
-      ? workouts
-      : workouts.filter(({ name }) =>
+      ? paginatedWorkouts
+      : paginatedWorkouts.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -57,7 +122,7 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
         );
 
   return (
-    <>
+    <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div
           className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
@@ -78,64 +143,89 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
         />
         <div
           className={
-            !details ? `flex justify-evenly items-center my-2` : "hidden"
+            !details
+              ? `grid grid-cols-2 justify-center items-center gap-3 my-2`
+              : "hidden"
           }
         >
-          <div>
-            <button
-              onClick={() => {
-                setShowParts(!showParts);
-              }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+          <div className="relative w-full">
+            <ul
+              onMouseLeave={() => setShowParts(!showParts)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
             >
-              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
-            </button>
-            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showParts
                 ? bodyParts.map((part, idx) => (
-                    <li key={idx}>
+                    <li
+                      key={idx}
+                      className={`flex flex-row cursor-pointer p-2 ${
+                        bodyPartBtn === part ? "bg-gray-500" : ""
+                      }`}
+                    >
                       <option
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
                         }}
-                        className="flex flex-col"
+                        className={`flex flex-col w-full 
+`}
                         value={part}
                       >
                         {part}
                       </option>
+                      {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                     </li>
                   ))
                 : null}
             </ul>
-          </div>
-          <div>
             <button
               onClick={() => {
-                setShowCategories(!showCategories);
+                setShowParts(!showParts);
               }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+              className={`w-full rounded-lg px-5 ${
+                bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
+              }`}
             >
-              {categoriesBtn ? categoriesBtn : "Any Category"}
+              {bodyPartBtn}
             </button>
-            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
+          </div>
+          <div className="relative w-full">
+            <ul
+              onMouseLeave={() => setShowCategories(!showCategories)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
+            >
               {showCategories
                 ? categories.map((category, idx) => (
-                    <li key={idx}>
+                    <li
+                      key={idx}
+                      className={`flex flex-row cursor-pointer p-2 ${
+                        categoriesBtn === category ? "bg-gray-500" : ""
+                      }`}
+                    >
                       <option
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
                         }}
-                        className="flex flex-col"
+                        className={`flex flex-col w-full`}
                         value={category}
                       >
                         {category}
                       </option>
+                      {categoriesBtn === category ? <AiOutlineCheck /> : null}
                     </li>
                   ))
                 : null}
             </ul>
+            <button
+              onClick={() => {
+                setShowCategories(!showCategories);
+              }}
+              className={`w-full rounded-lg px-5 ${
+                categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
+              }`}
+            >
+              {categoriesBtn}
+            </button>
           </div>
         </div>
         {filteredExercises?.map(
@@ -152,7 +242,8 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
                 <Image
                   className="col-span-1"
                   id="gif"
-                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                  src={`/1080/${id}.gif`}
+                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={100}
                   width={100}
                   alt="exercise gif"
@@ -186,7 +277,8 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                  src={`/1080/${id}.gif`}
+                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"
@@ -219,8 +311,16 @@ const SearchExercises = ({ recentWorkouts, data }: SearchExercisesProps) => {
             </div>
           ),
         )}
+        <div className={!details ? "mb-10 pb-10" : "hidden"}>
+          <Pagination
+            currentPage={currentPage}
+            workoutsPerPage={workoutsPerPage}
+            workouts={workouts.length}
+            onPageChange={onPageChange}
+          />
+        </div>
       </div>
-    </>
+    </Suspense>
   );
 };
 

@@ -16,9 +16,9 @@ const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
 
   const removeWorkout = async () => {
     ids.map(async (id: string) => await deleteWorkout(id));
-    if (sessionId) {
-      await deleteSession(sessionId);
-    }
+    // if (sessionId) {
+    //   await deleteSession(sessionId);
+    // }
     const items = await getWorkouts();
     if (items) {
       setWorkouts(items);
@@ -26,8 +26,9 @@ const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
     }
   };
   return (
-    <button className="remove-btn" onClick={removeWorkout}>
-      <HiOutlineTrash />
+    <button className="remove-btn flex flex-row" onClick={removeWorkout}>
+      <HiOutlineTrash className="text-red-500" />
+      <span className="text-lg">Delete</span>
     </button>
   );
 };

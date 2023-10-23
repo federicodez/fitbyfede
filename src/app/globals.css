@@ -38,7 +38,6 @@ body {
   color: #000;
   font-size: var(--fs-400);
   line-height: 1.5;
-  scroll-behavior: smooth;
   background: var(--bg-primary);
 }
 
@@ -94,7 +93,7 @@ p {
   border-radius: 20px;
   color: #495057;
   background-color: #fff;
-  padding: 16px 32px;
+  padding: 5px 32px;
   width: 15rem;
   margin: 1rem;
   margin-bottom: 3rem;
@@ -150,7 +149,7 @@ p {
 
 .searchbar-form {
   display: flex;
-  margin: 1rem;
+  /* margin: 1rem; */
 }
 
 .searchbar-form__input {
@@ -241,7 +240,7 @@ p {
   display: flex;
   width: 5rem;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: lightgrey;
   color: #000;
 }
 
@@ -265,8 +264,8 @@ p {
   }
 
   .workout-form__add-btn {
-    background-color: darkgrey;
-    color: #fff;
+    background-color: lightgrey;
+    color: #000;
     border-radius: 10px;
   }
 

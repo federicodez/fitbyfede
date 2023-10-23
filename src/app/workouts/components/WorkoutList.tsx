@@ -4,12 +4,14 @@ import { useState } from "react";
 import { RemoveBtn } from "@/components";
 import WorkoutCard from "./WorkoutCard";
 import Sessions from "./Sessions";
+import Detailed from "./Detailed";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
 import { exampleWorkout } from "@/constants";
 import { Workout } from "@/types";
 import { HiOutlineTrash } from "react-icons/hi";
+import { SlOptions } from "react-icons/sl";
 
 type WorkoutListProps = {
   items: Workout[];
@@ -21,7 +23,7 @@ type Groups = {
 
 type Session = {
   sessionId?: string;
-  date?: Date;
+  date: Date;
   ids: any[];
   exercises: {
     [key: string]: string;
@@ -39,7 +41,11 @@ type Session = {
 
 const WorkoutList = ({ items }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState(items);
-  const sorted = items.reduce((groups: Groups, workout: Workout) => {
+  const [showSessions, setShowSessions] = useState(true);
+  const [showOptions, setShowOptions] = useState<string | boolean>(false);
+  const [showWorkouts, setShowWorkouts] = useState<string | boolean>(false);
+
+  const sorted = workouts.reduce((groups: Groups, workout: Workout) => {
     if (!groups[workout.workoutSessionId])
       groups[workout.workoutSessionId] = [];
 
@@ -49,6 +55,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
   const sortedWorkouts = Object.values(sorted);
   const workoutSession = sortedWorkouts.map((workout) => {
     const session: Session = {
+      date: new Date(),
       ids: [],
       exercises: {},
       sets: {},
@@ -71,42 +78,89 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
 
   return (
     <section>
-      <Link href="/search-workout" className="home-link">
+      <Link href="/search-workout" as="/search-workout" className="home-link">
         Start a Workout
       </Link>
       <ul className="workoutlist">
         {workoutSession?.length
           ? workoutSession.map(
               ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
-                <li key={index} className="container wrapper workoutlist-item">
-                  <div className="workoutlist-btn">
-                    <RemoveBtn
+                <div key={index} className="wrapper">
+                  <div
+                    className={
+                      showWorkouts === sessionId ? "relative w-full" : "hidden"
+                    }
+                  >
+                    <Detailed
+                      date={date}
                       ids={ids}
+                      exercises={exercises}
+                      sets={sets}
+                      lbs={lbs}
+                      reps={reps}
                       sessionId={sessionId}
-                      setWorkouts={setWorkouts}
+                      setShowWorkouts={setShowWorkouts}
+                      setShowSessions={setShowSessions}
                     />
-                    <Link href={`/edit-workout/${sessionId}`}>
-                      <HiPencilAlt className="workoutlist__edit-btn" />
-                    </Link>
                   </div>
-                  <div className="workoutlist-date">
-                    {moment(date).format("dddd, MMM Do")}
-                  </div>
-                  <Sessions
-                    ids={ids}
-                    exercises={exercises}
-                    sets={sets}
-                    lbs={lbs}
-                    reps={reps}
-                  />
-                </li>
+                  <li className="container wrapper workoutlist-item rounded-lg">
+                    <div className="flex justify-between">
+                      {moment(date).format("dddd, MMM Do")}
+                      <button
+                        className={showOptions ? "hidden" : ""}
+                        onClick={() => {
+                          if (sessionId) {
+                            setShowOptions(sessionId);
+                          }
+                        }}
+                      >
+                        <SlOptions />
+                      </button>
+
+                      <div
+                        className={
+                          showOptions === sessionId
+                            ? "workoutlist-btn absolute right-7 flex flex-col bg-white rounded-md p-2"
+                            : "hidden"
+                        }
+                        onMouseLeave={() => setShowOptions(false)}
+                      >
+                        <Link
+                          href={`/edit-workout/${sessionId}`}
+                          className="flex flex-row"
+                        >
+                          <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
+                          <span className="text-lg">Edit Workout</span>
+                        </Link>
+                        <RemoveBtn
+                          ids={ids}
+                          sessionId={sessionId}
+                          setWorkouts={setWorkouts}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => {
+                        sessionId ? setShowWorkouts(sessionId) : null;
+                        setShowSessions(false);
+                      }}
+                    >
+                      <Sessions
+                        ids={ids}
+                        exercises={exercises}
+                        sets={sets}
+                        lbs={lbs}
+                        reps={reps}
+                      />
+                    </div>
+                  </li>
+                </div>
               ),
             )
           : exampleWorkout?.map(({ id, name, sets, lbs, reps, createdAt }) => (
               <li key={id} className="container workoutlist-item">
                 <div className="workoutlist-btn">
-                  <HiOutlineTrash />
-                  <HiPencilAlt />
+                  <SlOptions />
                 </div>
                 <div className="workoutlist-date">
                   {moment(createdAt).format("dddd, MMM Do")}

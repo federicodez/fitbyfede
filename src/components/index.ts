@@ -4,6 +4,7 @@ import CustomButton from "./CustomButton";
 import EmptyState from "./EmptyState";
 import RemoveBtn from "./RemoveBtn";
 import SetOptions from "./SetOptions";
+import ShowMore from "./ShowMore";
 import WorkoutForm from "./WorkoutForm";
 
 export {
@@ -13,5 +14,6 @@ export {
   EmptyState,
   RemoveBtn,
   SetOptions,
+  ShowMore,
   WorkoutForm,
 };

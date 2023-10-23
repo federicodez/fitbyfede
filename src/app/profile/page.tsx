@@ -1,7 +1,7 @@
 import { Avatar } from "@/components";
-import Navbar from "@/components/navbar/Navbar";
 import Statistics from "./components/WorkoutStatistics";
 import { getWorkouts } from "@/actions";
+import Navbar from "@/components/navbar/Navbar";
 
 const Profile = async () => {
   try {
