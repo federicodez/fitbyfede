@@ -192,9 +192,22 @@ export const createWorkout = async (
       return null;
     }
 
+    const date = new Date().getHours();
+    let time;
+    if (date < 12) {
+      time = "Morning Workout";
+    } else if (date < 15) {
+      time = "Midday Workout";
+    } else if (date < 18) {
+      time = "Afternoon Workout";
+    } else {
+      time = "Evening Workout";
+    }
+
     const session = await prisma.workoutSession.create({
       data: {
         userId: currentUser.id,
+        name: time,
       },
     });
 

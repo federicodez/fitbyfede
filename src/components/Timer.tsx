@@ -16,7 +16,7 @@ const StartTimer = () => {
     }
 
     return () => clearInterval(intervalId);
-  }, [isRunning, time]);
+  }, [isRunning, time, setTime]);
 
   const hours = Math.floor(time / 360000);
 
