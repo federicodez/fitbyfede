@@ -16,9 +16,9 @@ const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
 
   const removeWorkout = async () => {
     ids.map(async (id: string) => await deleteWorkout(id));
-    if (sessionId) {
-      await deleteSession(sessionId);
-    }
+    // if (sessionId) {
+    //   await deleteSession(sessionId);
+    // }
     const items = await getWorkouts();
     if (items) {
       setWorkouts(items);
