@@ -13,8 +13,12 @@ import {
   changeWorkoutSet,
   deleteWorkout,
 } from "@/actions";
-import { HiOutlineTrash } from "react-icons/hi2";
 import { SlOptions } from "react-icons/sl";
+import { HiX } from "react-icons/hi";
+import { AiFillEdit } from "react-icons/ai";
+import { MdAdd } from "react-icons/md";
+import { TbReplace } from "react-icons/tb";
+import { BiTimer } from "react-icons/bi";
 
 type FinishWorkoutFormProps = {
   sessionId: string;
@@ -27,13 +31,14 @@ const FinishWorkoutForm = ({
   items,
   recentWorkouts,
 }: FinishWorkoutFormProps) => {
+  const [notes, setNotes] = useState<string | boolean>(false);
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const [addExercise, setAddExercise] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [replace, setReplace] = useState(false);
   const router = useRouter();
-
-  console.log("workouts: ", workouts);
 
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
@@ -139,16 +144,110 @@ const FinishWorkoutForm = ({
         <form action={handleSubmit}>
           {items.map(({ id, name, sets, lbs, reps }) => (
             <div key={id}>
+              <div className="flex flex-row  my-4">
+                <h1 className="flex-1 text-2xl font-bold">{name}</h1>
+                <div className="flex-initial w-fit">
+                  <div
+                    onMouseLeave={() => setOpenMenu(false)}
+                    className={
+                      openMenu
+                        ? "absolute z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
+                        : "hidden"
+                    }
+                  >
+                    <div
+                      onClick={() => {
+                        setNotes(" ");
+                        setOpenMenu(false);
+                      }}
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <AiFillEdit className="text-blue-500" />
+                      <span>Add</span>
+                      <span>a</span>
+                      <span>Note</span>
+                    </div>
+                    <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
+                      <MdAdd className="text-blue-500" />
+                      <span>Add</span>
+                      <span>Warm-up</span>
+                      <span>Sets</span>
+                    </div>
+                    <div
+                      className="flex flex-row items-center gap-2 my-5"
+                      onClick={() => {
+                        setReplace(!replace);
+                        setOpenMenu(false);
+                      }}
+                    >
+                      <TbReplace className="text-blue-500" />
+                      <span>Replace</span>
+                      <span>Exercise</span>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 my-5">
+                      <BiTimer className="text-blue-500" />
+                      <span>Auto</span>
+                      <span>Rest</span>
+                      <span>Timer</span>
+                    </div>
+                    <div
+                      className={
+                        openMenu ? "flex flex-row items-center gap-2" : "hidden"
+                      }
+                      onClick={() => {
+                        removeExercise(id);
+                        setOpenMenu(false);
+                      }}
+                    >
+                      <HiX className="text-red-500" />
+                      <span>Remove</span>
+                      <span>Exercise</span>
+                    </div>
+                  </div>
+                  <div onClick={() => setOpenMenu(true)}>
+                    <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
+                  </div>
+                </div>
+              </div>
+              <div className={!notes ? "hidden" : ""}>
+                <input
+                  type="text"
+                  className="bg-white rounded-md w-full"
+                  onChange={(e) => setNotes(e.target.value)}
+                />
+              </div>
               <div className="grid grid-cols-3">
-                <h1 className="flex justify-center text-2xl font-bold col-span-2">
-                  {name}
-                </h1>
-                <button
-                  className="col-span-1"
-                  onClick={() => removeExercise(id)}
+                <div
+                  className={
+                    replace
+                      ? "absolute top-10 z-10 bg-white rounded-lg grid grid-cols-2 p-4"
+                      : "hidden"
+                  }
                 >
-                  <SlOptions />
-                </button>
+                  <h3 className="col-span-2 text-center">Replace Exercise?</h3>
+                  <span className="col-span-2">
+                    All previously entered sets will be replaced.
+                  </span>
+                  <button
+                    className="m-1 px-4 bg-gray-300 rounded-md"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setReplace(!replace);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="m-1 px-4 bg-red-500 rounded-md"
+                    onClick={() => {
+                      removeExercise(id);
+                      setReplace(!replace);
+                      setAddExercise(true);
+                    }}
+                  >
+                    Replace
+                  </button>
+                </div>
               </div>
               <div className="workout-form__container">
                 <ul className="workout-form__list" id="sets-list">
@@ -158,7 +257,7 @@ const FinishWorkoutForm = ({
                         type="button"
                         onClick={() => handleDeleteSet(id, setId)}
                       >
-                        <HiOutlineTrash />
+                        <HiX className="text-red-500" />
                       </button>
                       <div className="workout-form__label-input">
                         <SetOptions
