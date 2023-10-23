@@ -207,8 +207,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                           handleParts(part);
                           setShowParts(false);
                         }}
-                        className={`flex flex-col w-full 
-`}
+                        className={`flex flex-col w-full`}
                         value={part}
                       >
                         {part}

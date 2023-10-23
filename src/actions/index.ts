@@ -121,7 +121,6 @@ export const createWorkoutSession = async () => {
     if (!currentUser?.id) {
       return null;
     }
-
     const session = await prisma.workoutSession.create({
       data: {
         userId: currentUser.id,

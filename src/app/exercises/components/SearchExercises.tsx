@@ -7,9 +7,9 @@ import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
 import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
-import { CustomButton } from "@/components";
 import { Pagination, paginate } from "@/components/Pagination";
 import LoadingModel from "@/components/models/LoadingModel";
+import { AiOutlineCheck } from "react-icons/ai";
 
 type SearchExercisesProps = {
   recentWorkouts: Workout[];
@@ -143,66 +143,89 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
         />
         <div
           className={
-            !details ? `flex justify-evenly items-center my-2` : "hidden"
+            !details
+              ? `grid grid-cols-2 justify-center items-center gap-3 my-2`
+              : "hidden"
           }
         >
-          <div>
-            <button
-              onClick={() => {
-                setShowParts(!showParts);
-              }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+          <div className="relative w-full">
+            <ul
+              onMouseLeave={() => setShowParts(!showParts)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
             >
-              {bodyPartBtn}
-            </button>
-            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
               {showParts
                 ? bodyParts.map((part, idx) => (
-                    <li key={idx}>
+                    <li
+                      key={idx}
+                      className={`flex flex-row cursor-pointer p-2 ${
+                        bodyPartBtn === part ? "bg-gray-500" : ""
+                      }`}
+                    >
                       <option
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
-                          setPartsActivated(true);
                         }}
-                        className="flex flex-col"
+                        className={`flex flex-col w-full 
+`}
                         value={part}
                       >
                         {part}
                       </option>
+                      {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                     </li>
                   ))
                 : null}
             </ul>
-          </div>
-          <div>
             <button
               onClick={() => {
-                setShowCategories(!showCategories);
+                setShowParts(!showParts);
               }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
+              className={`w-full rounded-lg px-5 ${
+                bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
+              }`}
             >
-              {categoriesBtn}
+              {bodyPartBtn}
             </button>
-            <ul className="absolute bg-gray-800 text-white rounded-lg m-5">
+          </div>
+          <div className="relative w-full">
+            <ul
+              onMouseLeave={() => setShowCategories(!showCategories)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
+            >
               {showCategories
                 ? categories.map((category, idx) => (
-                    <li key={idx}>
+                    <li
+                      key={idx}
+                      className={`flex flex-row cursor-pointer p-2 ${
+                        categoriesBtn === category ? "bg-gray-500" : ""
+                      }`}
+                    >
                       <option
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
-                          setCategoryActivated(true);
                         }}
-                        className="flex flex-col"
+                        className={`flex flex-col w-full`}
                         value={category}
                       >
                         {category}
                       </option>
+                      {categoriesBtn === category ? <AiOutlineCheck /> : null}
                     </li>
                   ))
                 : null}
             </ul>
+            <button
+              onClick={() => {
+                setShowCategories(!showCategories);
+              }}
+              className={`w-full rounded-lg px-5 ${
+                categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
+              }`}
+            >
+              {categoriesBtn}
+            </button>
           </div>
         </div>
         {filteredExercises?.map(
