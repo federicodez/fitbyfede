@@ -171,21 +171,6 @@ export const createMany = async (exercises: Data, sessionId: string) => {
           });
         },
       ),
-      exercises.map(async ({ name, bodyPart, id, target }) => {
-        await prisma.workout.create({
-          data: {
-            name,
-            bodyPart,
-            gifId: id,
-            target,
-            sets: ["1"],
-            lbs: [0],
-            reps: [0],
-            userId: currentUser.id,
-            workoutSessionId: session.id,
-          },
-        });
-      }),
     );
   } catch (err: any) {
     console.log("Error creating many workouts: ", err);
