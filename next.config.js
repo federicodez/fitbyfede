@@ -5,8 +5,20 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ["lh3.googleusercontent.com"],
-    domains: ["fitbyfede-db.s3.amazonaws.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "fitbyfede-db.s3.amazonaws.com",
+        port: "",
+        pathname: "/1080/**",
+      },
+    ],
   },
 };
 
