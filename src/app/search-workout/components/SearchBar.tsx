@@ -279,7 +279,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               <div
                 className={
                   !details
-                    ? `grid grid-cols-6 gap-5 m-5 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                    ? `grid grid-cols-4 items-center rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
                     : "hidden"
                 }
                 onClick={() => {
@@ -287,26 +287,24 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 }}
               >
                 <Image
-                  className="col-span-1 object-cover"
+                  className="col-span-1"
                   id="gif"
                   // src={`/1080/${gifId}.gif` as string}
                   src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
+                  width={100}
+                  height={100}
                   alt="workout gif"
-                  height={200}
-                  width={200}
                   priority
                 />
-                <div className="grid grid-rows-2 col-span-4 items-center">
-                  <strong id="name" className="row-span-1">
+                <div className="col-span-2 flex flex-col items-center mx-2">
+                  <strong id="name" className="w-full">
                     {name}
                   </strong>
-                  <div className="row-span-1" id="bodypart">
-                    {bodyPart}
-                  </div>
+                  <span className="w-full">{bodyPart}</span>
                 </div>
                 <div
                   onClick={() => setDetails(id)}
-                  className="col-span-1 flex justify-center items-center"
+                  className="justify-self-end rounded-md bg-white w-fit p-1 mr-5"
                 >
                   {exerciseQueue.includes(name) ? (
                     <AiOutlineCheck />
@@ -335,13 +333,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  // src={`/1080/${gifId}.gif` as string}
-                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"
-                  blurDataURL="URL"
-                  placeholder="blur"
                 />
               </div>
             </div>
@@ -353,7 +348,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 <div
                   className={
                     !details
-                      ? `grid grid-cols-6 gap-5 m-5 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                      ? `grid grid-cols-4 items-center rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
                       : "hidden"
                   }
                   onClick={() => {
@@ -363,26 +358,23 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   <Image
                     className="col-span-1"
                     id="gif"
-                    // src={`/1080/${id}.gif` as string}
                     src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
-                    height={200}
-                    width={200}
+                    height={100}
+                    width={100}
                     alt="exercise gif"
                     priority
-                    blurDataURL="URL"
-                    placeholder="blur"
                   />
-                  <div className="grid grid-rows-2 col-span-4 items-center">
-                    <strong id="name" className="row-span-1">
+                  <div className="col-span-2 flex flex-col items-center mx-2">
+                    <strong id="name" className="w-full">
                       {name}
                     </strong>
-                    <div className="row-span-1" id="bodypart">
+                    <div className="w-full" id="bodypart">
                       {bodyPart}
                     </div>
                   </div>
                   <div
                     onClick={() => setDetails(id)}
-                    className="col-span-1 flex justify-center items-center"
+                    className="justify-self-end rounded-md bg-white w-fit p-1 mr-5"
                   >
                     {exerciseQueue.includes(name) ? (
                       <AiOutlineCheck />
