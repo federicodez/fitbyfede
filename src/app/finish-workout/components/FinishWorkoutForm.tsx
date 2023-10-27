@@ -41,6 +41,30 @@ const FinishWorkoutForm = ({
   const [replace, setReplace] = useState(false);
   const router = useRouter();
 
+  const addAnotherExercise = async (data: FormData) => {
+    const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
+    const dataReps = Object.values(data.getAll("reps")?.valueOf());
+
+    workouts.map(({ lbs, reps }) => {
+      lbs.map((_, id) => {
+        lbs.splice(id, 1, Number(dataLbs[0]));
+        dataLbs.shift();
+        reps.splice(id, 1, Number(dataReps[0]));
+        dataReps.shift();
+      });
+    });
+    setWorkouts(workouts);
+
+    try {
+      workouts.map(async ({ id, sets, lbs, reps }) => {
+        await updateWorkout(id, sets, lbs, reps);
+      });
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
@@ -67,7 +91,6 @@ const FinishWorkoutForm = ({
 
   const addSet = async (id: string) => {
     const workout = workouts.filter((workout) => workout.id === id);
-    console.log({ workouts });
     const { sets, lbs, reps } = workout[0];
     try {
       const lastSet = sets[sets.length - 1];
@@ -331,11 +354,16 @@ const FinishWorkoutForm = ({
             </div>
           ))}
           <div className="workout-form__btn">
-            <CustomButton
-              title="Add Exercise"
-              containerStyles="rounded-lg bg-purple-100 text-purple-900"
-              handleClick={() => setAddExercise(true)}
-            />
+            <button
+              type="submit"
+              className="rounded-lg bg-purple-100 text-purple-900"
+              formAction={(data) => {
+                setAddExercise(true);
+                addAnotherExercise(data);
+              }}
+            >
+              Add Exercise
+            </button>
             <button className="workout-form__submit-btn" type="submit">
               Create Workout
             </button>
