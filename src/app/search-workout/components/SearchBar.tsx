@@ -113,16 +113,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const handleClick = async () => {
     try {
       const session = await createWorkoutSession();
-      const exercises: Data = [];
-      data.filter((workout) => {
-        exerciseQueue.map((exercise) => {
-          if (exercise === workout.name) {
-            exercises.push(workout);
-          }
-        });
-      });
       if (session) {
-        await createMany(exercises, session.id);
+        await createMany(exerciseQueue, session.id);
         router.push(`/finish-workout/${session.id}`);
       }
     } catch (error) {
