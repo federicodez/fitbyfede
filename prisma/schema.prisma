@@ -59,7 +59,7 @@ model Workout {
 model WorkoutSession {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
-  time       String?
+  time       Int?
   notes      String?
   userId     String    @db.ObjectId
   createdAt  DateTime  @default(now())

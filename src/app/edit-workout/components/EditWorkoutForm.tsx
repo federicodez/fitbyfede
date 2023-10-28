@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Workout } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
@@ -14,12 +14,14 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
+import { WorkoutSession } from "@prisma/client";
 
 type EditWorkoutFormProps = {
   items: Workout[];
+  session: WorkoutSession;
 };
 
-const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
+const EditWorkoutForm = ({ items, session }: EditWorkoutFormProps) => {
   const date = items.findLast((item) => item);
   const [dateInput, setDateInput] = useState(false);
   const [setOptions, setSetOptions] = useState<string | null>(null);
@@ -27,6 +29,10 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const router = useRouter();
+
+  const hours = Math.floor(session?.time / 360000);
+  const minutes = Math.floor((session?.time % 360000) / 6000);
+  const seconds = Math.floor((session?.time % 6000) / 100);
 
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
@@ -123,113 +129,119 @@ const EditWorkoutForm = ({ items }: EditWorkoutFormProps) => {
     }
   };
 
+  console.log("session: ", session);
   return (
-    <div className="wrapper container">
-      {isLoading && <LoadingModel />}
-      <form className="workout-form" action={handleSubmit}>
-        <div className="flex justify-center items-center my-4">
-          {dateInput ? (
-            <input
-              name="date"
-              type="datetime-local"
-              className="rounded-md text-white"
-              onMouseLeave={() => setDateInput(false)}
-            />
-          ) : (
-            <div
-              onClick={() => setDateInput(true)}
-              className="flex flex-row gap-4 items-center"
-            >
-              <span>{moment(date?.createdAt).calendar()}</span>
-              <SlOptions />
-            </div>
-          )}
-        </div>
-        {items.map(({ id, name, sets, lbs, reps }) => (
-          <div key={id}>
-            <h1 className="workout-form__title">{name}</h1>
-            <div className="workout-form__container">
-              <ul className="workout-form__list" id="sets-list">
-                {sets?.map((set, setId) => (
-                  <li key={setId} className="workout-form__item">
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSet(id, setId)}
-                    >
-                      <HiOutlineTrash />
-                    </button>
-                    <div className="workout-form__label-input">
-                      <SetOptions
-                        id={id}
-                        setId={setId}
-                        setIndex={setIndex}
-                        setOptions={setOptions}
-                        setSetOptions={setSetOptions}
-                        changeSet={changeSet}
-                      />
-                      <span>Set</span>
-                      <CustomButton
-                        title={set}
-                        containerStyles="workout-form__input"
-                        handleClick={() => {
-                          setSetOptions(id);
-                          setSetIndex(setId);
-                        }}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <ul className="workout-form__list" id="lbs-list">
-                {lbs?.map((lb, id) => (
-                  <li key={id} className="workout-form__item">
-                    <div className="workout-form__label-input">
-                      <label htmlFor="lbs">Weight (lbs): </label>
-                      <input
-                        type="string"
-                        name="lbs"
-                        defaultValue={`${lb ? lb : 0}`}
-                        placeholder={`${lb}`}
-                        className="workout-form__input"
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <ul className="workout-form__list">
-                {reps?.map((rep, id) => (
-                  <li key={id} className="workout-form__item">
-                    <div className="workout-form__label-input">
-                      <label htmlFor="reps">Reps: </label>
-                      <input
-                        type="string"
-                        name="reps"
-                        defaultValue={`${rep ? rep : 0}`}
-                        placeholder={`${rep}`}
-                        className="workout-form__input"
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="workout-form__btn">
-              <CustomButton
-                title="Add Set"
-                handleClick={() => addSet(id)}
-                containerStyles="workout-form__add-btn"
+    <Suspense fallback={<LoadingModel />}>
+      <div className="wrapper container">
+        <form className="workout-form" action={handleSubmit}>
+          <div className="flex justify-center items-center my-4 flex-col">
+            {session?.name}
+            {dateInput ? (
+              <input
+                name="date"
+                type="datetime-local"
+                className="rounded-md text-white"
+                onMouseLeave={() => setDateInput(false)}
               />
-            </div>
+            ) : (
+              <div
+                onClick={() => setDateInput(true)}
+                className="flex flex-row gap-4 items-center"
+              >
+                <span>{moment(date?.createdAt).calendar()}</span>
+                {hours ? `${hours}:` : ""}
+                {minutes.toString().padStart(2)}:
+                {seconds.toString().padStart(2, "0")}m{session?.notes}
+                <SlOptions />
+              </div>
+            )}
           </div>
-        ))}
-        <div className="workout-form__btn">
-          <button type="submit" className="workout-form__submit-btn">
-            Update Workout
-          </button>
-        </div>
-      </form>
-    </div>
+          {items.map(({ id, name, sets, lbs, reps }) => (
+            <div key={id}>
+              <h1 className="workout-form__title">{name}</h1>
+              <div className="workout-form__container">
+                <ul className="workout-form__list" id="sets-list">
+                  {sets?.map((set, setId) => (
+                    <li key={setId} className="workout-form__item">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSet(id, setId)}
+                      >
+                        <HiOutlineTrash />
+                      </button>
+                      <div className="workout-form__label-input">
+                        <SetOptions
+                          id={id}
+                          setId={setId}
+                          setIndex={setIndex}
+                          setOptions={setOptions}
+                          setSetOptions={setSetOptions}
+                          changeSet={changeSet}
+                        />
+                        <span>Set</span>
+                        <CustomButton
+                          title={set}
+                          containerStyles="workout-form__input"
+                          handleClick={() => {
+                            setSetOptions(id);
+                            setSetIndex(setId);
+                          }}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <ul className="workout-form__list" id="lbs-list">
+                  {lbs?.map((lb, id) => (
+                    <li key={id} className="workout-form__item">
+                      <div className="workout-form__label-input">
+                        <label htmlFor="lbs">Weight (lbs): </label>
+                        <input
+                          type="string"
+                          name="lbs"
+                          defaultValue={`${lb ? lb : 0}`}
+                          placeholder={`${lb}`}
+                          className="workout-form__input"
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="workout-form__list">
+                  {reps?.map((rep, id) => (
+                    <li key={id} className="workout-form__item">
+                      <div className="workout-form__label-input">
+                        <label htmlFor="reps">Reps: </label>
+                        <input
+                          type="string"
+                          name="reps"
+                          defaultValue={`${rep ? rep : 0}`}
+                          placeholder={`${rep}`}
+                          className="workout-form__input"
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="workout-form__btn">
+                <CustomButton
+                  title="Add Set"
+                  handleClick={() => addSet(id)}
+                  containerStyles="workout-form__add-btn"
+                />
+              </div>
+            </div>
+          ))}
+          <div className="workout-form__btn">
+            <button type="submit" className="workout-form__submit-btn">
+              Update Workout
+            </button>
+          </div>
+        </form>
+      </div>
+    </Suspense>
   );
 };
 

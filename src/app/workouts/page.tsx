@@ -37,7 +37,9 @@ const Workouts = async () => {
         </Link>
         <WorkoutList items={workouts} />
       </section>
-    ) : null;
+    ) : (
+      <EmptyState />
+    );
   } catch (err) {
     console.log(err);
   }

@@ -319,6 +319,7 @@ export const getMostRecentWorkouts = async () => {
       where: {
         userId: currentUser.id,
       },
+      distinct: ["name"],
       orderBy: {
         createdAt: "desc",
       },
@@ -333,13 +334,25 @@ export const getMostRecentWorkouts = async () => {
 export const updateWorkoutSession = async (
   sessionId: string,
   notes: string,
+  time: number,
 ) => {
   try {
     await prisma.workoutSession.update({
       where: { id: sessionId },
-      data: { notes: notes },
+      data: { notes: notes, time: time },
     });
   } catch (error) {
     console.log("Error updating session ", error);
+  }
+};
+
+export const getSessionById = async (sessionId: string) => {
+  try {
+    const session = await prisma.workoutSession.findUnique({
+      where: { id: sessionId },
+    });
+    return session;
+  } catch (error) {
+    console.log("Error loading session ", error);
   }
 };

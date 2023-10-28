@@ -306,7 +306,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 </div>
               </div>
 
-              <li
+              <div
                 className={
                   details === id
                     ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
@@ -330,7 +330,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   width={400}
                   alt="exercise gif"
                 />
-              </li>
+              </div>
             </li>
           ))}
           <h3 className={!details ? "filtered-title" : "hidden"}>EXERCISES</h3>

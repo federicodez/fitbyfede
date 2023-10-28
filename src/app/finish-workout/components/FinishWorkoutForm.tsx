@@ -21,6 +21,7 @@ import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 import StartTimer from "@/components/Timer";
+import { useTimerContext } from "@/context/TimerContext";
 
 type FinishWorkoutFormProps = {
   sessionId: string;
@@ -41,6 +42,7 @@ const FinishWorkoutForm = ({
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState(false);
   const router = useRouter();
+  const { time } = useTimerContext();
 
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
@@ -57,7 +59,7 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
-      await updateWorkoutSession(sessionId, notes);
+      await updateWorkoutSession(sessionId, notes, time);
       workouts.map(async ({ id, sets, lbs, reps }) => {
         await updateWorkout(id, sets, lbs, reps);
       });
@@ -82,6 +84,7 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
+      await updateWorkoutSession(sessionId, notes, time);
       workouts.map(async ({ id, sets, lbs, reps }) => {
         await updateWorkout(id, sets, lbs, reps);
       });
