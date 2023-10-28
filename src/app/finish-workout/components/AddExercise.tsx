@@ -126,15 +126,7 @@ const AddExercise = ({
 
   const handleClick = async () => {
     try {
-      const exercises: Data = [];
-      workoutData.filter((workout) => {
-        exerciseQueue.map((exercise) => {
-          if (exercise === workout.name) {
-            exercises.push(workout);
-          }
-        });
-      });
-      await createMany(exercises, sessionId);
+      await createMany(exerciseQueue, sessionId);
       const newWorkouts = await getWorkoutsBySessionId(sessionId);
       if (newWorkouts) {
         setWorkouts(newWorkouts);

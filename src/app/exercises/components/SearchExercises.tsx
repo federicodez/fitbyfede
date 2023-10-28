@@ -9,7 +9,7 @@ import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
 import LoadingModel from "@/components/models/LoadingModel";
-import { AiOutlineCheck } from "react-icons/ai";
+import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 
 type SearchExercisesProps = {
   recentWorkouts: Workout[];
@@ -122,146 +122,150 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
         );
 
   return (
-    <Suspense fallback={<LoadingModel />}>
-      <div className="wrapper container">
-        <div
-          className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
-        >
-          <button type="button" className="text-[#03045e]" id="create-btn">
-            <Link href="/create-workout">New</Link>
+    <div className="wrapper container">
+      <div
+        className={!details ? `flex flex-row justify-between mt-8` : "hidden"}
+      >
+        <button type="button" className="text-[#03045e]" id="create-btn">
+          <Link href="/create-workout">New</Link>
+        </button>
+      </div>
+      <h1 className={!details ? `text-center font-bold` : "hidden"}>
+        Exercises
+      </h1>
+      <input
+        onChange={(e) => setQuery(e.target.value)}
+        type="text"
+        name="query"
+        placeholder="Search"
+        className={!details ? `w-full rounded-md bg-white` : "hidden"}
+      />
+      <div
+        className={
+          !details
+            ? `grid grid-cols-2 justify-center items-center gap-3 my-2`
+            : "hidden"
+        }
+      >
+        <div className="relative w-full">
+          <ul
+            onMouseLeave={() => setShowParts(!showParts)}
+            className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
+          >
+            {showParts
+              ? bodyParts.map((part, idx) => (
+                  <li
+                    key={idx}
+                    className={`flex flex-row cursor-pointer p-2 ${
+                      bodyPartBtn === part ? "bg-gray-500" : ""
+                    }`}
+                  >
+                    <option
+                      onClick={() => {
+                        handleParts(part);
+                        setShowParts(false);
+                      }}
+                      className={`flex flex-col w-full 
+`}
+                      value={part}
+                    >
+                      {part}
+                    </option>
+                    {bodyPartBtn === part ? <AiOutlineCheck /> : null}
+                  </li>
+                ))
+              : null}
+          </ul>
+          <button
+            onClick={() => {
+              setShowParts(!showParts);
+            }}
+            className={`w-full rounded-lg px-5 ${
+              bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
+            }`}
+          >
+            {bodyPartBtn}
           </button>
         </div>
-        <h1 className={!details ? `text-center font-bold` : "hidden"}>
-          Exercises
-        </h1>
-        <input
-          onChange={(e) => setQuery(e.target.value)}
-          type="text"
-          name="query"
-          placeholder="Search"
-          className={!details ? `w-full rounded-md bg-white` : "hidden"}
-        />
-        <div
-          className={
-            !details
-              ? `grid grid-cols-2 justify-center items-center gap-3 my-2`
-              : "hidden"
-          }
-        >
-          <div className="relative w-full">
-            <ul
-              onMouseLeave={() => setShowParts(!showParts)}
-              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
-            >
-              {showParts
-                ? bodyParts.map((part, idx) => (
-                    <li
-                      key={idx}
-                      className={`flex flex-row cursor-pointer p-2 ${
-                        bodyPartBtn === part ? "bg-gray-500" : ""
-                      }`}
+        <div className="relative w-full">
+          <ul
+            onMouseLeave={() => setShowCategories(!showCategories)}
+            className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
+          >
+            {showCategories
+              ? categories.map((category, idx) => (
+                  <li
+                    key={idx}
+                    className={`flex flex-row cursor-pointer p-2 ${
+                      categoriesBtn === category ? "bg-gray-500" : ""
+                    }`}
+                  >
+                    <option
+                      onClick={() => {
+                        handleCategories(category);
+                        setShowCategories(false);
+                      }}
+                      className={`flex flex-col w-full`}
+                      value={category}
                     >
-                      <option
-                        onClick={() => {
-                          handleParts(part);
-                          setShowParts(false);
-                        }}
-                        className={`flex flex-col w-full 
-`}
-                        value={part}
-                      >
-                        {part}
-                      </option>
-                      {bodyPartBtn === part ? <AiOutlineCheck /> : null}
-                    </li>
-                  ))
-                : null}
-            </ul>
-            <button
-              onClick={() => {
-                setShowParts(!showParts);
-              }}
-              className={`w-full rounded-lg px-5 ${
-                bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
-              }`}
-            >
-              {bodyPartBtn}
-            </button>
-          </div>
-          <div className="relative w-full">
-            <ul
-              onMouseLeave={() => setShowCategories(!showCategories)}
-              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
-            >
-              {showCategories
-                ? categories.map((category, idx) => (
-                    <li
-                      key={idx}
-                      className={`flex flex-row cursor-pointer p-2 ${
-                        categoriesBtn === category ? "bg-gray-500" : ""
-                      }`}
-                    >
-                      <option
-                        onClick={() => {
-                          handleCategories(category);
-                          setShowCategories(false);
-                        }}
-                        className={`flex flex-col w-full`}
-                        value={category}
-                      >
-                        {category}
-                      </option>
-                      {categoriesBtn === category ? <AiOutlineCheck /> : null}
-                    </li>
-                  ))
-                : null}
-            </ul>
-            <button
-              onClick={() => {
-                setShowCategories(!showCategories);
-              }}
-              className={`w-full rounded-lg px-5 ${
-                categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
-              }`}
-            >
-              {categoriesBtn}
-            </button>
-          </div>
+                      {category}
+                    </option>
+                    {categoriesBtn === category ? <AiOutlineCheck /> : null}
+                  </li>
+                ))
+              : null}
+          </ul>
+          <button
+            onClick={() => {
+              setShowCategories(!showCategories);
+            }}
+            className={`w-full rounded-lg px-5 ${
+              categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
+            }`}
+          >
+            {categoriesBtn}
+          </button>
         </div>
+      </div>
+      <ul className="mb-20">
         {filteredExercises?.map(
           ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
-            <div key={id}>
+            <li key={id} className="my-4">
               <div
                 className={
                   !details
-                    ? `grid grid-cols-6 gap-5 m-5 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                    ? `grid grid-cols-4 items-center rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
                     : "hidden"
                 }
                 onClick={() => setDetails(id)}
               >
-                <Image
-                  className="col-span-1"
-                  id="gif"
-                  src={`/1080/${id}.gif`}
-                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
-                  height={100}
-                  width={100}
-                  alt="exercise gif"
-                  priority={true}
-                />
-                <div className="grid grid-rows-2 col-span-5 items-center">
-                  <strong id="name" className="row-span-1">
+                <Suspense fallback={<LoadingModel />}>
+                  <Image
+                    className="col-span-1"
+                    id="gif"
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    height={100}
+                    width={100}
+                    alt="exercise gif"
+                    priority={true}
+                  />
+                </Suspense>
+                <div className="col-span-2 flex flex-col items-center mx-2">
+                  <strong id="name" className="w-full">
                     {name}
                   </strong>
-                  <div className="row-span-1" id="bodypart">
+                  <div className="w-full" id="bodypart">
                     {bodyPart}
                   </div>
+                </div>
+                <div className="justify-self-end rounded-md bg-white w-fit p-1 mr-5">
+                  <AiOutlineQuestion />
                 </div>
               </div>
               <div
                 className={
                   details === id
-                    ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                    ? `flex flex-col p-5 my-2 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
                     : "hidden"
                 }
               >
@@ -274,15 +278,16 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                 <h3 className="text-center m-2 font-bold" id="name">
                   {name}
                 </h3>
-                <Image
-                  className="flex self-center rounded-md"
-                  id="gif"
-                  src={`/1080/${id}.gif`}
-                  // src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
-                  height={400}
-                  width={400}
-                  alt="exercise gif"
-                />
+                <Suspense fallback={<LoadingModel />}>
+                  <Image
+                    className="flex self-center rounded-md"
+                    id="gif"
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    height={400}
+                    width={400}
+                    alt="exercise gif"
+                  />
+                </Suspense>
                 <h3 className="text-center m-2 underline font-semibold">
                   Instructions
                 </h3>
@@ -308,19 +313,19 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                   ))}
                 </ol>
               </div>
-            </div>
+            </li>
           ),
         )}
-        <div className={!details ? "mb-10 pb-10" : "hidden"}>
-          <Pagination
-            currentPage={currentPage}
-            workoutsPerPage={workoutsPerPage}
-            workouts={workouts.length}
-            onPageChange={onPageChange}
-          />
-        </div>
+      </ul>
+      <div className={!details ? "mb-10 pb-10" : "hidden"}>
+        <Pagination
+          currentPage={currentPage}
+          workoutsPerPage={workoutsPerPage}
+          workouts={workouts.length}
+          onPageChange={onPageChange}
+        />
       </div>
-    </Suspense>
+    </div>
   );
 };
 

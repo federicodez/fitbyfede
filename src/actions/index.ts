@@ -3,6 +3,7 @@ import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Data } from "@/types";
+import data from "@/constants/exerciseData.json";
 
 // export const getExerciseData = async () => {
 //   try {
@@ -144,13 +145,25 @@ export const createWorkoutSession = async () => {
   }
 };
 
-export const createMany = async (exercises: Data, sessionId: string) => {
+export const createMany = async (
+  exerciseQueue: string[],
+  sessionId: string,
+) => {
+  const exercises: Data = [];
+  data.filter((workout) => {
+    exerciseQueue.map((exercise) => {
+      if (exercise === workout.name) {
+        exercises.push(workout);
+      }
+    });
+  });
   try {
     const currentUser = await getCurrentUser();
 
     if (!currentUser?.id) {
       return null;
     }
+
     await Promise.all(
       exercises.map(
         async ({ name, bodyPart, id, target, equipment, instructions }) => {
@@ -314,5 +327,19 @@ export const getMostRecentWorkouts = async () => {
     return workouts;
   } catch (err: any) {
     console.log("Error loading most recent workouts: ", err);
+  }
+};
+
+export const updateWorkoutSession = async (
+  sessionId: string,
+  notes: string,
+) => {
+  try {
+    await prisma.workoutSession.update({
+      where: { id: sessionId },
+      data: { notes: notes },
+    });
+  } catch (error) {
+    console.log("Error updating session ", error);
   }
 };

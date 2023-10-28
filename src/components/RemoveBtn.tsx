@@ -11,6 +11,24 @@ type RemoveProps = {
   sessionId?: string;
 };
 
+type Session = {
+  sessionId?: string;
+  date: Date;
+  ids: any[];
+  exercises: {
+    [key: string]: string;
+  };
+  sets: {
+    [key: string]: string[];
+  };
+  lbs: {
+    [key: string]: number[];
+  };
+  reps: {
+    [key: string]: number[];
+  };
+};
+
 const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
   const router = useRouter();
 
@@ -28,7 +46,7 @@ const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
   return (
     <button className="remove-btn flex flex-row" onClick={removeWorkout}>
       <HiOutlineTrash className="text-red-500" />
-      <span className="text-lg">Delete</span>
+      <span className="text-lg px-1">Delete</span>
     </button>
   );
 };

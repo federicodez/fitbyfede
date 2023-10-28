@@ -12,6 +12,7 @@ import {
   deleteSet,
   changeWorkoutSet,
   deleteWorkout,
+  updateWorkoutSession,
 } from "@/actions";
 import { SlOptions } from "react-icons/sl";
 import { HiX } from "react-icons/hi";
@@ -32,7 +33,7 @@ const FinishWorkoutForm = ({
   items,
   recentWorkouts,
 }: FinishWorkoutFormProps) => {
-  const [notes, setNotes] = useState<string | boolean>(false);
+  const [notes, setNotes] = useState<string>("");
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
@@ -56,6 +57,7 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
+      await updateWorkoutSession(sessionId, notes);
       workouts.map(async ({ id, sets, lbs, reps }) => {
         await updateWorkout(id, sets, lbs, reps);
       });
@@ -172,61 +174,65 @@ const FinishWorkoutForm = ({
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
                 <div className="flex-initial w-fit">
-                  <div
-                    onMouseLeave={() => setOpenMenu(false)}
-                    className={
-                      openMenu === id
-                        ? "absolute z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
-                        : "hidden"
-                    }
-                  >
+                  <div className="relative">
                     <div
-                      onClick={() => {
-                        setNotes(" ");
-                        setOpenMenu(false);
-                      }}
-                      className="flex flex-row items-center gap-2"
-                    >
-                      <AiFillEdit className="text-blue-500" />
-                      <span>Add</span>
-                      <span>a</span>
-                      <span>Note</span>
-                    </div>
-                    <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
-                      <MdAdd className="text-blue-500" />
-                      <span>Add</span>
-                      <span>Warm-up</span>
-                      <span>Sets</span>
-                    </div>
-                    <div
-                      className="flex flex-row items-center gap-2 my-5"
-                      onClick={() => {
-                        setReplace(!replace);
-                        setOpenMenu(false);
-                      }}
-                    >
-                      <TbReplace className="text-blue-499" />
-                      <span>Replace</span>
-                      <span>Exercise</span>
-                    </div>
-                    <div className="flex flex-row items-center gap-2 my-5">
-                      <BiTimer className="text-blue-500" />
-                      <span>Auto</span>
-                      <span>Rest</span>
-                      <span>Timer</span>
-                    </div>
-                    <div
+                      onMouseLeave={() => setOpenMenu(false)}
                       className={
-                        openMenu ? "flex flex-row items-center gap-2" : "hidden"
+                        openMenu === id
+                          ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
+                          : "hidden"
                       }
-                      onClick={() => {
-                        removeExercise(id);
-                        setOpenMenu(false);
-                      }}
                     >
-                      <HiX className="text-red-500" />
-                      <span>Remove</span>
-                      <span>Exercise</span>
+                      <div
+                        onClick={() => {
+                          setNotes(" ");
+                          setOpenMenu(false);
+                        }}
+                        className="flex flex-row items-center gap-2"
+                      >
+                        <AiFillEdit className="text-blue-500" />
+                        <span>Add</span>
+                        <span>a</span>
+                        <span>Note</span>
+                      </div>
+                      <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
+                        <MdAdd className="text-blue-500" />
+                        <span>Add</span>
+                        <span>Warm-up</span>
+                        <span>Sets</span>
+                      </div>
+                      <div
+                        className="flex flex-row items-center gap-2 my-5"
+                        onClick={() => {
+                          setReplace(!replace);
+                          setOpenMenu(false);
+                        }}
+                      >
+                        <TbReplace className="text-blue-499" />
+                        <span>Replace</span>
+                        <span>Exercise</span>
+                      </div>
+                      <div className="flex flex-row items-center gap-2 my-5">
+                        <BiTimer className="text-blue-500" />
+                        <span>Auto</span>
+                        <span>Rest</span>
+                        <span>Timer</span>
+                      </div>
+                      <div
+                        className={
+                          openMenu
+                            ? "flex flex-row items-center gap-2"
+                            : "hidden"
+                        }
+                        onClick={() => {
+                          removeExercise(id);
+                          setOpenMenu(false);
+                        }}
+                      >
+                        <HiX className="text-red-500" />
+                        <span>Remove</span>
+                        <span>Exercise</span>
+                      </div>
                     </div>
                   </div>
                   <div onClick={() => setOpenMenu(id)}>
@@ -234,7 +240,7 @@ const FinishWorkoutForm = ({
                   </div>
                 </div>
               </div>
-              <div className={!notes ? "hidden" : ""}>
+              <div className={!notes.length ? "hidden" : ""}>
                 <input
                   type="text"
                   className="bg-white rounded-md w-full"
