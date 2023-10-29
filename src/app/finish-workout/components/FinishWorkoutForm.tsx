@@ -22,19 +22,23 @@ import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
+import { WorkoutSession } from "@prisma/client";
 
 type FinishWorkoutFormProps = {
+  session: WorkoutSession;
   sessionId: string;
   items: Workout[];
   recentWorkouts: Workout[];
 };
 
 const FinishWorkoutForm = ({
+  session,
   sessionId,
   items,
   recentWorkouts,
 }: FinishWorkoutFormProps) => {
   const [notes, setNotes] = useState<string>("");
+  const [sessionOptions, setSessionOptions] = useState(false);
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
@@ -170,8 +174,44 @@ const FinishWorkoutForm = ({
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
-        <StartTimer />
         <form action={handleSubmit}>
+          <div className="flex flex-row justify-between mt-3">
+            <button onClick={() => router.push("/workouts")}>
+              <HiX className="bg-gray-300 rounded-md" />
+            </button>
+            <button type="submit" className="bg-blue-300 rounded-md px-2">
+              Finish
+            </button>
+          </div>
+          <div className="flex my-4 flex-col">
+            <div className="flex flex-row items-center gap-2">
+              <strong>{session?.name}</strong>
+              <div
+                className={
+                  sessionOptions ? "absolute w-44 bg-gray-300" : "hidden"
+                }
+              >
+                <div className="flex flex-row gap-2">
+                  <AiFillEdit />
+                  <span>Edit</span>
+                  <span>Workout</span>
+                  <span>Name</span>
+                </div>
+              </div>
+              <SlOptions
+                onClick={() => setSessionOptions(true)}
+                className="bg-gray-300 rounded-md py-1"
+              />
+            </div>
+            <div>
+              <div className="flex flex-col gap-2">
+                <div className="relative left-0">
+                  <StartTimer />
+                </div>
+                <div>{session?.notes || "Notes"}</div>
+              </div>
+            </div>
+          </div>
           {items.map(({ id, name, sets, lbs, reps }) => (
             <div key={id}>
               <div className="flex flex-row  my-4">
@@ -324,8 +364,6 @@ const FinishWorkoutForm = ({
                           type="number"
                           name="lbs"
                           id="lbs"
-                          defaultValue={`${lb ? lb : 0}`}
-                          placeholder={`${lb}`}
                           className="workout-form__input"
                           required
                         />
@@ -343,8 +381,6 @@ const FinishWorkoutForm = ({
                           type="number"
                           name="reps"
                           id="reps"
-                          defaultValue={`${rep ? rep : 0}`}
-                          placeholder={`${rep}`}
                           className="workout-form__input"
                           required
                         />
@@ -365,16 +401,13 @@ const FinishWorkoutForm = ({
           <div className="workout-form__btn">
             <button
               type="submit"
-              className="rounded-lg bg-purple-100 text-purple-900"
+              className="rounded-lg bg-blue-300 text-blue-900"
               formAction={(data) => {
                 setAddExercise(true);
                 addAnotherExercise(data);
               }}
             >
               Add Exercise
-            </button>
-            <button className="workout-form__submit-btn" type="submit">
-              Create Workout
             </button>
             <CustomButton
               title="Cancel Workout"

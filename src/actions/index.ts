@@ -2,7 +2,7 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Data } from "@/types";
+import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
 
 // export const getExerciseData = async () => {
@@ -90,6 +90,29 @@ export const updateWorkoutWithDate = async (
   }
 };
 
+export const updateWorkouts = async (workouts: Workout[]) => {
+  try {
+    workouts.map(async ({ id, sets, lbs, reps }) => {
+      await updateWorkout(id, sets, lbs, reps);
+    });
+  } catch (error) {
+    console.log("Error updating workouts ", error);
+  }
+};
+
+export const updateWorkoutsWithDate = async (
+  workouts: Workout[],
+  date: string,
+) => {
+  try {
+    workouts.map(async ({ id, sets, lbs, reps }) => {
+      await updateWorkoutWithDate(id, sets, lbs, reps, date);
+    });
+  } catch (error) {
+    console.log("Error updating workout date: ", error);
+  }
+};
+
 export const changeWorkoutSet = async (id: string, sets: string[]) => {
   try {
     await prisma.workout.update({
@@ -137,6 +160,8 @@ export const createWorkoutSession = async () => {
       data: {
         userId: currentUser.id,
         name: time,
+        time: 0,
+        notes: "",
       },
     });
     return session;
@@ -221,6 +246,8 @@ export const createWorkout = async (
       data: {
         userId: currentUser.id,
         name: time,
+        time: 0,
+        notes: "",
       },
     });
 
