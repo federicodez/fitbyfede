@@ -60,7 +60,7 @@ model WorkoutSession {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   time       Int
-  notes      String
+  notes      String?
   userId     String    @db.ObjectId
   createdAt  DateTime  @default(now())
   workoutIds String[]  @db.ObjectId

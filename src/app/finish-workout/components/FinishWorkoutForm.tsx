@@ -2,7 +2,7 @@
 
 import { useState, MouseEvent, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { Workout, Data } from "@/types";
+import { Workout, Data, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import AddExercise from "./AddExercise";
@@ -23,7 +23,6 @@ import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
-import { WorkoutSession } from "@prisma/client";
 
 type FinishWorkoutFormProps = {
   session: WorkoutSession;

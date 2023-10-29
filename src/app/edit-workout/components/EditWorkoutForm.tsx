@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, MouseEvent, Suspense } from "react";
+import { useState, MouseEvent, Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Workout } from "@/types";
+import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
 import {
   updateWorkout,
@@ -19,7 +19,6 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash, HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
-import { WorkoutSession } from "@prisma/client";
 import AddExercise from "./AddExercise";
 import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
@@ -38,7 +37,7 @@ const EditWorkoutForm = ({
   recentWorkouts,
 }: EditWorkoutFormProps) => {
   const date = session;
-  const [notes, setNotes] = useState(session?.notes);
+  const [notes, setNotes] = useState<string>("");
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
@@ -49,6 +48,12 @@ const EditWorkoutForm = ({
   const [replace, setReplace] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const router = useRouter();
+
+  useEffect(() => {
+    if (session?.notes) {
+      setNotes(session?.notes);
+    }
+  }, []);
 
   const hours = Math.floor(session?.time / 360000);
   const minutes = Math.floor((session?.time % 360000) / 6000);
@@ -73,14 +78,14 @@ const EditWorkoutForm = ({
         await updateWorkoutSession(
           session?.id,
           workoutName,
-          session?.notes,
+          notes,
           session?.time,
         );
       } else {
         await updateWorkoutSession(
           session?.id,
           session?.name,
-          session?.notes,
+          notes,
           session?.time,
         );
       }
@@ -111,14 +116,14 @@ const EditWorkoutForm = ({
         await updateWorkoutSession(
           session?.id,
           workoutName,
-          session?.notes,
+          notes,
           session?.time,
         );
       } else {
         await updateWorkoutSession(
           session?.id,
           session?.name,
-          session?.notes,
+          notes,
           session?.time,
         );
       }

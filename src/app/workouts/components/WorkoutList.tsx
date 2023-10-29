@@ -7,10 +7,9 @@ import Detailed from "./Detailed";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
-import { Workout } from "@/types";
+import { Workout, WorkoutSession } from "@/types";
 import { SlOptions } from "react-icons/sl";
 import { getSessionById } from "@/actions";
-import { WorkoutSession } from "@prisma/client";
 
 type WorkoutListProps = {
   items: Workout[];
@@ -147,7 +146,7 @@ const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
                 onClick={() => {
                   sessionId ? setShowWorkouts(sessionId) : null;
                   setShowSessions(false);
-                  selectedSession(sessionId);
+                  sessionId ? selectedSession(sessionId) : null;
                 }}
               >
                 <Sessions

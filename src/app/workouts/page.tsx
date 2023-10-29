@@ -31,7 +31,6 @@ const Workouts = async () => {
     const workouts = await getWorkouts();
     const sessions = await getSessions();
 
-    // console.log("workouts: ", workouts, "sessions: ", sessions);
     if (workouts && sessions) {
       return (
         <section>

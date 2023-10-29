@@ -11,37 +11,19 @@ type RemoveProps = {
   sessionId?: string;
 };
 
-type Session = {
-  sessionId?: string;
-  date: Date;
-  ids: any[];
-  exercises: {
-    [key: string]: string;
-  };
-  sets: {
-    [key: string]: string[];
-  };
-  lbs: {
-    [key: string]: number[];
-  };
-  reps: {
-    [key: string]: number[];
-  };
-};
-
 const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
   const router = useRouter();
 
   const removeWorkout = async () => {
     ids.map(async (id: string) => await deleteWorkout(id));
-    // if (sessionId) {
-    //   await deleteSession(sessionId);
-    // }
+    if (sessionId) {
+      await deleteSession(sessionId);
+    }
     const items = await getWorkouts();
     if (items) {
       setWorkouts(items);
-      router.refresh();
     }
+    router.refresh();
   };
   return (
     <button className="remove-btn flex flex-row" onClick={removeWorkout}>
