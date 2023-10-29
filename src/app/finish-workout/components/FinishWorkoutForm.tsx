@@ -8,6 +8,7 @@ import LoadingModel from "@/components/models/LoadingModel";
 import AddExercise from "./AddExercise";
 import {
   updateWorkout,
+  updateWorkouts,
   deleteSession,
   deleteSet,
   changeWorkoutSet,
@@ -39,6 +40,7 @@ const FinishWorkoutForm = ({
 }: FinishWorkoutFormProps) => {
   const [notes, setNotes] = useState<string>("");
   const [sessionOptions, setSessionOptions] = useState(false);
+  const [workoutName, setWorkoutName] = useState("");
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
@@ -63,10 +65,12 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
-      await updateWorkoutSession(sessionId, notes, time);
-      workouts.map(async ({ id, sets, lbs, reps }) => {
-        await updateWorkout(id, sets, lbs, reps);
-      });
+      if (workoutName) {
+        await updateWorkoutSession(sessionId, workoutName, notes, time);
+      } else {
+        await updateWorkoutSession(sessionId, session.name, notes, time);
+      }
+      await updateWorkouts(workouts);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -88,10 +92,12 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
-      await updateWorkoutSession(sessionId, notes, time);
-      workouts.map(async ({ id, sets, lbs, reps }) => {
-        await updateWorkout(id, sets, lbs, reps);
-      });
+      if (workoutName) {
+        await updateWorkoutSession(sessionId, workoutName, notes, time);
+      } else {
+        await updateWorkoutSession(sessionId, session.name, notes, time);
+      }
+      await updateWorkouts(workouts);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -185,13 +191,32 @@ const FinishWorkoutForm = ({
           </div>
           <div className="flex my-4 flex-col">
             <div className="flex flex-row items-center gap-2">
-              <strong>{session?.name}</strong>
+              {workoutName ? (
+                <div className={!workoutName.length ? "hidden" : ""}>
+                  <input
+                    type="text"
+                    className="bg-white rounded-md w-full"
+                    onChange={(e) => setWorkoutName(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <strong>{session?.name}</strong>
+              )}
               <div
+                onMouseLeave={() => setSessionOptions(false)}
                 className={
-                  sessionOptions ? "absolute w-44 bg-gray-300" : "hidden"
+                  sessionOptions
+                    ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg p-2 cursor-pointer"
+                    : "hidden"
                 }
               >
-                <div className="flex flex-row gap-2">
+                <div
+                  onClick={() => {
+                    setWorkoutName(" ");
+                    setSessionOptions(false);
+                  }}
+                  className="flex flex-row items-center gap-2"
+                >
                   <AiFillEdit />
                   <span>Edit</span>
                   <span>Workout</span>

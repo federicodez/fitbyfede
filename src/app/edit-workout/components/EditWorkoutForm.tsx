@@ -11,7 +11,7 @@ import {
   updateWorkoutWithDate,
   updateWorkoutSession,
   updateWorkouts,
-  updateWorkoutsWithDate,
+  updateDate,
   deleteSession,
   deleteWorkout,
 } from "@/actions";
@@ -37,8 +37,10 @@ const EditWorkoutForm = ({
   session,
   recentWorkouts,
 }: EditWorkoutFormProps) => {
-  const date = items?.findLast((item) => item);
+  const date = session;
   const [notes, setNotes] = useState(session?.notes);
+  const [sessionOptions, setSessionOptions] = useState(false);
+  const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
@@ -67,7 +69,21 @@ const EditWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
-      await updateWorkoutSession(session?.id, session?.notes, session?.time);
+      if (workoutName) {
+        await updateWorkoutSession(
+          session?.id,
+          workoutName,
+          session?.notes,
+          session?.time,
+        );
+      } else {
+        await updateWorkoutSession(
+          session?.id,
+          session?.name,
+          session?.notes,
+          session?.time,
+        );
+      }
       await updateWorkouts(workouts);
       router.refresh();
     } catch (error) {
@@ -91,8 +107,23 @@ const EditWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
+      if (workoutName) {
+        await updateWorkoutSession(
+          session?.id,
+          workoutName,
+          session?.notes,
+          session?.time,
+        );
+      } else {
+        await updateWorkoutSession(
+          session?.id,
+          session?.name,
+          session?.notes,
+          session?.time,
+        );
+      }
       if (!date && date !== undefined) {
-        await updateWorkoutsWithDate(workouts, date);
+        await updateDate(workouts, session, date);
       } else {
         await updateWorkouts(workouts);
       }
@@ -190,8 +221,53 @@ const EditWorkoutForm = ({
           </div>
           <div className="flex my-4 flex-col">
             <div className="flex flex-row items-center gap-2">
-              <strong>{session?.name}</strong>
-              <SlOptions className="bg-gray-300 rounded-md py-1" />
+              <div className="flex flex-row items-center gap-2">
+                {workoutName ? (
+                  <div className={!workoutName.length ? "hidden" : ""}>
+                    <input
+                      type="text"
+                      className="bg-white rounded-md w-full"
+                      onChange={(e) => setWorkoutName(e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  <strong>{session?.name}</strong>
+                )}
+                <div
+                  onMouseLeave={() => setSessionOptions(false)}
+                  className={
+                    sessionOptions
+                      ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg p-2 cursor-pointer"
+                      : "hidden"
+                  }
+                >
+                  <div
+                    onClick={() => {
+                      setWorkoutName(" ");
+                      setSessionOptions(false);
+                    }}
+                    className="flex flex-row items-center gap-2 m-1"
+                  >
+                    <AiFillEdit className="text-blue-500" />
+                    <span>Edit</span>
+                    <span>Workout</span>
+                    <span>Name</span>
+                  </div>
+                  <div
+                    className="flex flex-row items-center gap-2 m-1"
+                    onClick={() => setDateInput(true)}
+                  >
+                    <AiFillEdit className="text-blue-500" />
+                    <span>Edit</span>
+                    <span>Workout</span>
+                    <span>Date</span>
+                  </div>
+                </div>
+                <SlOptions
+                  onClick={() => setSessionOptions(true)}
+                  className="bg-gray-300 rounded-md py-1"
+                />
+              </div>
             </div>
             {dateInput ? (
               <input
@@ -201,7 +277,7 @@ const EditWorkoutForm = ({
                 onMouseLeave={() => setDateInput(false)}
               />
             ) : (
-              <div onClick={() => setDateInput(true)}>
+              <div>
                 <div className="flex flex-col gap-2">
                   <div>{moment(date?.createdAt).calendar()}</div>
                   <div>

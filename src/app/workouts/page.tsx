@@ -1,4 +1,4 @@
-import { getWorkouts } from "@/actions";
+import { getSessions, getWorkouts } from "@/actions";
 import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 import { Workout } from "@/types";
@@ -29,17 +29,25 @@ type Session = {
 const Workouts = async () => {
   try {
     const workouts = await getWorkouts();
+    const sessions = await getSessions();
 
-    return workouts?.length ? (
-      <section>
-        <Link href="/search-workout" as="/search-workout" className="home-link">
-          Start a Workout
-        </Link>
-        <WorkoutList items={workouts} />
-      </section>
-    ) : (
-      <EmptyState />
-    );
+    // console.log("workouts: ", workouts, "sessions: ", sessions);
+    if (workouts && sessions) {
+      return (
+        <section>
+          <Link
+            href="/search-workout"
+            as="/search-workout"
+            className="home-link"
+          >
+            Start a Workout
+          </Link>
+          <WorkoutList items={workouts} sessions={sessions} />
+        </section>
+      );
+    } else {
+      return <EmptyState />;
+    }
   } catch (err) {
     console.log(err);
   }

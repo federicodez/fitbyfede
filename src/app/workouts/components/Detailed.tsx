@@ -1,8 +1,10 @@
 import moment from "moment";
 import Link from "next/link";
 import { HiX } from "react-icons/hi";
+import { WorkoutSession } from "@prisma/client";
 
 type DetailedProps = {
+  session: WorkoutSession[];
   date: Date;
   ids: any[];
   exercises: {
@@ -23,6 +25,7 @@ type DetailedProps = {
 };
 
 const Detailed = ({
+  session,
   date,
   ids,
   exercises,
@@ -33,6 +36,7 @@ const Detailed = ({
   setShowWorkouts,
   setShowSessions,
 }: DetailedProps) => {
+  console.log("session: ", session);
   return (
     <div className="absolute z-10 rounded-md bg-gray-100 w-full shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
       <div className="flex flex-row justify-between m-2">
@@ -45,6 +49,7 @@ const Detailed = ({
         >
           <HiX />
         </button>
+        {session?.name}
         <Link href={`/edit-workout/${sessionId}`} className="flex flex-row">
           <span className="text-lg text-blue-500">Edit</span>
         </Link>

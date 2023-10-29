@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Data, Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
+import { WorkoutSession } from "@prisma/client";
 
 // export const getExerciseData = async () => {
 //   try {
@@ -100,13 +101,18 @@ export const updateWorkouts = async (workouts: Workout[]) => {
   }
 };
 
-export const updateWorkoutsWithDate = async (
+export const updateDate = async (
   workouts: Workout[],
+  session: WorkoutSession,
   date: string,
 ) => {
   try {
     workouts.map(async ({ id, sets, lbs, reps }) => {
       await updateWorkoutWithDate(id, sets, lbs, reps, date);
+    });
+    await prisma.workoutSession.update({
+      where: { id: session.id },
+      data: { createdAt: date },
     });
   } catch (error) {
     console.log("Error updating workout date: ", error);
@@ -247,7 +253,7 @@ export const createWorkout = async (
         userId: currentUser.id,
         name: time,
         time: 0,
-        notes: "",
+        notes: " ",
       },
     });
 
@@ -360,13 +366,14 @@ export const getMostRecentWorkouts = async () => {
 
 export const updateWorkoutSession = async (
   sessionId: string,
+  name: string,
   notes: string,
   time: number,
 ) => {
   try {
     await prisma.workoutSession.update({
       where: { id: sessionId },
-      data: { notes: notes, time: time },
+      data: { name: name, notes: notes, time: time },
     });
   } catch (error) {
     console.log("Error updating session ", error);
@@ -381,5 +388,22 @@ export const getSessionById = async (sessionId: string) => {
     return session;
   } catch (error) {
     console.log("Error loading session ", error);
+  }
+};
+
+export const getSessions = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+    const sessions = await prisma.workoutSession.findMany({
+      where: { userId: currentUser.id },
+    });
+    console.log("actions: ", sessions);
+    return sessions;
+  } catch (error) {
+    console.log("Error fetching sessions ", error);
   }
 };

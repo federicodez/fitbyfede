@@ -14,7 +14,7 @@ const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
 
     const session = await getSessionById(sessionId);
 
-    if (workouts && session?.time) {
+    if (workouts && session) {
       return (
         <EditWorkoutForm
           items={workouts}
