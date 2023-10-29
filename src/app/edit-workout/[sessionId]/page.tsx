@@ -1,4 +1,8 @@
-import { getWorkoutsBySessionId } from "@/actions";
+import {
+  getMostRecentWorkouts,
+  getSessionById,
+  getWorkoutsBySessionId,
+} from "@/actions";
 import EditWorkoutForm from "../components/EditWorkoutForm";
 
 const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
@@ -6,7 +10,19 @@ const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
 
   try {
     const workouts = await getWorkoutsBySessionId(sessionId);
-    return workouts ? <EditWorkoutForm items={workouts} /> : null;
+    const recentWorkouts = (await getMostRecentWorkouts()) || [];
+
+    const session = await getSessionById(sessionId);
+
+    if (workouts && session) {
+      return (
+        <EditWorkoutForm
+          items={workouts}
+          session={session}
+          recentWorkouts={recentWorkouts}
+        />
+      );
+    }
   } catch (err) {
     console.log(err);
   }

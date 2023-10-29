@@ -2,19 +2,18 @@
 
 import { useState } from "react";
 import { RemoveBtn } from "@/components";
-import WorkoutCard from "./WorkoutCard";
 import Sessions from "./Sessions";
 import Detailed from "./Detailed";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import moment from "moment";
-import { exampleWorkout } from "@/constants";
-import { Workout } from "@/types";
-import { HiOutlineTrash } from "react-icons/hi";
+import { Workout, WorkoutSession } from "@/types";
 import { SlOptions } from "react-icons/sl";
+import { getSessionById } from "@/actions";
 
 type WorkoutListProps = {
   items: Workout[];
+  sessions: WorkoutSession[];
 };
 
 type Groups = {
@@ -39,11 +38,17 @@ type Session = {
   };
 };
 
-const WorkoutList = ({ items }: WorkoutListProps) => {
+const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const [showSessions, setShowSessions] = useState(true);
   const [showOptions, setShowOptions] = useState<string | boolean>(false);
   const [showWorkouts, setShowWorkouts] = useState<string | boolean>(false);
+  const [session, setSession] = useState<WorkoutSession[]>(sessions);
+
+  const selectedSession = (sessionId: string) => {
+    const selected = sessions.filter((session) => session.id === sessionId);
+    setSession(selected);
+  };
 
   const sorted = workouts?.reduce((groups: Groups, workout: Workout) => {
     if (!groups[workout.workoutSessionId])
@@ -87,6 +92,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
               }
             >
               <Detailed
+                session={session}
                 date={date}
                 ids={ids}
                 exercises={exercises}
@@ -140,6 +146,7 @@ const WorkoutList = ({ items }: WorkoutListProps) => {
                 onClick={() => {
                   sessionId ? setShowWorkouts(sessionId) : null;
                   setShowSessions(false);
+                  sessionId ? selectedSession(sessionId) : null;
                 }}
               >
                 <Sessions

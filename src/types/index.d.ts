@@ -42,3 +42,13 @@ export type Data = {
   secondaryMuscles: string[];
   instructions: string[];
 }[];
+
+export type WorkoutSession = {
+  id: string;
+  name: string;
+  time: number;
+  notes?: string | null;
+  userId: string;
+  workoutIds: string[];
+  createdAt: Date;
+};

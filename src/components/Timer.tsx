@@ -33,7 +33,7 @@ const StartTimer = () => {
   };
 
   return (
-    <div className="flex justify-center items-center flex-row gap-2">
+    <div className="flex items-center flex-row gap-2">
       <p className="text-center">
         {hours ? `${hours}:` : ""}
         {minutes.toString().padStart(2)}:{seconds.toString().padStart(2, "0")}

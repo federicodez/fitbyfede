@@ -1,8 +1,10 @@
 import moment from "moment";
 import Link from "next/link";
 import { HiX } from "react-icons/hi";
+import { WorkoutSession } from "@/types";
 
 type DetailedProps = {
+  session: WorkoutSession[];
   date: Date;
   ids: any[];
   exercises: {
@@ -23,6 +25,7 @@ type DetailedProps = {
 };
 
 const Detailed = ({
+  session,
   date,
   ids,
   exercises,
@@ -45,6 +48,7 @@ const Detailed = ({
         >
           <HiX />
         </button>
+        {session[0]?.name}
         <Link href={`/edit-workout/${sessionId}`} className="flex flex-row">
           <span className="text-lg text-blue-500">Edit</span>
         </Link>

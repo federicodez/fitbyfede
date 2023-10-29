@@ -2,12 +2,13 @@
 
 import { useState, MouseEvent, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { Workout, Data } from "@/types";
+import { Workout, Data, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import AddExercise from "./AddExercise";
 import {
   updateWorkout,
+  updateWorkouts,
   deleteSession,
   deleteSet,
   changeWorkoutSet,
@@ -21,19 +22,24 @@ import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 import StartTimer from "@/components/Timer";
+import { useTimerContext } from "@/context/TimerContext";
 
 type FinishWorkoutFormProps = {
+  session: WorkoutSession;
   sessionId: string;
   items: Workout[];
   recentWorkouts: Workout[];
 };
 
 const FinishWorkoutForm = ({
+  session,
   sessionId,
   items,
   recentWorkouts,
 }: FinishWorkoutFormProps) => {
   const [notes, setNotes] = useState<string>("");
+  const [sessionOptions, setSessionOptions] = useState(false);
+  const [workoutName, setWorkoutName] = useState("");
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
@@ -41,6 +47,7 @@ const FinishWorkoutForm = ({
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState(false);
   const router = useRouter();
+  const { time } = useTimerContext();
 
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
@@ -57,10 +64,12 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
-      await updateWorkoutSession(sessionId, notes);
-      workouts.map(async ({ id, sets, lbs, reps }) => {
-        await updateWorkout(id, sets, lbs, reps);
-      });
+      if (workoutName) {
+        await updateWorkoutSession(sessionId, workoutName, notes, time);
+      } else {
+        await updateWorkoutSession(sessionId, session.name, notes, time);
+      }
+      await updateWorkouts(workouts);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -82,9 +91,12 @@ const FinishWorkoutForm = ({
     setWorkouts(workouts);
 
     try {
-      workouts.map(async ({ id, sets, lbs, reps }) => {
-        await updateWorkout(id, sets, lbs, reps);
-      });
+      if (workoutName) {
+        await updateWorkoutSession(sessionId, workoutName, notes, time);
+      } else {
+        await updateWorkoutSession(sessionId, session.name, notes, time);
+      }
+      await updateWorkouts(workouts);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -167,8 +179,63 @@ const FinishWorkoutForm = ({
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
-        <StartTimer />
         <form action={handleSubmit}>
+          <div className="flex flex-row justify-between mt-3">
+            <button onClick={() => router.push("/workouts")}>
+              <HiX className="bg-gray-300 rounded-md" />
+            </button>
+            <button type="submit" className="bg-blue-300 rounded-md px-2">
+              Finish
+            </button>
+          </div>
+          <div className="flex my-4 flex-col">
+            <div className="flex flex-row items-center gap-2">
+              {workoutName ? (
+                <div className={!workoutName.length ? "hidden" : ""}>
+                  <input
+                    type="text"
+                    className="bg-white rounded-md w-full"
+                    onChange={(e) => setWorkoutName(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <strong>{session?.name}</strong>
+              )}
+              <div
+                onMouseLeave={() => setSessionOptions(false)}
+                className={
+                  sessionOptions
+                    ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg p-2 cursor-pointer"
+                    : "hidden"
+                }
+              >
+                <div
+                  onClick={() => {
+                    setWorkoutName(" ");
+                    setSessionOptions(false);
+                  }}
+                  className="flex flex-row items-center gap-2"
+                >
+                  <AiFillEdit />
+                  <span>Edit</span>
+                  <span>Workout</span>
+                  <span>Name</span>
+                </div>
+              </div>
+              <SlOptions
+                onClick={() => setSessionOptions(true)}
+                className="bg-gray-300 rounded-md py-1"
+              />
+            </div>
+            <div>
+              <div className="flex flex-col gap-2">
+                <div className="relative left-0">
+                  <StartTimer />
+                </div>
+                <div>{session?.notes || "Notes"}</div>
+              </div>
+            </div>
+          </div>
           {items.map(({ id, name, sets, lbs, reps }) => (
             <div key={id}>
               <div className="flex flex-row  my-4">
@@ -321,8 +388,6 @@ const FinishWorkoutForm = ({
                           type="number"
                           name="lbs"
                           id="lbs"
-                          defaultValue={`${lb ? lb : 0}`}
-                          placeholder={`${lb}`}
                           className="workout-form__input"
                           required
                         />
@@ -340,8 +405,6 @@ const FinishWorkoutForm = ({
                           type="number"
                           name="reps"
                           id="reps"
-                          defaultValue={`${rep ? rep : 0}`}
-                          placeholder={`${rep}`}
                           className="workout-form__input"
                           required
                         />
@@ -362,16 +425,13 @@ const FinishWorkoutForm = ({
           <div className="workout-form__btn">
             <button
               type="submit"
-              className="rounded-lg bg-purple-100 text-purple-900"
+              className="rounded-lg bg-blue-300 text-blue-900"
               formAction={(data) => {
                 setAddExercise(true);
                 addAnotherExercise(data);
               }}
             >
               Add Exercise
-            </button>
-            <button className="workout-form__submit-btn" type="submit">
-              Create Workout
             </button>
             <CustomButton
               title="Cancel Workout"

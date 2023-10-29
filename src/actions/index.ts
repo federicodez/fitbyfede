@@ -2,7 +2,7 @@
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Data } from "@/types";
+import { Data, Workout, WorkoutSession } from "@/types";
 import data from "@/constants/exerciseData.json";
 
 // export const getExerciseData = async () => {
@@ -90,6 +90,34 @@ export const updateWorkoutWithDate = async (
   }
 };
 
+export const updateWorkouts = async (workouts: Workout[]) => {
+  try {
+    workouts.map(async ({ id, sets, lbs, reps }) => {
+      await updateWorkout(id, sets, lbs, reps);
+    });
+  } catch (error) {
+    console.log("Error updating workouts ", error);
+  }
+};
+
+export const updateDate = async (
+  workouts: Workout[],
+  session: WorkoutSession,
+  date: string,
+) => {
+  try {
+    workouts.map(async ({ id, sets, lbs, reps }) => {
+      await updateWorkoutWithDate(id, sets, lbs, reps, date);
+    });
+    await prisma.workoutSession.update({
+      where: { id: session.id },
+      data: { createdAt: date },
+    });
+  } catch (error) {
+    console.log("Error updating workout date: ", error);
+  }
+};
+
 export const changeWorkoutSet = async (id: string, sets: string[]) => {
   try {
     await prisma.workout.update({
@@ -123,20 +151,21 @@ export const createWorkoutSession = async () => {
       return null;
     }
     const date = new Date().getHours();
-    let time;
+    let timer;
     if (date < 12) {
-      time = "Morning Workout";
+      timer = "Morning Workout";
     } else if (date < 15) {
-      time = "Midday Workout";
+      timer = "Midday Workout";
     } else if (date < 18) {
-      time = "Afternoon Workout";
+      timer = "Afternoon Workout";
     } else {
-      time = "Evening Workout";
+      timer = "Evening Workout";
     }
     const session = await prisma.workoutSession.create({
       data: {
         userId: currentUser.id,
-        name: time,
+        name: timer,
+        time: 0,
       },
     });
     return session;
@@ -206,21 +235,22 @@ export const createWorkout = async (
     }
 
     const date = new Date().getHours();
-    let time;
+    let timer;
     if (date < 12) {
-      time = "Morning Workout";
+      timer = "Morning Workout";
     } else if (date < 15) {
-      time = "Midday Workout";
+      timer = "Midday Workout";
     } else if (date < 18) {
-      time = "Afternoon Workout";
+      timer = "Afternoon Workout";
     } else {
-      time = "Evening Workout";
+      timer = "Evening Workout";
     }
 
     const session = await prisma.workoutSession.create({
       data: {
         userId: currentUser.id,
-        name: time,
+        name: timer,
+        time: 0,
       },
     });
 
@@ -319,6 +349,7 @@ export const getMostRecentWorkouts = async () => {
       where: {
         userId: currentUser.id,
       },
+      distinct: ["name"],
       orderBy: {
         createdAt: "desc",
       },
@@ -332,14 +363,53 @@ export const getMostRecentWorkouts = async () => {
 
 export const updateWorkoutSession = async (
   sessionId: string,
+  name: string,
   notes: string,
+  time: number,
 ) => {
   try {
-    await prisma.workoutSession.update({
-      where: { id: sessionId },
-      data: { notes: notes },
-    });
+    if (notes) {
+      await prisma.workoutSession.update({
+        where: { id: sessionId },
+        data: { name: name, time: time, notes: notes },
+      });
+    } else {
+      await prisma.workoutSession.update({
+        where: { id: sessionId },
+        data: { name: name, time: time },
+      });
+    }
   } catch (error) {
     console.log("Error updating session ", error);
+  }
+};
+
+export const getSessionById = async (sessionId: string) => {
+  try {
+    const session = await prisma.workoutSession.findUnique({
+      where: { id: sessionId },
+    });
+    return session;
+  } catch (error) {
+    console.log("Error loading session ", error);
+  }
+};
+
+export const getSessions = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+    const sessions = await prisma.workoutSession.findMany({
+      where: { userId: currentUser.id },
+    });
+    if (!sessions?.length) {
+      throw new Error("Failed to fetch sessions");
+    }
+    return sessions;
+  } catch (error) {
+    console.log("Error fetching sessions ", error);
   }
 };
