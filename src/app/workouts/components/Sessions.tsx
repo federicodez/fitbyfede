@@ -1,4 +1,7 @@
+import { WorkoutSession } from "@/types";
+
 type SessionsProps = {
+  sessions: WorkoutSession[];
   ids: any[];
   exercises: {
     [key: string]: string;
@@ -15,7 +18,15 @@ type SessionsProps = {
   sessionId?: string;
 };
 
-const Sessions = ({ ids, exercises, sets, lbs, reps }: SessionsProps) => {
+const Sessions = ({
+  sessions,
+  ids,
+  exercises,
+  sets,
+  lbs,
+  reps,
+}: SessionsProps) => {
+  console.log("sessions: ", sessions);
   return (
     <div>
       <strong className="flex flex-start">Exercise</strong>

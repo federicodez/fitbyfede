@@ -413,3 +413,35 @@ export const getSessions = async () => {
     console.log("Error fetching sessions ", error);
   }
 };
+
+export const getPreviousWorkout = async (workouts: Workout[]) => {
+  try {
+    const previous: Workout[] = [];
+    workouts.map(async ({ id, name }) => {
+      const prev = await prisma.workout.findFirst({
+        where: {
+          name,
+          NOT: {
+            id,
+          },
+        },
+      });
+
+      if (prev) {
+        previous.push(prev);
+      }
+    });
+    // const previous = await prisma.workout.findFirst({
+    //   where: { name: workouts[0].name },
+    // });
+
+    if (!previous) {
+      return null;
+    }
+
+    console.log("actions: ", previous);
+    return previous;
+  } catch (error) {
+    console.log("Error loading previous workouts ", error);
+  }
+};
