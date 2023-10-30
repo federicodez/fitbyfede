@@ -236,7 +236,7 @@ const FinishWorkoutForm = ({
               </div>
             </div>
           </div>
-          {items.map(({ id, name, sets, lbs, reps }) => (
+          {items.map(({ id, name, sets, lbs, reps, bodyPart }) => (
             <div key={id}>
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
@@ -383,7 +383,11 @@ const FinishWorkoutForm = ({
                   {lbs?.map((lb, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
-                        <label htmlFor="lbs">Weight (lbs): </label>
+                        {bodyPart === "cardio" ? (
+                          <label htmlFor="lbs">Mile</label>
+                        ) : (
+                          <label htmlFor="lbs">Weight (lbs) </label>
+                        )}
                         <input
                           type="number"
                           name="lbs"
@@ -400,7 +404,11 @@ const FinishWorkoutForm = ({
                   {reps?.map((rep, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
-                        <label htmlFor="reps">Reps: </label>
+                        {bodyPart === "cardio" ? (
+                          <label htmlFor="reps">Time</label>
+                        ) : (
+                          <label htmlFor="reps">Reps</label>
+                        )}
                         <input
                           type="number"
                           name="reps"
