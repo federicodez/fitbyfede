@@ -43,11 +43,11 @@ const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
   const [showSessions, setShowSessions] = useState(true);
   const [showOptions, setShowOptions] = useState<string | boolean>(false);
   const [showWorkouts, setShowWorkouts] = useState<string | boolean>(false);
-  const [session, setSession] = useState<WorkoutSession[]>(sessions);
+  const [session, setSession] = useState<WorkoutSession | null>(null);
 
   const selectedSession = (sessionId: string) => {
     const selected = sessions.filter((session) => session.id === sessionId);
-    setSession(selected);
+    setSession(selected[0]);
   };
 
   const sorted = workouts?.reduce((groups: Groups, workout: Workout) => {
@@ -91,18 +91,20 @@ const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
                 showWorkouts === sessionId ? "relative w-full" : "hidden"
               }
             >
-              <Detailed
-                session={session}
-                date={date}
-                ids={ids}
-                exercises={exercises}
-                sets={sets}
-                lbs={lbs}
-                reps={reps}
-                sessionId={sessionId}
-                setShowWorkouts={setShowWorkouts}
-                setShowSessions={setShowSessions}
-              />
+              {session ? (
+                <Detailed
+                  session={session}
+                  date={date}
+                  ids={ids}
+                  exercises={exercises}
+                  sets={sets}
+                  lbs={lbs}
+                  reps={reps}
+                  sessionId={sessionId}
+                  setShowWorkouts={setShowWorkouts}
+                  setShowSessions={setShowSessions}
+                />
+              ) : null}
             </div>
             <div className="container wrapper workoutlist-item rounded-lg">
               <div className="flex justify-between">
@@ -150,6 +152,7 @@ const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
                 }}
               >
                 <Sessions
+                  sessions={sessions}
                   ids={ids}
                   exercises={exercises}
                   sets={sets}
