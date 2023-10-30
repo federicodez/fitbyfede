@@ -26,7 +26,6 @@ const Sessions = ({
   lbs,
   reps,
 }: SessionsProps) => {
-  console.log("sessions: ", sessions);
   return (
     <div>
       <strong className="flex flex-start">Exercise</strong>

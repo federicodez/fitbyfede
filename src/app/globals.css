@@ -217,7 +217,7 @@ p {
 
 .workout-form__container {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   gap: 1rem;
 
   .workout-form__item {

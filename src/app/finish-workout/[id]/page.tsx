@@ -15,9 +15,10 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
     const session = await getSessionById(id);
 
     if (workouts && session?.name) {
-      const previous = await getPreviousWorkout(workouts);
+      const previous = (await getPreviousWorkout(workouts)) || null;
       return (
         <FinishWorkoutForm
+          previous={previous}
           session={session}
           sessionId={id}
           items={workouts}

@@ -3,6 +3,8 @@ import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const Workouts = async () => {
   try {
     const workouts = await getWorkouts();

@@ -105,7 +105,7 @@ const Detailed = ({
                       : `${reps[id][lbIndex]} reps`}
                   </div>
                 </div>
-                <div>{lb * (1 + reps[id][lbIndex] / 30)}</div>
+                <div>{Math.floor(lb * (1 + reps[id][lbIndex] / 30))}</div>
               </li>
             ))}
           </ul>

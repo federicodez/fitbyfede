@@ -25,6 +25,7 @@ import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
 
 type FinishWorkoutFormProps = {
+  previous: Workout | null;
   session: WorkoutSession;
   sessionId: string;
   items: Workout[];
@@ -32,6 +33,7 @@ type FinishWorkoutFormProps = {
 };
 
 const FinishWorkoutForm = ({
+  previous,
   session,
   sessionId,
   items,
@@ -236,7 +238,7 @@ const FinishWorkoutForm = ({
               </div>
             </div>
           </div>
-          {items.map(({ id, name, sets, lbs, reps, bodyPart }) => (
+          {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
             <div key={id}>
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
@@ -349,6 +351,7 @@ const FinishWorkoutForm = ({
               </div>
               <div className="workout-form__container">
                 <ul className="workout-form__list" id="sets-list">
+                  <span>Set</span>
                   {sets?.map((set, setId) => (
                     <li key={setId} className="workout-form__item">
                       <button
@@ -366,7 +369,6 @@ const FinishWorkoutForm = ({
                           setSetOptions={setSetOptions}
                           changeSet={changeSet}
                         />
-                        <span>Set</span>
                         <CustomButton
                           title={set}
                           containerStyles="workout-form__input"
@@ -379,15 +381,33 @@ const FinishWorkoutForm = ({
                     </li>
                   ))}
                 </ul>
+
                 <ul className="workout-form__list">
+                  <label>Previous</label>
+                  {lbs?.map((lb, id) => (
+                    <li key={id} className="workout-form__item">
+                      <div className="flex flex-col">
+                        {previous?.lbs[id] ? (
+                          <div className="flex flex-row bg-gray-300 rounded-lg px-1">
+                            {previous?.lbs[id]} x {previous?.reps[id]}
+                          </div>
+                        ) : (
+                          <div className="w-10 border-4 border-gray-300 rounded-lg m-2"></div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <ul className="workout-form__list">
+                  {bodyPart === "cardio" ? (
+                    <label htmlFor="lbs">Mile</label>
+                  ) : (
+                    <label htmlFor="lbs">Weight (lbs) </label>
+                  )}
                   {lbs?.map((lb, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
-                        {bodyPart === "cardio" ? (
-                          <label htmlFor="lbs">Mile</label>
-                        ) : (
-                          <label htmlFor="lbs">Weight (lbs) </label>
-                        )}
                         <input
                           type="number"
                           name="lbs"
@@ -401,14 +421,14 @@ const FinishWorkoutForm = ({
                 </ul>
 
                 <ul className="workout-form__list">
+                  {bodyPart === "cardio" ? (
+                    <label htmlFor="reps">Time</label>
+                  ) : (
+                    <label htmlFor="reps">Reps</label>
+                  )}
                   {reps?.map((rep, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
-                        {bodyPart === "cardio" ? (
-                          <label htmlFor="reps">Time</label>
-                        ) : (
-                          <label htmlFor="reps">Reps</label>
-                        )}
                         <input
                           type="number"
                           name="reps"
