@@ -416,19 +416,24 @@ export const getSessions = async () => {
 
 export const getPreviousWorkout = async (workouts: Workout[]) => {
   try {
-    const previous = await prisma.workout.findFirst({
-      where: {
-        name: workouts[0].name,
-        NOT: { id: workouts[0].id },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    const result: any[] = [];
+    for (let i = 0; i < workouts.length; i++) {
+      const previous = await prisma.workout.findFirst({
+        where: {
+          name: workouts[i].name,
+          NOT: { id: workouts[i].id },
+        },
+        orderBy: { createdAt: "desc" },
+      });
 
-    if (!previous) {
+      result.push(previous);
+    }
+
+    if (!result.length) {
       return null;
     }
 
-    return previous;
+    return result;
   } catch (error) {
     console.log("Error loading previous workouts ", error);
   }

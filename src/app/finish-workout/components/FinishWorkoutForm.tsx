@@ -25,7 +25,7 @@ import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
 
 type FinishWorkoutFormProps = {
-  previous: Workout | null;
+  previous: Workout[] | [];
   session: WorkoutSession;
   sessionId: string;
   items: Workout[];
@@ -178,6 +178,7 @@ const FinishWorkoutForm = ({
     router.refresh();
   };
 
+  console.log("previous: ", previous?.length);
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
@@ -384,19 +385,21 @@ const FinishWorkoutForm = ({
 
                 <ul className="workout-form__list">
                   <label>Previous</label>
-                  {lbs?.map((lb, id) => (
-                    <li key={id} className="workout-form__item">
-                      <div className="flex flex-col">
-                        {previous?.lbs[id] ? (
-                          <div className="flex flex-row bg-gray-300 rounded-lg px-1">
-                            {previous?.lbs[id]} x {previous?.reps[id]}
+                  <div>
+                    {sets.map((set, idx) => (
+                      <div key={idx}>
+                        {previous ? (
+                          <div className="flex flex-row gap-2">
+                            <div>{previous[index].lbs[idx]}</div>
+                            <div>x</div>
+                            <div>{previous[index].reps[idx]}</div>
                           </div>
                         ) : (
-                          <div className="w-10 border-4 border-gray-300 rounded-lg m-2"></div>
+                          <div className="border-4 w-10"></div>
                         )}
                       </div>
-                    </li>
-                  ))}
+                    ))}
+                  </div>
                 </ul>
 
                 <ul className="workout-form__list">

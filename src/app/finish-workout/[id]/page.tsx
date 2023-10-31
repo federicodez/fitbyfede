@@ -15,8 +15,8 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
     const session = await getSessionById(id);
 
     if (workouts && session?.name) {
-      const previous = (await getPreviousWorkout(workouts)) || null;
-      return (
+      const previous = (await getPreviousWorkout(workouts)) || [];
+      return previous ? (
         <FinishWorkoutForm
           previous={previous}
           session={session}
@@ -24,7 +24,7 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
           items={workouts}
           recentWorkouts={recentWorkouts}
         />
-      );
+      ) : null;
     }
   } catch (error) {
     console.log(error);
