@@ -26,12 +26,14 @@ import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 
 type EditWorkoutFormProps = {
+  previous: Workout[] | [];
   items: Workout[];
   session: WorkoutSession;
   recentWorkouts: Workout[];
 };
 
 const EditWorkoutForm = ({
+  previous,
   items,
   session,
   recentWorkouts,
@@ -295,7 +297,7 @@ const EditWorkoutForm = ({
               </div>
             )}
           </div>
-          {items.map(({ id, name, sets, lbs, reps, bodyPart }) => (
+          {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
             <div key={id}>
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
@@ -368,7 +370,8 @@ const EditWorkoutForm = ({
                 </div>
               </div>
               <div className="workout-form__container">
-                <ul className="workout-form__list" id="sets-list">
+                <ul className="workout-form__list text-center" id="sets-list">
+                  <span>Set</span>
                   {sets?.map((set, setId) => (
                     <li key={setId} className="workout-form__item">
                       <button
@@ -377,7 +380,7 @@ const EditWorkoutForm = ({
                       >
                         <HiX className="text-red-500" />
                       </button>
-                      <div className="workout-form__label-input">
+                      <div className="workout-form__label-input m-1">
                         <SetOptions
                           id={id}
                           setId={setId}
@@ -386,10 +389,9 @@ const EditWorkoutForm = ({
                           setSetOptions={setSetOptions}
                           changeSet={changeSet}
                         />
-                        <span>Set</span>
                         <CustomButton
                           title={set}
-                          containerStyles="workout-form__input"
+                          containerStyles="bg-gray-300 rounded-lg w-8 pl-[0.5]"
                           handleClick={() => {
                             setSetOptions(id);
                             setSetIndex(setId);
@@ -400,41 +402,58 @@ const EditWorkoutForm = ({
                   ))}
                 </ul>
 
-                <ul className="workout-form__list" id="lbs-list">
+                <ul className="workout-form__list text-center">
+                  <label>Previous</label>
+                  <div>
+                    {sets.map((_, idx) => (
+                      <li key={idx} className="workout-form__item">
+                        {previous[index].lbs[idx] ? (
+                          <div className="workout-form__label-input">
+                            <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[idx]} x ${previous[index].reps[idx]}`}</div>
+                          </div>
+                        ) : (
+                          <div className="border-4 rounded-lg w-14 my-1 mx-4 border-gray-300"></div>
+                        )}
+                      </li>
+                    ))}
+                  </div>
+                </ul>
+
+                <ul className="workout-form__list text-center" id="lbs-list">
+                  {bodyPart === "cardio" ? (
+                    <label htmlFor="lbs">mile</label>
+                  ) : (
+                    <label htmlFor="lbs">lbs</label>
+                  )}
                   {lbs?.map((lb, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
-                        {bodyPart === "cardio" ? (
-                          <label htmlFor="lbs">Mile</label>
-                        ) : (
-                          <label htmlFor="lbs">Weight (lbs) </label>
-                        )}
                         <input
                           type="string"
                           name="lbs"
                           defaultValue={`${lb ? lb : 0}`}
                           placeholder={`${lb}`}
-                          className="workout-form__input"
+                          className="bg-gray-300 rounded-lg w-16 m-1 pl-2"
                         />
                       </div>
                     </li>
                   ))}
                 </ul>
-                <ul className="workout-form__list">
+                <ul className="workout-form__list text-center">
+                  {bodyPart === "cardio" ? (
+                    <label htmlFor="reps">Time</label>
+                  ) : (
+                    <label htmlFor="reps">Reps</label>
+                  )}
                   {reps?.map((rep, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
-                        {bodyPart === "cardio" ? (
-                          <label htmlFor="reps">Time</label>
-                        ) : (
-                          <label htmlFor="reps">Reps</label>
-                        )}
                         <input
                           type="string"
                           name="reps"
                           defaultValue={`${rep ? rep : 0}`}
                           placeholder={`${rep}`}
-                          className="workout-form__input"
+                          className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
                         />
                       </div>
                     </li>

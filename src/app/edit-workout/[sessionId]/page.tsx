@@ -1,5 +1,6 @@
 import {
   getMostRecentWorkouts,
+  getPreviousWorkout,
   getSessionById,
   getWorkoutsBySessionId,
 } from "@/actions";
@@ -15,13 +16,15 @@ const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
     const session = await getSessionById(sessionId);
 
     if (workouts && session) {
-      return (
+      const previous = (await getPreviousWorkout(workouts)) || [];
+      return previous ? (
         <EditWorkoutForm
+          previous={previous}
           items={workouts}
           session={session}
           recentWorkouts={recentWorkouts}
         />
-      );
+      ) : null;
     }
   } catch (err) {
     console.log(err);

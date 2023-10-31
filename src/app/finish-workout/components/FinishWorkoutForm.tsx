@@ -178,7 +178,6 @@ const FinishWorkoutForm = ({
     router.refresh();
   };
 
-  console.log("previous: ", previous?.length);
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
@@ -351,7 +350,7 @@ const FinishWorkoutForm = ({
                 </div>
               </div>
               <div className="workout-form__container">
-                <ul className="workout-form__list" id="sets-list">
+                <ul className="workout-form__list text-center" id="sets-list">
                   <span>Set</span>
                   {sets?.map((set, setId) => (
                     <li key={setId} className="workout-form__item">
@@ -361,7 +360,7 @@ const FinishWorkoutForm = ({
                       >
                         <HiX className="text-red-500" />
                       </button>
-                      <div className="workout-form__label-input">
+                      <div className="workout-form__label-input m-1">
                         <SetOptions
                           id={id}
                           setId={setId}
@@ -372,7 +371,7 @@ const FinishWorkoutForm = ({
                         />
                         <CustomButton
                           title={set}
-                          containerStyles="workout-form__input"
+                          containerStyles="bg-gray-300 rounded-lg w-8 pl-[0.5]"
                           handleClick={() => {
                             setSetOptions(id);
                             setSetIndex(setId);
@@ -383,39 +382,37 @@ const FinishWorkoutForm = ({
                   ))}
                 </ul>
 
-                <ul className="workout-form__list">
+                <ul className="workout-form__list text-center">
                   <label>Previous</label>
                   <div>
-                    {sets.map((set, idx) => (
-                      <div key={idx}>
-                        {previous ? (
-                          <div className="flex flex-row gap-2">
-                            <div>{previous[index].lbs[idx]}</div>
-                            <div>x</div>
-                            <div>{previous[index].reps[idx]}</div>
+                    {sets.map((_, idx) => (
+                      <li key={idx} className="workout-form__item">
+                        {previous[index].lbs[idx] ? (
+                          <div className="workout-form__label-input">
+                            <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[idx]} x ${previous[index].reps[idx]}`}</div>
                           </div>
                         ) : (
-                          <div className="border-4 w-10"></div>
+                          <div className="border-4 rounded-lg w-14 my-1 mx-4 border-gray-300"></div>
                         )}
-                      </div>
+                      </li>
                     ))}
                   </div>
                 </ul>
 
-                <ul className="workout-form__list">
+                <ul className="workout-form__list text-center">
                   {bodyPart === "cardio" ? (
-                    <label htmlFor="lbs">Mile</label>
+                    <label htmlFor="lbs">mile</label>
                   ) : (
-                    <label htmlFor="lbs">Weight (lbs) </label>
+                    <label htmlFor="lbs">lbs</label>
                   )}
-                  {lbs?.map((lb, id) => (
+                  {lbs?.map((_, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
                         <input
                           type="number"
                           name="lbs"
                           id="lbs"
-                          className="workout-form__input"
+                          className="bg-gray-300 rounded-lg w-16 m-1 pl-2"
                           required
                         />
                       </div>
@@ -423,20 +420,20 @@ const FinishWorkoutForm = ({
                   ))}
                 </ul>
 
-                <ul className="workout-form__list">
+                <ul className="workout-form__list text-center">
                   {bodyPart === "cardio" ? (
                     <label htmlFor="reps">Time</label>
                   ) : (
                     <label htmlFor="reps">Reps</label>
                   )}
-                  {reps?.map((rep, id) => (
+                  {reps?.map((_, id) => (
                     <li key={id} className="workout-form__item">
                       <div className="workout-form__label-input">
                         <input
                           type="number"
                           name="reps"
                           id="reps"
-                          className="workout-form__input"
+                          className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
                           required
                         />
                       </div>
