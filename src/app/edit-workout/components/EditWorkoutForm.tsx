@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, MouseEvent, Suspense, useEffect } from "react";
+import { useState, MouseEvent, Suspense, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
@@ -24,6 +24,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
+import { useSwipeable } from "react-swipeable";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
@@ -43,6 +44,7 @@ const EditWorkoutForm = ({
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
+  const [swipeDelete, setSwipeDelete] = useState<number | null>(null);
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [addExercise, setAddExercise] = useState(false);
@@ -213,6 +215,35 @@ const EditWorkoutForm = ({
     router.refresh();
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: async (eventData) => {
+      const target = (eventData.event.target as HTMLElement).id.split("-");
+      const id = target[0];
+      const index = Number(target[1]);
+      const workout = workouts.filter((workout) => workout.id === id);
+      const { sets, lbs, reps } = workout[0];
+      if (eventData.absX) {
+        setSwipeDelete(index);
+      }
+      if (eventData.absX > 250) {
+        sets.splice(index, 1);
+        lbs.splice(index, 1);
+        reps.splice(index, 1);
+        if (!sets.length) {
+          sets.push("1");
+          lbs.push(0);
+          reps.push(0);
+        }
+        try {
+          await deleteSet(id, sets, lbs, reps);
+          router.refresh();
+        } catch (err: any) {
+          console.log(err);
+        }
+      }
+    },
+  });
+
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
@@ -369,7 +400,11 @@ const EditWorkoutForm = ({
                   </div>
                 </div>
               </div>
-              <div className="workout-form__container">
+
+              <div
+                {...handlers}
+                className={`workout-form__container touch-pan-left`}
+              >
                 <ul className="workout-form__list text-center" id="sets-list">
                   <span>Set</span>
                   {sets?.map((set, setId) => (
@@ -377,6 +412,7 @@ const EditWorkoutForm = ({
                       <button
                         type="button"
                         onClick={() => handleDeleteSet(id, setId)}
+                        className="hidden md:flex"
                       >
                         <HiX className="text-red-500" />
                       </button>
@@ -441,21 +477,35 @@ const EditWorkoutForm = ({
                 </ul>
                 <ul className="workout-form__list text-center">
                   {bodyPart === "cardio" ? (
-                    <label htmlFor="reps">Time</label>
+                    <label id={id} htmlFor="reps">
+                      Time
+                    </label>
                   ) : (
-                    <label htmlFor="reps">Reps</label>
+                    <label id={id} htmlFor="reps">
+                      Reps
+                    </label>
                   )}
-                  {reps?.map((rep, id) => (
-                    <li key={id} className="workout-form__item">
+                  {reps?.map((rep, repId) => (
+                    <li key={repId} className="workout-form__item">
                       <div className="workout-form__label-input">
                         <input
                           type="string"
                           name="reps"
+                          id={`${id}-${repId}`}
                           defaultValue={`${rep ? rep : 0}`}
                           placeholder={`${rep}`}
                           className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
                         />
                       </div>
+                      <button
+                        className={
+                          swipeDelete === repId
+                            ? "absolute w-full bg-red-500 rounded-lg px-5 -translate-x-100 ease-in-out"
+                            : "hidden"
+                        }
+                      >
+                        Delete
+                      </button>
                     </li>
                   ))}
                 </ul>
