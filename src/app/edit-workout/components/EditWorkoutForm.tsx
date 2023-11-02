@@ -215,34 +215,75 @@ const EditWorkoutForm = ({
     router.refresh();
   };
 
-  const handlers = useSwipeable({
-    onSwipedLeft: async (eventData) => {
-      const target = (eventData.event.target as HTMLElement).id.split("-");
-      const id = target[0];
-      const index = Number(target[1]);
-      const workout = workouts.filter((workout) => workout.id === id);
-      const { sets, lbs, reps } = workout[0];
-      if (eventData.absX) {
-        setSwipeDelete(index);
+  // const handlers = useSwipeable({
+  //   onSwipedLeft: async (eventData) => {
+  //     const target = (eventdata.event.target as htmlelement).id.split("-");
+  //     const id = target[0];
+  //     const index = number(target[1]);
+  //     const workout = workouts.filter((workout) => workout.id === id);
+  //     const { sets, lbs, reps } = workout[0];
+  //     if (eventData.absX) {
+  //       setSwipeDelete(index);
+  //     }
+  //     if (eventData.absX > 250) {
+  //       sets.splice(index, 1);
+  //       lbs.splice(index, 1);
+  //       reps.splice(index, 1);
+  //       if (!sets.length) {
+  //         sets.push("1");
+  //         lbs.push(0);
+  //         reps.push(0);
+  //       }
+  //       try {
+  //         await deleteSet(id, sets, lbs, reps);
+  //         setSwipeDelete(null);
+  //         router.refresh();
+  //       } catch (err: any) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   },
+  // });
+
+  let x: number;
+  let target: string[];
+  let id: string;
+  let index: number;
+  const onMoveStart = (e: TouchEvent) => {
+    // console.log("start: ", e.target?.id);
+    x = e.touches[0].clientX;
+    target = (e.target as HTMLElement).id.split("-");
+    id = target[0];
+    index = Number(target[1]);
+  };
+  const onMoveChange = async (e: TouchEvent) => {
+    // console.log("changes: ", x - e.touches[0].clientX);
+    // console.log("change: ", e.target?.id);
+    const workout = workouts.filter((workout) => workout.id === id);
+    const { sets, lbs, reps } = workout[0];
+    // console.log("sum: ", x - e.touches[0].clientX);
+    if (x - e.touches[0].clientX > 200) {
+      console.log("delete");
+      sets.splice(index, 1);
+      lbs.splice(index, 1);
+      reps.splice(index, 1);
+      if (!sets.length) {
+        sets.push("1");
+        lbs.push(0);
+        reps.push(0);
       }
-      if (eventData.absX > 250) {
-        sets.splice(index, 1);
-        lbs.splice(index, 1);
-        reps.splice(index, 1);
-        if (!sets.length) {
-          sets.push("1");
-          lbs.push(0);
-          reps.push(0);
-        }
-        try {
-          await deleteSet(id, sets, lbs, reps);
-          router.refresh();
-        } catch (err: any) {
-          console.log(err);
-        }
+      try {
+        await deleteSet(id, sets, lbs, reps);
+        setSwipeDelete(null);
+        router.refresh();
+      } catch (err: any) {
+        console.log(err);
       }
-    },
-  });
+    }
+  };
+  const onMoveEnd = (e: TouchEvent) => {
+    console.log("end: ", e.changedTouches[0].clientX);
+  };
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
@@ -402,8 +443,12 @@ const EditWorkoutForm = ({
               </div>
 
               <div
-                {...handlers}
-                className={`workout-form__container touch-pan-left`}
+                onTouchStart={(e) => onMoveStart(e)}
+                onTouchMove={(e) => onMoveChange(e)}
+                onTouchEnd={(e) => onMoveEnd(e)}
+                className={`workout-form__container content ${
+                  swipeDelete === index ? " deleting transition" : ""
+                } touch-pan-left`}
               >
                 <ul className="workout-form__list text-center" id="sets-list">
                   <span>Set</span>
@@ -486,7 +531,11 @@ const EditWorkoutForm = ({
                     </label>
                   )}
                   {reps?.map((rep, repId) => (
-                    <li key={repId} className="workout-form__item">
+                    <li
+                      key={repId}
+                      id={`${id}-${repId}`}
+                      className="workout-form__item"
+                    >
                       <div className="workout-form__label-input">
                         <input
                           type="string"
@@ -498,11 +547,9 @@ const EditWorkoutForm = ({
                         />
                       </div>
                       <button
-                        className={
-                          swipeDelete === repId
-                            ? "absolute w-full bg-red-500 rounded-lg px-5 -translate-x-100 ease-in-out"
-                            : "hidden"
-                        }
+                        className={`${
+                          swipeDelete === repId ? " deleting" : "hidden"
+                        }`}
                       >
                         Delete
                       </button>
