@@ -120,12 +120,12 @@ const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
                     <div
                       className={
                         showOptions === sessionId
-                          ? "absolute w-44 bg-white rounded-md p-2 cursor-pointer gap-5 right-0"
+                          ? "absolute w-44 bg-white rounded-md p-2 cursor-pointer right-0"
                           : "hidden"
                       }
                       onMouseLeave={() => setShowOptions(false)}
                     >
-                      <div className="flex flex-col w-full">
+                      <div className="flex flex-col w-full gap-5">
                         <Link
                           href={`/edit-workout/${sessionId}`}
                           className="flex flex-row"

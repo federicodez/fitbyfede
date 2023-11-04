@@ -322,12 +322,12 @@ const FinishWorkoutForm = ({
                 <div
                   className={
                     replace
-                      ? "absolute top-10 z-10 bg-white rounded-lg grid grid-cols-2 p-4"
+                      ? "absolute top-50 z-10 bg-white rounded-lg grid grid-cols-2 p-4 mr-4 md:ml-40"
                       : "hidden"
                   }
                 >
                   <h3 className="col-span-2 text-center">Replace Exercise?</h3>
-                  <span className="col-span-2">
+                  <span className="col-span-2 text-center">
                     All previously entered sets will be replaced.
                   </span>
                   <button
@@ -417,12 +417,11 @@ const FinishWorkoutForm = ({
                               id="lbs"
                               defaultValue={`${lbs[setId] ? lbs[setId] : ""}`}
                               placeholder={`${
-                                previous[index].lbs[setId]
-                                  ? previous[index].lbs[setId]
+                                previous?.[index]?.lbs[setId]
+                                  ? previous?.[index]?.lbs[setId]
                                   : ""
                               }`}
                               className="bg-gray-300 rounded-lg w-20"
-                              required
                             />
                           </div>
                           <div className="">
@@ -432,8 +431,8 @@ const FinishWorkoutForm = ({
                               id="reps"
                               defaultValue={`${reps[setId] ? reps[setId] : ""}`}
                               placeholder={`${
-                                previous[index].reps[setId]
-                                  ? previous[index].reps[setId]
+                                previous?.[index]?.reps[setId]
+                                  ? previous?.[index]?.reps[setId]
                                   : ""
                               }`}
                               className="bg-gray-300 rounded-lg w-20"

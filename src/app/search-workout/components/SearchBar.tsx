@@ -223,7 +223,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
           <div className="relative w-full">
             <ul
               onMouseLeave={() => setShowCategories(!showCategories)}
-              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
+              className="absolute w-50 md:w-full z-10 bg-gray-800 text-white rounded-lg right-0"
             >
               {showCategories
                 ? categories.map((category, idx) => (
@@ -336,7 +336,10 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
           <h3 className={!details ? "filtered-title" : "hidden"}>EXERCISES</h3>
           <ul className="mb-20">
             {filteredExercises?.map(
-              ({ bodyPart, id, name, secondaryMuscles, instructions }) => (
+              (
+                { bodyPart, id, name, secondaryMuscles, instructions },
+                index,
+              ) => (
                 <li key={id} className="my-4">
                   <div
                     className={
