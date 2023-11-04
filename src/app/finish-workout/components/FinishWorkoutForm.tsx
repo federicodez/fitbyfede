@@ -387,7 +387,7 @@ const FinishWorkoutForm = ({
                   <div>
                     {sets.map((_, idx) => (
                       <li key={idx} className="workout-form__item">
-                        {previous[index].lbs[idx] ? (
+                        {previous?.[index]?.lbs[idx] ? (
                           <div className="workout-form__label-input">
                             <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[idx]} x ${previous[index].reps[idx]}`}</div>
                           </div>

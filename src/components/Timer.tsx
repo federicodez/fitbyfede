@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SlOptions } from "react-icons/sl";
 import { useTimerContext } from "@/context/TimerContext";
 
@@ -8,14 +8,16 @@ const StartTimer = () => {
   const { time, setTime } = useTimerContext();
   const [isRunning, setIsRunning] = useState(true);
   const [timerOptions, setTimerOptions] = useState(false);
+  const intervalId = useRef<
+    number | string | ReturnType<typeof setTimeout> | null
+  >(null);
 
   useEffect(() => {
-    let intervalId: any;
     if (isRunning) {
-      intervalId = setInterval(() => setTime(time + 1), 10);
+      intervalId.current = setInterval(() => setTime(time + 1), 10);
     }
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(Number(intervalId.current));
   }, [isRunning, time, setTime]);
 
   const hours = Math.floor(time / 360000);

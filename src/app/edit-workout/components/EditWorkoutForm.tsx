@@ -1,6 +1,14 @@
 "use client";
 
-import { useState, MouseEvent, Suspense, useEffect, useRef } from "react";
+import {
+  useState,
+  MouseEvent,
+  TouchEvent,
+  Suspense,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
@@ -24,13 +32,22 @@ import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
-import { useSwipeable } from "react-swipeable";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/scss";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
   items: Workout[];
   session: WorkoutSession;
   recentWorkouts: Workout[];
+};
+
+const cursorPosition = (event: any) => {
+  if (event?.touches?.[0]?.clientX) return event.touches[0].clientX;
+  if (event?.clientX) return event?.clientX;
+  if (event?.nativeEvent?.touches?.[0]?.clientX)
+    return event.nativeEvent.touches[0].clientX;
+  return event?.nativeEvent?.clientX;
 };
 
 const EditWorkoutForm = ({
@@ -52,6 +69,13 @@ const EditWorkoutForm = ({
   const [replace, setReplace] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const router = useRouter();
+
+  const startTouchPosition = useRef(0);
+  const initTranslate = useRef(0);
+  const [translate, setTranslate] = useState(0);
+  const target = useRef<string[]>([]);
+  const targetId = useRef("");
+  const targetIndex = useRef(0);
 
   useEffect(() => {
     if (session?.notes) {
@@ -215,74 +239,26 @@ const EditWorkoutForm = ({
     router.refresh();
   };
 
-  // const handlers = useSwipeable({
-  //   onSwipedLeft: async (eventData) => {
-  //     const target = (eventdata.event.target as htmlelement).id.split("-");
-  //     const id = target[0];
-  //     const index = number(target[1]);
-  //     const workout = workouts.filter((workout) => workout.id === id);
-  //     const { sets, lbs, reps } = workout[0];
-  //     if (eventData.absX) {
-  //       setSwipeDelete(index);
-  //     }
-  //     if (eventData.absX > 250) {
-  //       sets.splice(index, 1);
-  //       lbs.splice(index, 1);
-  //       reps.splice(index, 1);
-  //       if (!sets.length) {
-  //         sets.push("1");
-  //         lbs.push(0);
-  //         reps.push(0);
-  //       }
-  //       try {
-  //         await deleteSet(id, sets, lbs, reps);
-  //         setSwipeDelete(null);
-  //         router.refresh();
-  //       } catch (err: any) {
-  //         console.log(err);
-  //       }
-  //     }
-  //   },
-  // });
-
-  let x: number;
-  let target: string[];
-  let id: string;
-  let index: number;
-  const onMoveStart = (e: TouchEvent) => {
-    // console.log("start: ", e.target?.id);
-    x = e.touches[0].clientX;
-    target = (e.target as HTMLElement).id.split("-");
-    id = target[0];
-    index = Number(target[1]);
-  };
-  const onMoveChange = async (e: TouchEvent) => {
-    // console.log("changes: ", x - e.touches[0].clientX);
-    // console.log("change: ", e.target?.id);
+  const onStart = async (id: string, setId: number) => {
     const workout = workouts.filter((workout) => workout.id === id);
     const { sets, lbs, reps } = workout[0];
-    // console.log("sum: ", x - e.touches[0].clientX);
-    if (x - e.touches[0].clientX > 200) {
-      console.log("delete");
-      sets.splice(index, 1);
-      lbs.splice(index, 1);
-      reps.splice(index, 1);
-      if (!sets.length) {
-        sets.push("1");
-        lbs.push(0);
-        reps.push(0);
-      }
-      try {
-        await deleteSet(id, sets, lbs, reps);
-        setSwipeDelete(null);
-        router.refresh();
-      } catch (err: any) {
-        console.log(err);
-      }
+
+    sets.splice(setId, 1);
+    lbs.splice(setId, 1);
+    reps.splice(setId, 1);
+    if (!sets.length) {
+      sets.push("1");
+      lbs.push(0);
+      reps.push(0);
     }
-  };
-  const onMoveEnd = (e: TouchEvent) => {
-    console.log("end: ", e.changedTouches[0].clientX);
+    try {
+      await deleteSet(id, sets, lbs, reps);
+      console.log("deleted");
+      setSwipeDelete(null);
+      router.refresh();
+    } catch (err: any) {
+      console.log(err);
+    }
   };
 
   return !addExercise ? (
@@ -370,7 +346,7 @@ const EditWorkoutForm = ({
             )}
           </div>
           {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
-            <div key={id}>
+            <div key={id} className="touch-pan-left">
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
 
@@ -442,121 +418,88 @@ const EditWorkoutForm = ({
                 </div>
               </div>
 
-              <div
-                onTouchStart={(e) => onMoveStart(e)}
-                onTouchMove={(e) => onMoveChange(e)}
-                onTouchEnd={(e) => onMoveEnd(e)}
-                className={`workout-form__container content ${
-                  swipeDelete === index ? " deleting transition" : ""
-                } touch-pan-left`}
-              >
-                <ul className="workout-form__list text-center" id="sets-list">
-                  <span>Set</span>
-                  {sets?.map((set, setId) => (
-                    <li key={setId} className="workout-form__item">
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSet(id, setId)}
-                        className="hidden md:flex"
-                      >
-                        <HiX className="text-red-500" />
-                      </button>
-                      <div className="workout-form__label-input m-1">
-                        <SetOptions
-                          id={id}
-                          setId={setId}
-                          setIndex={setIndex}
-                          setOptions={setOptions}
-                          setSetOptions={setSetOptions}
-                          changeSet={changeSet}
-                        />
-                        <CustomButton
-                          title={set}
-                          containerStyles="bg-gray-300 rounded-lg w-8 pl-[0.5]"
-                          handleClick={() => {
-                            setSetOptions(id);
-                            setSetIndex(setId);
-                          }}
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <ul className="workout-form__list text-center">
-                  <label>Previous</label>
-                  <div>
-                    {sets.map((_, idx) => (
-                      <li key={idx} className="workout-form__item">
-                        {previous[index].lbs[idx] ? (
-                          <div className="workout-form__label-input">
-                            <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[idx]} x ${previous[index].reps[idx]}`}</div>
-                          </div>
-                        ) : (
-                          <div className="border-4 rounded-lg w-14 my-1 mx-4 border-gray-300"></div>
-                        )}
-                      </li>
-                    ))}
-                  </div>
-                </ul>
-
-                <ul className="workout-form__list text-center" id="lbs-list">
-                  {bodyPart === "cardio" ? (
-                    <label htmlFor="lbs">mile</label>
-                  ) : (
-                    <label htmlFor="lbs">lbs</label>
-                  )}
-                  {lbs?.map((lb, id) => (
-                    <li key={id} className="workout-form__item">
-                      <div className="workout-form__label-input">
-                        <input
-                          type="string"
-                          name="lbs"
-                          defaultValue={`${lb ? lb : 0}`}
-                          placeholder={`${lb}`}
-                          className="bg-gray-300 rounded-lg w-16 m-1 pl-2"
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <ul className="workout-form__list text-center">
-                  {bodyPart === "cardio" ? (
-                    <label id={id} htmlFor="reps">
-                      Time
-                    </label>
-                  ) : (
-                    <label id={id} htmlFor="reps">
-                      Reps
-                    </label>
-                  )}
-                  {reps?.map((rep, repId) => (
-                    <li
-                      key={repId}
-                      id={`${id}-${repId}`}
-                      className="workout-form__item"
-                    >
-                      <div className="workout-form__label-input">
-                        <input
-                          type="string"
-                          name="reps"
-                          id={`${id}-${repId}`}
-                          defaultValue={`${rep ? rep : 0}`}
-                          placeholder={`${rep}`}
-                          className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
-                        />
-                      </div>
-                      <button
-                        className={`${
-                          swipeDelete === repId ? " deleting" : "hidden"
-                        }`}
-                      >
-                        Delete
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex justify-evenly">
+                <span>Set</span>
+                <label>Previous</label>
+                {bodyPart === "cardio" ? (
+                  <label htmlFor="lbs">mile</label>
+                ) : (
+                  <label htmlFor="lbs">lbs</label>
+                )}
+                {bodyPart === "cardio" ? (
+                  <label id={id} htmlFor="reps">
+                    Time
+                  </label>
+                ) : (
+                  <label id={id} htmlFor="reps">
+                    Reps
+                  </label>
+                )}
               </div>
+              <ul className="flex flex-col gap-4">
+                {sets?.map((set, setId) => (
+                  <div key={setId}>
+                    <Swiper
+                      spaceBetween={50}
+                      slidesPerView={1}
+                      onSlideChange={() => onStart(id, setId)}
+                    >
+                      <SwiperSlide>
+                        <li className="flex flex-row justify-evenly">
+                          <div className="workout-form__label-input m-1">
+                            <SetOptions
+                              id={id}
+                              setId={setId}
+                              setIndex={setIndex}
+                              setOptions={setOptions}
+                              setSetOptions={setSetOptions}
+                              changeSet={changeSet}
+                            />
+                            <CustomButton
+                              title={set}
+                              containerStyles="bg-gray-300 rounded-lg w-8 pl-[0.5]"
+                              handleClick={() => {
+                                setSetOptions(id);
+                                setSetIndex(setId);
+                              }}
+                            />
+                          </div>
+                          {previous?.[index]?.lbs[setId] ? (
+                            <div className="workout-form__label-input">
+                              <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
+                            </div>
+                          ) : (
+                            <div className="border-4 rounded-lg w-14 h-fit my-1 mx-4 border-gray-300"></div>
+                          )}
+                          <div className="workout-form__label-input">
+                            <input
+                              type="string"
+                              name="lbs"
+                              defaultValue={`${lbs[setId] ? lbs[setId] : 0}`}
+                              placeholder={`${lbs[setId]}`}
+                              className="bg-gray-300 rounded-lg w-16 m-1 pl-2"
+                            />
+                          </div>
+                          <div className="workout-form__label-input">
+                            <input
+                              type="string"
+                              name="reps"
+                              defaultValue={`${reps[setId] ? reps[setId] : 0}`}
+                              placeholder={`${reps[setId]}`}
+                              className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
+                            />
+                          </div>
+                        </li>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <button className={`w-full bg-red-300 rounded-lg px-2`}>
+                          Delete
+                        </button>
+                      </SwiperSlide>
+                    </Swiper>
+                  </div>
+                ))}
+              </ul>
               <div className="workout-form__btn">
                 <CustomButton
                   title="Add Set"
