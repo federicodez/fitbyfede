@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  useState,
-  MouseEvent,
-  TouchEvent,
-  Suspense,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { useState, MouseEvent, Suspense, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
@@ -24,7 +16,7 @@ import {
   deleteWorkout,
 } from "@/actions";
 import LoadingModel from "@/components/models/LoadingModel";
-import { HiOutlineTrash, HiX } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
 import AddExercise from "./AddExercise";
@@ -42,14 +34,6 @@ type EditWorkoutFormProps = {
   recentWorkouts: Workout[];
 };
 
-const cursorPosition = (event: any) => {
-  if (event?.touches?.[0]?.clientX) return event.touches[0].clientX;
-  if (event?.clientX) return event?.clientX;
-  if (event?.nativeEvent?.touches?.[0]?.clientX)
-    return event.nativeEvent.touches[0].clientX;
-  return event?.nativeEvent?.clientX;
-};
-
 const EditWorkoutForm = ({
   previous,
   items,
@@ -61,7 +45,6 @@ const EditWorkoutForm = ({
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
-  const [swipeDelete, setSwipeDelete] = useState<number | null>(null);
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [setIndex, setSetIndex] = useState<number>(0);
   const [addExercise, setAddExercise] = useState(false);
@@ -69,13 +52,6 @@ const EditWorkoutForm = ({
   const [replace, setReplace] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(items);
   const router = useRouter();
-
-  const startTouchPosition = useRef(0);
-  const initTranslate = useRef(0);
-  const [translate, setTranslate] = useState(0);
-  const target = useRef<string[]>([]);
-  const targetId = useRef("");
-  const targetIndex = useRef(0);
 
   useEffect(() => {
     if (session?.notes) {
@@ -210,25 +186,6 @@ const EditWorkoutForm = ({
     }
   };
 
-  const handleDeleteSet = async (id: string, setId: number) => {
-    const workout = workouts.filter((workout) => workout.id === id);
-    const { sets, lbs, reps } = workout[0];
-    sets.splice(setId, 1);
-    lbs.splice(setId, 1);
-    reps.splice(setId, 1);
-    if (!sets.length) {
-      sets.push("1");
-      lbs.push(0);
-      reps.push(0);
-    }
-    try {
-      await deleteSet(id, sets, lbs, reps);
-      router.refresh();
-    } catch (err: any) {
-      console.log(err);
-    }
-  };
-
   const removeWorkout = async () => {
     await deleteSession(session.id);
     router.push("/workouts");
@@ -239,7 +196,7 @@ const EditWorkoutForm = ({
     router.refresh();
   };
 
-  const onStart = async (id: string, setId: number) => {
+  const handleDeleteSet = async (id: string, setId: number) => {
     const workout = workouts.filter((workout) => workout.id === id);
     const { sets, lbs, reps } = workout[0];
 
@@ -253,8 +210,6 @@ const EditWorkoutForm = ({
     }
     try {
       await deleteSet(id, sets, lbs, reps);
-      console.log("deleted");
-      setSwipeDelete(null);
       router.refresh();
     } catch (err: any) {
       console.log(err);
@@ -263,7 +218,7 @@ const EditWorkoutForm = ({
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
-      <div className="wrapper container">
+      <div className="wrapper container pb-20">
         <form className="workout-form" action={handleSubmit}>
           <div className="flex flex-row justify-between mt-3">
             <button onClick={() => router.push("/workouts")}>
@@ -419,21 +374,29 @@ const EditWorkoutForm = ({
               </div>
 
               <div className="flex justify-evenly">
-                <span>Set</span>
-                <label>Previous</label>
+                <span className="flex justify-center items-center w-full">
+                  Set
+                </span>
+                <span className="flex justify-center items-center w-full">
+                  Previous
+                </span>
                 {bodyPart === "cardio" ? (
-                  <label htmlFor="lbs">mile</label>
+                  <span className="flex justify-center items-center w-full">
+                    mile
+                  </span>
                 ) : (
-                  <label htmlFor="lbs">lbs</label>
+                  <span className="flex justify-center items-center w-full">
+                    lbs
+                  </span>
                 )}
                 {bodyPart === "cardio" ? (
-                  <label id={id} htmlFor="reps">
+                  <span className="flex justify-center items-center w-full">
                     Time
-                  </label>
+                  </span>
                 ) : (
-                  <label id={id} htmlFor="reps">
+                  <span className="flex justify-center items-center w-full">
                     Reps
-                  </label>
+                  </span>
                 )}
               </div>
               <ul className="flex flex-col gap-4">
@@ -442,11 +405,11 @@ const EditWorkoutForm = ({
                     <Swiper
                       spaceBetween={50}
                       slidesPerView={1}
-                      onSlideChange={() => onStart(id, setId)}
+                      onSlideChange={() => handleDeleteSet(id, setId)}
                     >
                       <SwiperSlide>
                         <li className="flex flex-row justify-evenly">
-                          <div className="workout-form__label-input m-1">
+                          <div className="">
                             <SetOptions
                               id={id}
                               setId={setId}
@@ -457,7 +420,7 @@ const EditWorkoutForm = ({
                             />
                             <CustomButton
                               title={set}
-                              containerStyles="bg-gray-300 rounded-lg w-8 pl-[0.5]"
+                              containerStyles="bg-gray-300 rounded-lg w-20 pl-[0.5]"
                               handleClick={() => {
                                 setSetOptions(id);
                                 setSetIndex(setId);
@@ -465,28 +428,26 @@ const EditWorkoutForm = ({
                             />
                           </div>
                           {previous?.[index]?.lbs[setId] ? (
-                            <div className="workout-form__label-input">
-                              <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
-                            </div>
+                            <div className="bg-gray-300 rounded-lg w-20 m-1 pl-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
                           ) : (
-                            <div className="border-4 rounded-lg w-14 h-fit my-1 mx-4 border-gray-300"></div>
+                            <div className="border-4 rounded-lg w-20 h-fit my-2 border-gray-300"></div>
                           )}
-                          <div className="workout-form__label-input">
+                          <div className="">
                             <input
                               type="string"
                               name="lbs"
                               defaultValue={`${lbs[setId] ? lbs[setId] : 0}`}
                               placeholder={`${lbs[setId]}`}
-                              className="bg-gray-300 rounded-lg w-16 m-1 pl-2"
+                              className="bg-gray-300 rounded-lg w-20"
                             />
                           </div>
-                          <div className="workout-form__label-input">
+                          <div className="">
                             <input
                               type="string"
                               name="reps"
                               defaultValue={`${reps[setId] ? reps[setId] : 0}`}
                               placeholder={`${reps[setId]}`}
-                              className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
+                              className="bg-gray-300 rounded-lg w-20"
                             />
                           </div>
                         </li>
