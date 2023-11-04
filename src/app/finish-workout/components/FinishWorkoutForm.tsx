@@ -23,6 +23,8 @@ import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/scss";
 
 type FinishWorkoutFormProps = {
   previous: Workout[] | [];
@@ -349,98 +351,107 @@ const FinishWorkoutForm = ({
                   </button>
                 </div>
               </div>
-              <div className="workout-form__container">
-                <ul className="workout-form__list text-center" id="sets-list">
-                  <span>Set</span>
-                  {sets?.map((set, setId) => (
-                    <li key={setId} className="workout-form__item">
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSet(id, setId)}
-                      >
-                        <HiX className="text-red-500" />
-                      </button>
-                      <div className="workout-form__label-input m-1">
-                        <SetOptions
-                          id={id}
-                          setId={setId}
-                          setIndex={setIndex}
-                          setOptions={setOptions}
-                          setSetOptions={setSetOptions}
-                          changeSet={changeSet}
-                        />
-                        <CustomButton
-                          title={set}
-                          containerStyles="bg-gray-300 rounded-lg w-8 pl-[0.5]"
-                          handleClick={() => {
-                            setSetOptions(id);
-                            setSetIndex(setId);
-                          }}
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <ul className="workout-form__list text-center">
-                  <label>Previous</label>
-                  <div>
-                    {sets.map((_, idx) => (
-                      <li key={idx} className="workout-form__item">
-                        {previous?.[index]?.lbs[idx] ? (
-                          <div className="workout-form__label-input">
-                            <div className="bg-gray-300 rounded-lg w-24 m-1 pl-2">{`${previous[index].lbs[idx]} x ${previous[index].reps[idx]}`}</div>
-                          </div>
-                        ) : (
-                          <div className="border-4 rounded-lg w-14 my-1 mx-4 border-gray-300"></div>
-                        )}
-                      </li>
-                    ))}
-                  </div>
-                </ul>
-
-                <ul className="workout-form__list text-center">
-                  {bodyPart === "cardio" ? (
-                    <label htmlFor="lbs">mile</label>
-                  ) : (
-                    <label htmlFor="lbs">lbs</label>
-                  )}
-                  {lbs?.map((_, id) => (
-                    <li key={id} className="workout-form__item">
-                      <div className="workout-form__label-input">
-                        <input
-                          type="number"
-                          name="lbs"
-                          id="lbs"
-                          className="bg-gray-300 rounded-lg w-16 m-1 pl-2"
-                          required
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <ul className="workout-form__list text-center">
-                  {bodyPart === "cardio" ? (
-                    <label htmlFor="reps">Time</label>
-                  ) : (
-                    <label htmlFor="reps">Reps</label>
-                  )}
-                  {reps?.map((_, id) => (
-                    <li key={id} className="workout-form__item">
-                      <div className="workout-form__label-input">
-                        <input
-                          type="number"
-                          name="reps"
-                          id="reps"
-                          className="bg-gray-300 rounded-lg w-12 m-1 pl-2"
-                          required
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex justify-evenly">
+                <span className="flex justify-center items-center w-full">
+                  Set
+                </span>
+                <span className="flex justify-center items-center w-full">
+                  Previous
+                </span>
+                {bodyPart === "cardio" ? (
+                  <span className="flex justify-center items-center w-full">
+                    mile
+                  </span>
+                ) : (
+                  <span className="flex justify-center items-center w-full">
+                    lbs
+                  </span>
+                )}
+                {bodyPart === "cardio" ? (
+                  <span className="flex justify-center items-center w-full">
+                    Time
+                  </span>
+                ) : (
+                  <span className="flex justify-center items-center w-full">
+                    Reps
+                  </span>
+                )}
               </div>
+              <ul className="flex flex-col gap-4">
+                {sets?.map((set, setId) => (
+                  <div key={setId}>
+                    <SetOptions
+                      id={id}
+                      setId={setId}
+                      setIndex={setIndex}
+                      setOptions={setOptions}
+                      setSetOptions={setSetOptions}
+                      changeSet={changeSet}
+                    />
+                    <Swiper
+                      spaceBetween={50}
+                      slidesPerView={1}
+                      onSlideChange={() => handleDeleteSet(id, setId)}
+                    >
+                      <SwiperSlide>
+                        <li className="flex flex-row justify-evenly">
+                          <div className="relative h-full">
+                            <CustomButton
+                              title={set}
+                              containerStyles="bg-gray-300 rounded-lg w-20 pl-[0.5]"
+                              handleClick={() => {
+                                setSetOptions(id);
+                                setSetIndex(setId);
+                              }}
+                            />
+                          </div>
+                          {previous?.[index]?.lbs[setId] ? (
+                            <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
+                          ) : (
+                            <div className="border-4 rounded-lg w-20 h-fit my-2 border-gray-300"></div>
+                          )}
+                          <div className="">
+                            <input
+                              type="number"
+                              name="lbs"
+                              id="lbs"
+                              defaultValue={`${lbs[setId] ? lbs[setId] : ""}`}
+                              placeholder={`${
+                                previous[index].lbs[setId]
+                                  ? previous[index].lbs[setId]
+                                  : ""
+                              }`}
+                              className="bg-gray-300 rounded-lg w-20"
+                              required
+                            />
+                          </div>
+                          <div className="">
+                            <input
+                              type="number"
+                              name="reps"
+                              id="reps"
+                              defaultValue={`${reps[setId] ? reps[setId] : ""}`}
+                              placeholder={`${
+                                previous[index].reps[setId]
+                                  ? previous[index].reps[setId]
+                                  : ""
+                              }`}
+                              className="bg-gray-300 rounded-lg w-20"
+                              required
+                            />
+                          </div>
+                        </li>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <button className={`w-full bg-red-300 rounded-lg px-2`}>
+                          Delete
+                        </button>
+                      </SwiperSlide>
+                    </Swiper>
+                  </div>
+                ))}
+              </ul>
+
               <div className="workout-form__btn">
                 <CustomButton
                   title="Add Set"

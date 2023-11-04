@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, MouseEvent, Suspense, useEffect, useRef } from "react";
+import { useState, MouseEvent, Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions } from "@/components";
