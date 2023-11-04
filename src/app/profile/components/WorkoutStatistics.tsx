@@ -7,7 +7,7 @@ type StatisticsProps = {
 
 const Statistics = ({ workouts }: StatisticsProps) => {
   return (
-    <div className="statistics-card">
+    <div className="statistics-card mb-20 md:mb-10">
       <PieChart workouts={workouts} />
     </div>
   );

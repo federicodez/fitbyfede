@@ -217,7 +217,7 @@ p {
 
 .workout-form__container {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   gap: 1rem;
 
   .workout-form__item {
@@ -371,5 +371,47 @@ p {
 @media (max-width: 868px) {
   .profile-card {
     margin: 1.5rem auto;
+  }
+  .deleting {
+    transition: all 250 ease-out;
+  }
+  .content {
+    width: auto;
+    position: relative;
+    transform: translateX(0px);
+  }
+  .content.transition {
+    transition: transform 250 ease-out;
+  }
+  .content.deleting {
+    height: 100%;
+    width: auto;
+    position: relative;
+    transform: scale(0) translateX(0px);
+  }
+  .delete {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background: rgba(252, 58, 48, 1);
+    font-weight: 400;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .delete button {
+    width: 75px;
+    transition: margin transform 250 ease-in-out;
+    margin-left: 0px;
+    margin-right: 0px;
+    text-align: center;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
   }
 }

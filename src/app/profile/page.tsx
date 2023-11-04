@@ -8,7 +8,7 @@ const Profile = async () => {
     const workouts = await getWorkouts();
     return (
       <Navbar>
-        <section className="profile wrapper container">
+        <section className="profile wrapper container pb-10">
           <div className="profile-card">
             <h1 className="profile-title">Profile</h1>
             <Avatar />
