@@ -301,7 +301,7 @@ const EditWorkoutForm = ({
             )}
           </div>
           {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
-            <div key={id} className="touch-pan-left">
+            <div key={id} className="">
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
 
@@ -401,7 +401,15 @@ const EditWorkoutForm = ({
               </div>
               <ul className="flex flex-col gap-4">
                 {sets?.map((set, setId) => (
-                  <div key={setId}>
+                  <div key={setId} className="">
+                    <SetOptions
+                      id={id}
+                      setId={setId}
+                      setIndex={setIndex}
+                      setOptions={setOptions}
+                      setSetOptions={setSetOptions}
+                      changeSet={changeSet}
+                    />
                     <Swiper
                       spaceBetween={50}
                       slidesPerView={1}
@@ -409,15 +417,7 @@ const EditWorkoutForm = ({
                     >
                       <SwiperSlide>
                         <li className="flex flex-row justify-evenly">
-                          <div className="">
-                            <SetOptions
-                              id={id}
-                              setId={setId}
-                              setIndex={setIndex}
-                              setOptions={setOptions}
-                              setSetOptions={setSetOptions}
-                              changeSet={changeSet}
-                            />
+                          <div className="relative h-full">
                             <CustomButton
                               title={set}
                               containerStyles="bg-gray-300 rounded-lg w-20 pl-[0.5]"
@@ -428,7 +428,7 @@ const EditWorkoutForm = ({
                             />
                           </div>
                           {previous?.[index]?.lbs[setId] ? (
-                            <div className="bg-gray-300 rounded-lg w-20 m-1 pl-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
+                            <div className="bg-gray-300 rounded-lg w-fit m-1 px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
                           ) : (
                             <div className="border-4 rounded-lg w-20 h-fit my-2 border-gray-300"></div>
                           )}
@@ -436,8 +436,7 @@ const EditWorkoutForm = ({
                             <input
                               type="string"
                               name="lbs"
-                              defaultValue={`${lbs[setId] ? lbs[setId] : 0}`}
-                              placeholder={`${lbs[setId]}`}
+                              defaultValue={`${lbs[setId] ? lbs[setId] : ""}`}
                               className="bg-gray-300 rounded-lg w-20"
                             />
                           </div>
@@ -445,8 +444,7 @@ const EditWorkoutForm = ({
                             <input
                               type="string"
                               name="reps"
-                              defaultValue={`${reps[setId] ? reps[setId] : 0}`}
-                              placeholder={`${reps[setId]}`}
+                              defaultValue={`${reps[setId] ? reps[setId] : ""}`}
                               className="bg-gray-300 rounded-lg w-20"
                             />
                           </div>

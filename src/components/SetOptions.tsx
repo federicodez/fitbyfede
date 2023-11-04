@@ -27,11 +27,12 @@ const SetOptions = ({
       onMouseLeave={() => setSetOptions(null)}
       className={
         setOptions === id && setIndex === setId
-          ? `absolute bg-gray-800 text-white rounded-lg cursor-pointer`
+          ? `absolute z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
           : "hidden"
       }
     >
       <option
+        className=""
         value="w"
         onClick={(e) => {
           changeSet(id, e);
@@ -42,6 +43,7 @@ const SetOptions = ({
       </option>
 
       <option
+        className=""
         value="d"
         onClick={(e) => {
           changeSet(id, e);
@@ -52,6 +54,7 @@ const SetOptions = ({
       </option>
 
       <option
+        className=""
         value="f"
         onClick={(e) => {
           changeSet(id, e);
