@@ -8,10 +8,6 @@ import bcrypt from "bcrypt";
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -50,6 +46,10 @@ export const authOptions: AuthOptions = {
         // return user object if everything is valid
         return user;
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
