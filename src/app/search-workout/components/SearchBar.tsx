@@ -183,7 +183,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         >
           <div className="relative w-full">
             <ul
-              onMouseLeave={() => setShowParts(!showParts)}
+              onMouseLeave={() => setShowParts(false)}
               className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
             >
               {showParts
@@ -194,16 +194,16 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                         bodyPartBtn === part ? "bg-gray-500" : ""
                       }`}
                     >
-                      <option
+                      <div
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
                         }}
                         className={`flex flex-col w-full`}
-                        value={part}
+                        id={part}
                       >
                         {part}
-                      </option>
+                      </div>
                       {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                     </li>
                   ))
@@ -211,7 +211,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             </ul>
             <button
               onClick={() => {
-                setShowParts(!showParts);
+                setShowParts(true);
               }}
               className={`w-full rounded-lg px-5 ${
                 bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
@@ -222,8 +222,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
           </div>
           <div className="relative w-full">
             <ul
-              onMouseLeave={() => setShowCategories(!showCategories)}
-              className="absolute w-50 md:w-full z-10 bg-gray-800 text-white rounded-lg right-0"
+              onMouseLeave={() => setShowCategories(false)}
+              className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
             >
               {showCategories
                 ? categories.map((category, idx) => (
@@ -233,16 +233,16 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                         categoriesBtn === category ? "bg-gray-500" : ""
                       }`}
                     >
-                      <option
+                      <div
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
                         }}
                         className={`flex flex-col w-full`}
-                        value={category}
+                        id={category}
                       >
                         {category}
-                      </option>
+                      </div>
                       {categoriesBtn === category ? <AiOutlineCheck /> : null}
                     </li>
                   ))
@@ -250,7 +250,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             </ul>
             <button
               onClick={() => {
-                setShowCategories(!showCategories);
+                setShowCategories(true);
               }}
               className={`w-full rounded-lg px-5 ${
                 categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"

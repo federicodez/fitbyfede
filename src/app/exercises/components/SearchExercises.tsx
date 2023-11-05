@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, MouseEvent, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import { bodyParts, categories } from "@/constants";
@@ -161,17 +161,17 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                         bodyPartBtn === part ? "bg-gray-500" : ""
                       }`}
                     >
-                      <option
+                      <div
                         onClick={() => {
                           handleParts(part);
                           setShowParts(false);
                         }}
                         className={`flex flex-col w-full 
 `}
-                        value={part}
+                        id={part}
                       >
                         {part}
-                      </option>
+                      </div>
                       {bodyPartBtn === part ? <AiOutlineCheck /> : null}
                     </li>
                   ))
@@ -201,16 +201,16 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                         categoriesBtn === category ? "bg-gray-500" : ""
                       }`}
                     >
-                      <option
+                      <div
                         onClick={() => {
                           handleCategories(category);
                           setShowCategories(false);
                         }}
                         className={`flex flex-col w-full`}
-                        value={category}
+                        id={category}
                       >
                         {category}
-                      </option>
+                      </div>
                       {categoriesBtn === category ? <AiOutlineCheck /> : null}
                     </li>
                   ))
