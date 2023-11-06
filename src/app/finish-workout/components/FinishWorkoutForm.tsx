@@ -152,17 +152,17 @@ const FinishWorkoutForm = ({
   };
 
   const handleDeleteSet = async (id: string, setId: number) => {
-    const workout = workouts.filter((workout) => workout.id === id);
-    const { sets, lbs, reps } = workout[0];
-    sets.splice(setId, 1);
-    lbs.splice(setId, 1);
-    reps.splice(setId, 1);
-    if (!sets.length) {
-      sets.push("1");
-      lbs.push(0);
-      reps.push(0);
-    }
     try {
+      const workout = workouts.filter((workout) => workout.id === id);
+      const { sets, lbs, reps } = workout[0];
+      sets.splice(setId, 1);
+      lbs.splice(setId, 1);
+      reps.splice(setId, 1);
+      if (!sets.length) {
+        sets.push("1");
+        lbs.push(0);
+        reps.push(0);
+      }
       await deleteSet(id, sets, lbs, reps);
       router.refresh();
     } catch (err: any) {
@@ -240,7 +240,7 @@ const FinishWorkoutForm = ({
               </div>
             </div>
           </div>
-          {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
+          {items?.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
             <div key={id}>
               <div className="flex flex-row  my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
