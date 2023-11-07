@@ -303,74 +303,20 @@ const EditWorkoutForm = ({
           </div>
           {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
             <div key={id} className="">
-              <div className="flex flex-row  my-4">
+              <div className="flex flex-row items-center my-4">
                 <h1 className="flex-1 text-2xl font-bold">{name}</h1>
 
                 <div className="flex-initial w-fit">
                   <div className="relative">
                     <MenuOptions
+                      id={id}
+                      replace={replace}
+                      openMenu={openMenu}
                       setNotes={setNotes}
                       setOpenMenu={setOpenMenu}
+                      setReplace={setReplace}
+                      removeExercise={removeExercise}
                     />
-                    <div
-                      onMouseLeave={() => setOpenMenu(false)}
-                      className={
-                        openMenu === id
-                          ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
-                          : "hidden"
-                      }
-                    >
-                      <div
-                        onClick={() => {
-                          setNotes(" ");
-                          setOpenMenu(false);
-                        }}
-                        className="flex flex-row items-center gap-2"
-                      >
-                        <AiFillEdit className="text-blue-500" />
-                        <span>Add</span>
-                        <span>a</span>
-                        <span>Note</span>
-                      </div>
-                      <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
-                        <MdAdd className="text-blue-500" />
-                        <span>Add</span>
-                        <span>Warm-up</span>
-                        <span>Sets</span>
-                      </div>
-                      <div
-                        className="flex flex-row items-center gap-2 my-5"
-                        onClick={() => {
-                          setReplace(!replace);
-                          setOpenMenu(false);
-                        }}
-                      >
-                        <TbReplace className="text-blue-499" />
-                        <span>Replace</span>
-                        <span>Exercise</span>
-                      </div>
-                      <div className="flex flex-row items-center gap-2 my-5">
-                        <BiTimer className="text-blue-500" />
-                        <span>Auto</span>
-                        <span>Rest</span>
-                        <span>Timer</span>
-                      </div>
-                      <div
-                        className={
-                          openMenu
-                            ? "flex flex-row items-center gap-2"
-                            : "hidden"
-                        }
-                        onClick={() => {
-                          removeExercise(id);
-                          setOpenMenu(false);
-                        }}
-                      >
-                        <HiX className="text-red-500" />
-                        <span>Remove</span>
-                        <span>Exercise</span>
-                      </div>
-                    </div>
                   </div>
                   <div onClick={() => setOpenMenu(id)}>
                     <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
