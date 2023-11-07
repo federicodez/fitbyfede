@@ -26,7 +26,7 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
         Start a Workout
       </Link>
       <ul className="workoutlist">
-        {sessions?.reverse().map((session) => (
+        {sessions?.map((session) => (
           <div key={session.id} className="wrapper">
             <div
               className={

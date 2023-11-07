@@ -75,10 +75,13 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
         </div>
       </div>
       <div className="flex flex-col my-4 ">
-        {session.Workout?.map(({ id, name, sets, lbs, reps }) => (
+        {session.Workout?.map(({ id, name, sets, lbs, reps, notes }) => (
           <div key={id}>
             <div className="flex flex-row justify-evenly my-2">
-              <strong>{name}</strong>
+              <div className="flex flex-col">
+                <strong>{name}</strong>
+                <span>{notes}</span>
+              </div>
               <strong>1RM</strong>
             </div>
             <ul className="workout-card-list">

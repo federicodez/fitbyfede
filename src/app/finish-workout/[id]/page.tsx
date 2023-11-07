@@ -13,13 +13,14 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
     const workouts = await getWorkoutsBySessionId(id);
     const recentWorkouts = (await getMostRecentWorkouts()) || [];
     const session = await getSessionById(id);
+    // console.log("session: ", session);
 
-    if (workouts && session?.name) {
+    if (workouts && session) {
       const previous = (await getPreviousWorkout(workouts)) || [];
       return previous ? (
         <FinishWorkoutForm
           previous={previous}
-          session={session}
+          initialSession={session}
           sessionId={id}
           items={workouts}
           recentWorkouts={recentWorkouts}

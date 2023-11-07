@@ -47,6 +47,7 @@ export const updateWorkout = async (
   sets: string[],
   lbs: number[],
   reps: number[],
+  notes: string,
 ) => {
   try {
     const updated = await prisma.workout.update({
@@ -57,6 +58,7 @@ export const updateWorkout = async (
         sets,
         lbs,
         reps,
+        notes,
       },
     });
     return updated;
@@ -90,10 +92,10 @@ export const updateWorkoutWithDate = async (
   }
 };
 
-export const updateWorkouts = async (workouts: Workout[]) => {
+export const updateWorkouts = async (session: WorkoutSession) => {
   try {
-    workouts.map(async ({ id, sets, lbs, reps }) => {
-      await updateWorkout(id, sets, lbs, reps);
+    session.Workout?.map(async ({ id, sets, lbs, reps, notes }) => {
+      await updateWorkout(id, sets, lbs, reps, notes);
     });
   } catch (error) {
     console.log("Error updating workouts ", error);
@@ -207,6 +209,7 @@ export const createMany = async (
               sets: ["1"],
               lbs: [0],
               reps: [0],
+              notes: "",
               userId: currentUser.id,
               workoutSessionId: sessionId,
             },
@@ -262,6 +265,7 @@ export const createWorkout = async (
         sets: sets,
         lbs: lbs,
         reps: reps,
+        notes: "",
         userId: currentUser.id,
         workoutSessionId: session.id,
       },
@@ -362,7 +366,7 @@ export const getMostRecentWorkouts = async () => {
 };
 
 export const updateWorkoutSession = async (
-  sessionId: string,
+  id: string,
   name: string,
   notes: string,
   time: number,
@@ -370,12 +374,12 @@ export const updateWorkoutSession = async (
   try {
     if (notes) {
       await prisma.workoutSession.update({
-        where: { id: sessionId },
+        where: { id },
         data: { name: name, time: time, notes: notes },
       });
     } else {
       await prisma.workoutSession.update({
-        where: { id: sessionId },
+        where: { id },
         data: { name: name, time: time },
       });
     }
@@ -388,6 +392,7 @@ export const getSessionById = async (sessionId: string) => {
   try {
     const session = await prisma.workoutSession.findUnique({
       where: { id: sessionId },
+      include: { Workout: true },
     });
     return session;
   } catch (error) {
@@ -405,6 +410,7 @@ export const getSessions = async () => {
     const sessions = await prisma.workoutSession.findMany({
       where: { userId: currentUser.id },
       include: { Workout: true },
+      orderBy: { createdAt: "desc" },
     });
     if (!sessions?.length) {
       throw new Error("Failed to fetch sessions");

@@ -6,6 +6,7 @@ import { BiTimer } from "react-icons/bi";
 
 type MenuOptionsProps = {
   id: string;
+  setAddNote: React.Dispatch<React.SetStateAction<string | boolean>>;
   replace: boolean;
   openMenu: string | boolean;
   setNotes: React.Dispatch<React.SetStateAction<string>>;
@@ -16,6 +17,7 @@ type MenuOptionsProps = {
 
 const MenuOptions = ({
   id,
+  setAddNote,
   replace,
   openMenu,
   setNotes,
@@ -40,6 +42,7 @@ const MenuOptions = ({
         </div>
         <div
           onClick={() => {
+            setAddNote(id);
             setNotes(" ");
             setOpenMenu(false);
           }}

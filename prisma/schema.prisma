@@ -51,6 +51,7 @@ model Workout {
   lbs              Int[]
   reps             Int[]
   sets             String[]
+  notes            String
   workoutSessionId String         @db.ObjectId
   user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   WorkoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)

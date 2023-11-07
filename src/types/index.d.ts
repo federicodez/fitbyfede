@@ -27,6 +27,7 @@ export type Workout = {
   sets: string[];
   lbs: number[];
   reps: number[];
+  notes: string;
   userId: string;
   createdAt: Date;
   updatedAt: Date;

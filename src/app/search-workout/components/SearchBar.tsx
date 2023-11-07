@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { createWorkoutSession, createMany } from "@/actions";
+import { createMany } from "@/actions";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
@@ -12,12 +12,14 @@ import { Pagination, paginate } from "@/components/Pagination";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
+import { WorkoutSession } from "@prisma/client";
 
 type SearchBarProps = {
+  session: WorkoutSession;
   recentWorkouts: Workout[];
 };
 
-const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
+const SearchBar = ({ session, recentWorkouts }: SearchBarProps) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
@@ -112,11 +114,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const handleClick = async () => {
     try {
-      const session = await createWorkoutSession();
-      if (session) {
-        await createMany(exerciseQueue, session.id);
-        router.push(`/finish-workout/${session.id}`);
-      }
+      await createMany(exerciseQueue, session.id);
+      router.push(`/finish-workout/${session.id}`);
     } catch (error) {
       console.log(error);
     }
