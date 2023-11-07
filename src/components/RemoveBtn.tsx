@@ -2,27 +2,17 @@
 
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
-import { deleteWorkout, getWorkouts, deleteSession } from "@/actions";
-import { Workout } from "@/types";
+import { deleteSession } from "@/actions";
 
 type RemoveProps = {
-  ids: string[];
-  setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
-  sessionId?: string;
+  id: string;
 };
 
-const RemoveBtn = ({ ids, setWorkouts, sessionId }: RemoveProps) => {
+const RemoveBtn = ({ id }: RemoveProps) => {
   const router = useRouter();
 
   const removeWorkout = async () => {
-    ids.map(async (id: string) => await deleteWorkout(id));
-    if (sessionId) {
-      await deleteSession(sessionId);
-    }
-    const items = await getWorkouts();
-    if (items) {
-      setWorkouts(items);
-    }
+    await deleteSession(id);
     router.refresh();
   };
   return (

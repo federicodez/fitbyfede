@@ -1,99 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { RemoveBtn } from "@/components";
 import Sessions from "./Sessions";
 import Detailed from "./Detailed";
+import MenuOptions from "./MenuOptions";
 import Link from "next/link";
-import { HiPencilAlt } from "react-icons/hi";
+import { HiPencilAlt, HiX } from "react-icons/hi";
 import moment from "moment";
 import { Workout, WorkoutSession } from "@/types";
 import { SlOptions } from "react-icons/sl";
 
 type WorkoutListProps = {
-  items: Workout[];
   sessions: WorkoutSession[];
 };
 
-type Groups = {
-  [key: string]: Workout[];
-};
-
-type Session = {
-  sessionId?: string;
-  date: Date;
-  ids: any[];
-  exercises: {
-    [key: string]: string;
-  };
-  sets: {
-    [key: string]: string[];
-  };
-  lbs: {
-    [key: string]: number[];
-  };
-  reps: {
-    [key: string]: number[];
-  };
-};
-
-const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
-  const [workouts, setWorkouts] = useState<Workout[]>(items);
-  const [showSessions, setShowSessions] = useState(true);
+const WorkoutList = ({ sessions }: WorkoutListProps) => {
   const [showOptions, setShowOptions] = useState<string | boolean>(false);
-  const [showWorkouts, setShowWorkouts] = useState<string | boolean>(false);
-  const [session, setSession] = useState<WorkoutSession | null>(null);
-
-  const selectedSession = (sessionId: string) => {
-    const selected = sessions.filter((session) => session.id === sessionId);
-    setSession(selected[0]);
-  };
-
-  const sorted = workouts?.reduce((groups: Groups, workout: Workout) => {
-    if (!groups[workout.workoutSessionId])
-      groups[workout.workoutSessionId] = [];
-
-    groups[workout.workoutSessionId].push(workout);
-    return groups;
-  }, {} as Groups);
-  const sortedWorkouts = Object.values(sorted);
-  const workoutSession = sortedWorkouts.map((workout) => {
-    const session: Session = {
-      date: new Date(),
-      ids: [],
-      exercises: {},
-      sets: {},
-      lbs: {},
-      reps: {},
-    };
-    workout.map(
-      ({ id, name, sets, lbs, reps, createdAt, workoutSessionId }) => {
-        session.sessionId = workoutSessionId;
-        session.ids.push(id);
-        session.date = createdAt;
-        session.exercises[id] = name;
-        session.sets[id] = [...sets];
-        session.lbs[id] = [...lbs];
-        session.reps[id] = [...reps];
-      },
-    );
-    return session;
-  });
-
-  const handleOptions = (sessionId: any) => {
-    if (sessionId) {
-      setShowOptions(sessionId);
-    }
-  };
-
-  const handleSessions = (sessionId: any) => {
-    if (sessionId) {
-      setShowWorkouts(sessionId);
-      setShowSessions(false);
-      setShowOptions(false);
-      selectedSession(sessionId);
-    }
-  };
+  const [showWorkoutDetails, setShowWorkoutDetails] = useState<
+    string | boolean
+  >(false);
 
   return (
     <section>
@@ -101,74 +26,41 @@ const WorkoutList = ({ items, sessions }: WorkoutListProps) => {
         Start a Workout
       </Link>
       <ul className="workoutlist">
-        {workoutSession?.map(
-          ({ ids, exercises, sets, lbs, reps, date, sessionId }, index) => (
-            <div key={index} className="wrapper">
-              <div
-                className={
-                  showWorkouts === sessionId ? "relative w-full" : "hidden"
-                }
-              >
-                {session && (
-                  <Detailed
+        {sessions?.map((session) => (
+          <div key={session.id} className="wrapper">
+            <div
+              className={
+                showWorkoutDetails === session.id ? "relative w-full" : "hidden"
+              }
+            >
+              <Detailed
+                session={session}
+                setShowWorkoutDetails={setShowWorkoutDetails}
+              />
+            </div>
+            <div className="wrapper my-2 p-2 rounded-lg shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+              <div className="flex justify-between">
+                {moment(session.createdAt).format("dddd, MMM Do")}
+                <div
+                  className={
+                    showOptions === session.id ? "absolute w-full" : "hidden"
+                  }
+                >
+                  <MenuOptions
                     session={session}
-                    date={date}
-                    ids={ids}
-                    exercises={exercises}
-                    sets={sets}
-                    lbs={lbs}
-                    reps={reps}
-                    sessionId={sessionId}
-                    setShowWorkouts={setShowWorkouts}
-                    setShowSessions={setShowSessions}
+                    setShowOptions={setShowOptions}
                   />
-                )}
+                </div>
+                <div onClick={() => setShowOptions(session.id)}>
+                  <SlOptions />
+                </div>
               </div>
-              <div className="container wrapper workoutlist-item rounded-lg">
-                <div className="flex justify-between">
-                  {moment(date).format("dddd, MMM Do")}
-                  <div onClick={() => handleOptions(sessionId)}>
-                    <div className="relative w-full">
-                      <div
-                        className={
-                          showOptions === sessionId
-                            ? "absolute w-44 bg-white rounded-md p-2 cursor-pointer right-0"
-                            : "hidden"
-                        }
-                      >
-                        <div className="flex flex-col w-full gap-5">
-                          <Link
-                            href={`/edit-workout/${sessionId}`}
-                            className="flex flex-row"
-                          >
-                            <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
-                            <span className="text-lg px-1">Edit Workout</span>
-                          </Link>
-                          <RemoveBtn
-                            ids={ids}
-                            sessionId={sessionId}
-                            setWorkouts={setWorkouts}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <SlOptions />
-                  </div>
-                </div>
-                <div onClick={() => handleSessions(sessionId)}>
-                  <Sessions
-                    sessions={sessions}
-                    ids={ids}
-                    exercises={exercises}
-                    sets={sets}
-                    lbs={lbs}
-                    reps={reps}
-                  />
-                </div>
+              <div onClick={() => setShowWorkoutDetails(session.id)}>
+                <Sessions session={session} />
               </div>
             </div>
-          ),
-        )}
+          </div>
+        ))}
       </ul>
     </section>
   );

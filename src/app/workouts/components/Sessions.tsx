@@ -1,42 +1,21 @@
 import { WorkoutSession } from "@/types";
 
 type SessionsProps = {
-  sessions: WorkoutSession[];
-  ids: any[];
-  exercises: {
-    [key: string]: string;
-  };
-  sets: {
-    [key: string]: string[];
-  };
-  lbs: {
-    [key: string]: number[];
-  };
-  reps: {
-    [key: string]: number[];
-  };
-  sessionId?: string;
+  session: WorkoutSession;
 };
 
-const Sessions = ({
-  sessions,
-  ids,
-  exercises,
-  sets,
-  lbs,
-  reps,
-}: SessionsProps) => {
+const Sessions = ({ session }: SessionsProps) => {
   return (
-    <div>
+    <>
       <strong className="flex flex-start">Exercise</strong>
-      {ids?.reverse().map((id: string, idIndex: number) => (
-        <div key={idIndex} className="flex-1 flex flex-row gap-2 my-2">
-          <div className="workout-card-list">{sets[id].length}</div>
+      {session?.Workout?.map((workout) => (
+        <div key={workout.id} className="flex flex-row gap-2">
+          <div className="workout-card-list">{workout.sets.length}</div>
           <span>x</span>
-          <span>{exercises[id]}</span>
+          <span>{workout.name}</span>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 export default Sessions;

@@ -20,6 +20,7 @@ import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
 import AddExercise from "./AddExercise";
+import MenuOptions from "./MenuOptions";
 import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
@@ -307,6 +308,10 @@ const EditWorkoutForm = ({
 
                 <div className="flex-initial w-fit">
                   <div className="relative">
+                    <MenuOptions
+                      setNotes={setNotes}
+                      setOpenMenu={setOpenMenu}
+                    />
                     <div
                       onMouseLeave={() => setOpenMenu(false)}
                       className={

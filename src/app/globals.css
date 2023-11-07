@@ -95,10 +95,7 @@ p {
   background-color: #fff;
   padding: 5px 32px;
   width: 15rem;
-  margin: 1rem;
-  margin-bottom: 3rem;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 2rem auto;
 }
 
 .workoutlist {

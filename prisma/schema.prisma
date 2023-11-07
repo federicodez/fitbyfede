@@ -63,7 +63,7 @@ model WorkoutSession {
   notes      String?
   userId     String    @db.ObjectId
   createdAt  DateTime  @default(now())
-  workoutIds String[]  @db.ObjectId
+  workoutIds String[]
   Workout    Workout[]
   User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

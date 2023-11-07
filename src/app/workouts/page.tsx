@@ -6,11 +6,10 @@ export const dynamic = "force-dynamic";
 
 const Workouts = async () => {
   try {
-    const workouts = await getWorkouts();
     const sessions = await getSessions();
 
-    if (workouts && sessions) {
-      return <WorkoutList items={workouts} sessions={sessions} />;
+    if (sessions) {
+      return <WorkoutList sessions={sessions} />;
     } else {
       return <EmptyState />;
     }

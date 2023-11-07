@@ -404,6 +404,7 @@ export const getSessions = async () => {
     }
     const sessions = await prisma.workoutSession.findMany({
       where: { userId: currentUser.id },
+      include: { Workout: true },
     });
     if (!sessions?.length) {
       throw new Error("Failed to fetch sessions");
