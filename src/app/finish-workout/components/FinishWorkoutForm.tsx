@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, MouseEvent, Suspense } from "react";
+import { useState, MouseEvent, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, SetOptions, ReplaceBtn } from "@/components";
@@ -28,7 +28,7 @@ type FinishWorkoutFormProps = {
 };
 
 type Notes = {
-  note: string;
+  id: string;
 };
 
 const FinishWorkoutForm = ({
@@ -37,8 +37,9 @@ const FinishWorkoutForm = ({
   recentWorkouts,
 }: FinishWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
-  const [notes, setNotes] = useState<Notes>({ note: "" });
-  const [addNote, setAddNote] = useState<string | boolean>(false);
+  const [sessionNotes, setSessionNotes] = useState("");
+  const [addNotes, setAddNotes] = useState<Notes>({ id: "" });
+  const [noteIds, setNoteIds] = useState<string[]>([]);
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState<string | null>(null);
   const [addExercise, setAddExercise] = useState(false);
@@ -51,19 +52,20 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout.map(({ lbs, reps }) => {
+    session.Workout.map(({ id, lbs, reps, notes }) => {
       lbs.map((_, id) => {
         lbs.splice(id, 1, Number(dataLbs[0]));
         dataLbs.shift();
         reps.splice(id, 1, Number(dataReps[0]));
         dataReps.shift();
       });
+      notes.concat(addNotes[id]);
     });
     setSession(session);
 
     try {
       const name = workoutName ?? session.name;
-      await updateWorkoutSession(session.id, name, notes, time);
+      await updateWorkoutSession(session.id, name, sessionNotes, time);
       await updateWorkouts(session);
       router.refresh();
     } catch (error) {
@@ -82,12 +84,12 @@ const FinishWorkoutForm = ({
         reps.splice(id, 1, Number(dataReps[0]));
         dataReps.shift();
       });
+      notes += addNotes[id];
     });
     setSession(session);
-
     try {
       const name = workoutName ?? session.name;
-      await updateWorkoutSession(session.id, name, notes, time);
+      await updateWorkoutSession(session.id, name, sessionNotes, time);
       await updateWorkouts(session);
       router.push("/workouts");
     } catch (error) {
@@ -126,15 +128,13 @@ const FinishWorkoutForm = ({
     router.refresh();
   };
 
-  const handleNotes = (e: Event) => {
-    setNotes({
-      ...notes,
+  const handleNotes = (e: ChangeEvent) => {
+    setAddNotes({
+      ...addNotes,
       [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement)
         .value,
     });
   };
-
-  console.log("notes: ", notes);
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
@@ -207,9 +207,8 @@ const FinishWorkoutForm = ({
                     <div className="relative">
                       <MenuOptions
                         id={id}
-                        notes={notes}
-                        setNotes={setNotes}
-                        setAddNote={setAddNote}
+                        noteIds={noteIds}
+                        setNoteIds={setNoteIds}
                         replace={replace}
                         openMenu={openMenu}
                         setOpenMenu={setOpenMenu}
@@ -222,7 +221,7 @@ const FinishWorkoutForm = ({
                     </div>
                   </div>
                 </div>
-                <div className={notes ? "" : "hidden"}>
+                <div className={noteIds.includes(id) ? "" : "hidden"}>
                   <input
                     type="text"
                     name={id}

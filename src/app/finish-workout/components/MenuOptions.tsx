@@ -10,9 +10,8 @@ type Notes = {
 
 type MenuOptionsProps = {
   id: string;
-  notes: Notes;
-  setNotes: React.Dispatch<React.SetStateAction<Notes>>;
-  setAddNote: React.Dispatch<React.SetStateAction<string | boolean>>;
+  noteIds: string[];
+  setNoteIds: React.Dispatch<React.SetStateAction<string[]>>;
   replace: boolean;
   openMenu: string | boolean;
   setOpenMenu: React.Dispatch<React.SetStateAction<string | boolean>>;
@@ -22,15 +21,23 @@ type MenuOptionsProps = {
 
 const MenuOptions = ({
   id,
-  notes,
-  setNotes,
-  setAddNote,
+  noteIds,
+  setNoteIds,
   replace,
   openMenu,
   setOpenMenu,
   setReplace,
   removeExercise,
 }: MenuOptionsProps) => {
+  const handleNotes = (id: string) => {
+    if (noteIds.includes(id)) {
+      const newNotes = noteIds.filter((noteId) => noteId !== id);
+      setNoteIds([...newNotes]);
+    } else {
+      noteIds.push(id);
+    }
+  };
+
   return (
     <>
       <div
@@ -48,8 +55,7 @@ const MenuOptions = ({
         </div>
         <div
           onClick={() => {
-            setAddNote(id);
-            setNotes({ ...notes, note: " " });
+            handleNotes(id);
             setOpenMenu(false);
           }}
           className="flex flex-row items-center gap-2"
