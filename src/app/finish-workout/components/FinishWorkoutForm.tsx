@@ -12,8 +12,6 @@ import {
   updateWorkout,
   updateWorkouts,
   deleteSession,
-  deleteSet,
-  changeWorkoutSet,
   deleteWorkout,
   updateWorkoutSession,
 } from "@/actions";
@@ -29,18 +27,20 @@ type FinishWorkoutFormProps = {
   recentWorkouts: Workout[];
 };
 
+type Notes = {
+  note: string;
+};
+
 const FinishWorkoutForm = ({
   previous,
   initialSession,
   recentWorkouts,
 }: FinishWorkoutFormProps) => {
-  const [notes, setNotes] = useState<string>("");
+  const [session, setSession] = useState<WorkoutSession>(initialSession);
+  const [notes, setNotes] = useState<Notes>({ note: "" });
   const [addNote, setAddNote] = useState<string | boolean>(false);
   const [sessionOptions, setSessionOptions] = useState(false);
-  const [workoutName, setWorkoutName] = useState("");
-  const [setOptions, setSetOptions] = useState<string | null>(null);
-  const [setIndex, setSetIndex] = useState<number>(0);
-  const [session, setSession] = useState<WorkoutSession>(initialSession);
+  const [workoutName, setWorkoutName] = useState<string | null>(null);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState(false);
@@ -51,7 +51,7 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout?.map(({ lbs, reps }) => {
+    session.Workout.map(({ lbs, reps }) => {
       lbs.map((_, id) => {
         lbs.splice(id, 1, Number(dataLbs[0]));
         dataLbs.shift();
@@ -75,7 +75,7 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout?.map(({ lbs, reps }) => {
+    session.Workout?.map(({ id, lbs, reps, notes }) => {
       lbs.map((_, id) => {
         lbs.splice(id, 1, Number(dataLbs[0]));
         dataLbs.shift();
@@ -116,48 +116,6 @@ const FinishWorkoutForm = ({
     }
   };
 
-  const changeSet = async (id: string, e: MouseEvent) => {
-    const workout = session.Workout.filter((workout) => workout.id === id);
-    const { sets } = workout[0];
-    const { target } = e;
-    if (target) {
-      const set = (target as HTMLButtonElement).value;
-      sets.splice(setIndex, 1, set);
-      const newSet: string[] = [];
-      let i = 1;
-      sets.map((set) => {
-        if (!!Number(set)) {
-          newSet.push(String(i));
-          i++;
-        } else {
-          newSet.push(set);
-        }
-      });
-
-      await changeWorkoutSet(id, newSet);
-      router.refresh();
-    }
-  };
-
-  const handleDeleteSet = async (id: string, setId: number) => {
-    try {
-      const workout = session.Workout.filter((workout) => workout.id === id);
-      const { sets, lbs, reps } = workout[0];
-      sets.splice(setId, 1);
-      lbs.splice(setId, 1);
-      reps.splice(setId, 1);
-      if (!sets.length) {
-        sets.push("1");
-        lbs.push(0);
-        reps.push(0);
-      }
-      await deleteSet(id, sets, lbs, reps);
-      router.refresh();
-    } catch (err: any) {
-      console.log(err);
-    }
-  };
-
   const removeWorkout = async () => {
     await deleteSession(session.id);
     router.push("/workouts");
@@ -168,7 +126,15 @@ const FinishWorkoutForm = ({
     router.refresh();
   };
 
-  const handleNotes = (query: string, id: string) => {};
+  const handleNotes = (e: Event) => {
+    setNotes({
+      ...notes,
+      [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement)
+        .value,
+    });
+  };
+
+  console.log("notes: ", notes);
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
@@ -241,10 +207,11 @@ const FinishWorkoutForm = ({
                     <div className="relative">
                       <MenuOptions
                         id={id}
+                        notes={notes}
+                        setNotes={setNotes}
                         setAddNote={setAddNote}
                         replace={replace}
                         openMenu={openMenu}
-                        setNotes={setNotes}
                         setOpenMenu={setOpenMenu}
                         setReplace={setReplace}
                         removeExercise={removeExercise}
@@ -255,12 +222,12 @@ const FinishWorkoutForm = ({
                     </div>
                   </div>
                 </div>
-                <div className={addNote === id ? "" : "hidden"}>
+                <div className={notes ? "" : "hidden"}>
                   <input
                     type="text"
-                    name="notes"
+                    name={id}
                     className="bg-white rounded-md w-full"
-                    onChange={(e) => handleNotes(e.target.value, id)}
+                    onChange={(e) => handleNotes(e)}
                   />
                 </div>
                 <ReplaceBtn

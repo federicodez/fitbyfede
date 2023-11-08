@@ -20,8 +20,7 @@ const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
       return previous ? (
         <EditWorkoutForm
           previous={previous}
-          items={workouts}
-          session={session}
+          initialSession={session}
           recentWorkouts={recentWorkouts}
         />
       ) : null;

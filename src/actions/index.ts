@@ -94,7 +94,7 @@ export const updateWorkoutWithDate = async (
 
 export const updateWorkouts = async (session: WorkoutSession) => {
   try {
-    session.Workout?.map(async ({ id, sets, lbs, reps, notes }) => {
+    session.Workout.map(async ({ id, sets, lbs, reps, notes }) => {
       await updateWorkout(id, sets, lbs, reps, notes);
     });
   } catch (error) {
@@ -102,13 +102,9 @@ export const updateWorkouts = async (session: WorkoutSession) => {
   }
 };
 
-export const updateDate = async (
-  workouts: Workout[],
-  session: WorkoutSession,
-  date: string,
-) => {
+export const updateDate = async (session: WorkoutSession, date: string) => {
   try {
-    workouts.map(async ({ id, sets, lbs, reps }) => {
+    session.Workout.map(async ({ id, sets, lbs, reps }) => {
       await updateWorkoutWithDate(id, sets, lbs, reps, date);
     });
     await prisma.workoutSession.update({
@@ -168,6 +164,7 @@ export const createWorkoutSession = async () => {
         userId: currentUser.id,
         name: timer,
         time: 0,
+        notes: "",
       },
     });
     return session;

@@ -4,12 +4,17 @@ import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 
+type Notes = {
+  note: string;
+};
+
 type MenuOptionsProps = {
   id: string;
+  notes: Notes;
+  setNotes: React.Dispatch<React.SetStateAction<Notes>>;
   setAddNote: React.Dispatch<React.SetStateAction<string | boolean>>;
   replace: boolean;
   openMenu: string | boolean;
-  setNotes: React.Dispatch<React.SetStateAction<string>>;
   setOpenMenu: React.Dispatch<React.SetStateAction<string | boolean>>;
   setReplace: React.Dispatch<React.SetStateAction<boolean>>;
   removeExercise: (id: string) => void;
@@ -17,10 +22,11 @@ type MenuOptionsProps = {
 
 const MenuOptions = ({
   id,
+  notes,
+  setNotes,
   setAddNote,
   replace,
   openMenu,
-  setNotes,
   setOpenMenu,
   setReplace,
   removeExercise,
@@ -43,7 +49,7 @@ const MenuOptions = ({
         <div
           onClick={() => {
             setAddNote(id);
-            setNotes(" ");
+            setNotes({ ...notes, note: " " });
             setOpenMenu(false);
           }}
           className="flex flex-row items-center gap-2"
