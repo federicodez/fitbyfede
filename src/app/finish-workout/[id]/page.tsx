@@ -21,8 +21,6 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
         <FinishWorkoutForm
           previous={previous}
           initialSession={session}
-          sessionId={id}
-          items={workouts}
           recentWorkouts={recentWorkouts}
         />
       ) : null;

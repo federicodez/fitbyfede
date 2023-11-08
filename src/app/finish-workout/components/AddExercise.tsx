@@ -4,9 +4,9 @@ import { Suspense, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { createMany, getWorkoutsBySessionId } from "@/actions";
+import { createMany, getSessionById, getWorkoutsBySessionId } from "@/actions";
 import { useRouter } from "next/navigation";
-import { Workout, Data } from "@/types";
+import { Workout, Data, WorkoutSession } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
@@ -14,17 +14,17 @@ import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
 
 type AddExerciseProps = {
-  sessionId: string;
+  session: WorkoutSession;
   recentWorkouts: Workout[];
   setAddExercise: React.Dispatch<React.SetStateAction<boolean>>;
-  setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
+  setSession: React.Dispatch<React.SetStateAction<WorkoutSession>>;
 };
 
 const AddExercise = ({
-  sessionId,
+  session,
   recentWorkouts,
   setAddExercise,
-  setWorkouts,
+  setSession,
 }: AddExerciseProps) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -126,10 +126,10 @@ const AddExercise = ({
 
   const handleClick = async () => {
     try {
-      await createMany(exerciseQueue, sessionId);
-      const newWorkouts = await getWorkoutsBySessionId(sessionId);
-      if (newWorkouts) {
-        setWorkouts(newWorkouts);
+      await createMany(exerciseQueue, session.id);
+      const newSession = await getSessionById(session.id);
+      if (newSession) {
+        setSession(newSession);
       }
       router.refresh();
       setAddExercise(false);

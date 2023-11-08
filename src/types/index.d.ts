@@ -52,5 +52,5 @@ export type WorkoutSession = {
   userId: string;
   workoutIds: string[];
   createdAt: Date;
-  Workout?: Workout[];
+  Workout: Workout[];
 };
