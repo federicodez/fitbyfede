@@ -27,10 +27,6 @@ type FinishWorkoutFormProps = {
   recentWorkouts: Workout[];
 };
 
-type Notes = {
-  [key: string]: string;
-};
-
 const FinishWorkoutForm = ({
   previous,
   initialSession,
