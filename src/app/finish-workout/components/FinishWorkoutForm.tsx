@@ -28,7 +28,7 @@ type FinishWorkoutFormProps = {
 };
 
 type Notes = {
-  id: string;
+  [key: string]: string;
 };
 
 const FinishWorkoutForm = ({
@@ -53,13 +53,13 @@ const FinishWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     session.Workout.map(({ id, lbs, reps, notes }) => {
-      lbs.map((_, id) => {
-        lbs.splice(id, 1, Number(dataLbs[0]));
+      lbs.map((_, idx) => {
+        lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();
-        reps.splice(id, 1, Number(dataReps[0]));
+        reps.splice(idx, 1, Number(dataReps[0]));
         dataReps.shift();
+        notes.concat(addNotes[id]);
       });
-      notes.concat(addNotes[id]);
     });
     setSession(session);
 
@@ -78,15 +78,16 @@ const FinishWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     session.Workout?.map(({ id, lbs, reps, notes }) => {
-      lbs.map((_, id) => {
-        lbs.splice(id, 1, Number(dataLbs[0]));
+      lbs.map((_, idx) => {
+        lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();
-        reps.splice(id, 1, Number(dataReps[0]));
+        reps.splice(idx, 1, Number(dataReps[0]));
         dataReps.shift();
       });
-      notes += addNotes[id];
+      notes = addNotes[id];
     });
     setSession(session);
+
     try {
       const name = workoutName ?? session.name;
       await updateWorkoutSession(session.id, name, sessionNotes, time);

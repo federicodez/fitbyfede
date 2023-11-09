@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
-import { CustomButton } from "@/components";
+import { CustomButton, ReplaceBtn } from "@/components";
 import {
   updateWorkout,
   updateWorkoutSession,
@@ -34,6 +34,7 @@ const EditWorkoutForm = ({
 }: EditWorkoutFormProps) => {
   const date = initialSession;
   const [notes, setNotes] = useState<string>("");
+  const [noteIds, setNoteIds] = useState<string[]>([]);
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
@@ -42,12 +43,6 @@ const EditWorkoutForm = ({
   const [replace, setReplace] = useState(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const router = useRouter();
-
-  useEffect(() => {
-    if (session?.notes) {
-      setNotes(session?.notes);
-    }
-  }, []);
 
   const hours = Math.floor(session?.time / 360000);
   const minutes = Math.floor((session?.time % 360000) / 6000);
@@ -95,7 +90,7 @@ const EditWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
     const date = data.get("date")?.valueOf();
 
-    session.Workout.map(({ lbs, reps }) => {
+    session.Workout.map(({ lbs, reps, notes }) => {
       lbs.map((_, idx) => {
         lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();
@@ -161,6 +156,20 @@ const EditWorkoutForm = ({
   const removeExercise = async (id: string) => {
     await deleteWorkout(id);
     router.refresh();
+  };
+
+  const handleNotes = (e: ChangeEvent) => {
+    setSession((prev) => {
+      const updated = prev.Workout.map((workout) =>
+        workout.id === (e.target as HTMLInputElement).name
+          ? {
+              ...workout,
+              notes: (e.target as HTMLInputElement).value,
+            }
+          : workout,
+      );
+      return { ...prev, Workout: updated };
+    });
   };
 
   return !addExercise ? (
@@ -257,9 +266,10 @@ const EditWorkoutForm = ({
                     <div className="relative">
                       <MenuOptions
                         id={id}
+                        noteIds={noteIds}
+                        setNoteIds={setNoteIds}
                         replace={replace}
                         openMenu={openMenu}
-                        setNotes={setNotes}
                         setOpenMenu={setOpenMenu}
                         setReplace={setReplace}
                         removeExercise={removeExercise}
@@ -271,6 +281,22 @@ const EditWorkoutForm = ({
                   </div>
                 </div>
 
+                <div className={noteIds.includes(id) ? "" : "hidden"}>
+                  <input
+                    type="text"
+                    name={id}
+                    className="bg-white rounded-md w-full"
+                    onChange={(e) => handleNotes(e)}
+                  />
+                </div>
+                <ReplaceBtn
+                  id={id}
+                  replace={replace}
+                  setReplace={setReplace}
+                  setOpenMenu={setOpenMenu}
+                  removeExercise={removeExercise}
+                  setAddExercise={setAddExercise}
+                />
                 <div className="flex justify-evenly">
                   <span className="flex justify-center items-center w-full">
                     Set

@@ -6,9 +6,10 @@ import { BiTimer } from "react-icons/bi";
 
 type MenuOptionsProps = {
   id: string;
+  noteIds: string[];
+  setNoteIds: React.Dispatch<React.SetStateAction<string[]>>;
   replace: boolean;
   openMenu: string | boolean;
-  setNotes: React.Dispatch<React.SetStateAction<string>>;
   setOpenMenu: React.Dispatch<React.SetStateAction<string | boolean>>;
   setReplace: React.Dispatch<React.SetStateAction<boolean>>;
   removeExercise: (id: string) => void;
@@ -16,13 +17,23 @@ type MenuOptionsProps = {
 
 const MenuOptions = ({
   id,
+  noteIds,
+  setNoteIds,
   replace,
   openMenu,
-  setNotes,
   setOpenMenu,
   setReplace,
   removeExercise,
 }: MenuOptionsProps) => {
+  const handleNotes = (id: string) => {
+    if (noteIds.includes(id)) {
+      const newNotes = noteIds.filter((noteId) => noteId !== id);
+      setNoteIds([...newNotes]);
+    } else {
+      noteIds.push(id);
+    }
+  };
+
   return (
     <>
       <div
@@ -40,7 +51,7 @@ const MenuOptions = ({
         </div>
         <div
           onClick={() => {
-            setNotes(" ");
+            handleNotes(id);
             setOpenMenu(false);
           }}
           className="flex flex-row items-center gap-2"
