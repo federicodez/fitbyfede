@@ -120,7 +120,9 @@ const AuthForm = () => {
             text-gray-900
           "
         >
-          Sign in to your account
+          {variant === "LOGIN"
+            ? "Sign in to your account"
+            : "Create your account"}
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -189,7 +191,7 @@ const AuthForm = () => {
               </div>
             </div>
 
-            <div className="mt-6 flex">
+            <div className="my-6 flex">
               <AuthSocialButton
                 icon={BsGoogle}
                 onClick={() => socialAction("google")}
@@ -228,7 +230,7 @@ const AuthForm = () => {
       </div>
     </>
   ) : (
-    <ForgotCredentials />
+    <ForgotCredentials setForgot={setForgot} setVariant={setVariant} />
   );
 };
 
