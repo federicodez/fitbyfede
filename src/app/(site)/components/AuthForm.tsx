@@ -109,15 +109,17 @@ const AuthForm = () => {
 
   return !forgot ? (
     <>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="flex justify-center items-center sm:mx-auto sm:w-full sm:max-w-md">
         <h2
           className="
             mt-6 
+            backdrop-blur-lg
+            w-fit
             text-center 
             text-3xl 
             font-bold 
             tracking-tight 
-            text-gray-900
+            text-white
           "
         >
           {variant === "LOGIN"
@@ -128,7 +130,6 @@ const AuthForm = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
           className="
-        bg-white
           px-4
           py-8
           shadow
@@ -136,7 +137,10 @@ const AuthForm = () => {
           sm:px-10
         "
         >
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="space-y-6 backdrop-blur-lg p-2"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {variant === "REGISTER" && (
               <Input
                 disabled={isLoading}
@@ -174,18 +178,8 @@ const AuthForm = () => {
 
           <div className="mt-6">
             <div className="relative">
-              <div
-                className="
-                absolute 
-                inset-0 
-                flex 
-                items-center
-              "
-              >
-                <div className="w-full border-t border-gray-300" />
-              </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-500">
+                <span className="line-design px-2 text-white">
                   Or continue with
                 </span>
               </div>
@@ -201,7 +195,7 @@ const AuthForm = () => {
           <div className="relative flex justify-center text-sm">
             <span
               onClick={() => setForgot(true)}
-              className="bg-white px-2 text-gray-500 cursor-pointer"
+              className="backdrop-blur-sm px-2 text-white cursor-pointer"
             >
               Forgot password?
             </span>
@@ -214,15 +208,18 @@ const AuthForm = () => {
             text-sm 
             mt-6 
             px-2 
-            text-gray-500
+            text-white
           "
           >
-            <div>
+            <div className="backdrop-blur-lg">
               {variant === "LOGIN"
                 ? "New to FitbyFede?"
                 : "Already have an account?"}
             </div>
-            <div onClick={toggleVariant} className="underline cursor-pointer">
+            <div
+              onClick={toggleVariant}
+              className="backdrop-blur-lg underline cursor-pointer"
+            >
               {variant === "LOGIN" ? "Create an account" : "Login"}
             </div>
           </div>

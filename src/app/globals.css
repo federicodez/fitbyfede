@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #c5dff8;
+  --bg-primary: #2f3651;
   --clr-red-900: hsla(360, 100%, 17%, 1);
   --clr-blue-500: hsla(227, 47%, 23%, 1);
   --clr-blue-900: hsla(227, 100%, 17%, 1);
+  --clr-btn: #8ebbff;
 
   --ff-base: "Outfit", sans-serif;
 
@@ -49,13 +50,48 @@ video {
   display: block;
 }
 
+button {
+  color: var(--clr-btn);
+}
+
 p {
   max-width: 65ch;
 }
 
+/********Line design**********/
+.line-design {
+  display: flex;
+  flex-direction: row;
+}
+.line-design:before,
+.line-design:after {
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid white;
+  margin: auto;
+}
+.line-design:before {
+  margin-right: 10px;
+}
+.line-design:after {
+  margin-left: 10px;
+}
+
+/******************************/
+
 .wrapper {
   width: min(50rem, 100% - 2rem);
   margin-inline: auto;
+}
+
+.auth-image {
+  background: url("/bgImage.webp") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  overflow: hidden;
 }
 
 .primary-header {

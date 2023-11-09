@@ -8,7 +8,7 @@ const Auth = () => {
         min-h-full 
         flex-col 
         justify-center 
-        py-12 
+        py-20 
         sm:px-6 
         lg:px-8 
       "

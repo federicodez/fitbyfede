@@ -36,26 +36,32 @@ const ForgotCredentials = ({
   return (
     <>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center items-center">
-          <AiFillLock className="flex items-center bg-white rounded-full text-7xl p-2 border-2 border-black" />
-        </div>
-        <h2
-          className="
+        <div className="flex flex-col justify-center items-center">
+          <AiFillLock className="flex items-center backdrop-blur-lg rounded-full text-7xl p-2 border-2 border-white text-white" />
+          <h2
+            className="
+            backdrop-blur-lg
+            rounded-md
+            w-fit
             mt-6 
             text-center 
             text-lg 
             font-bold 
             tracking-tight 
-            text-gray-900
+            text-white
           "
-        >
-          Trouble logging in?
-        </h2>
+          >
+            Trouble logging in?
+          </h2>
+          <p className="backdrop-blur-lg text-center text-base text-white">
+            Enter your email and we&apos;ll send you a link to get back into
+            your account.
+          </p>
+        </div>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
           className="
-        bg-white
           px-4
           py-8
           shadow
@@ -63,11 +69,10 @@ const ForgotCredentials = ({
           sm:px-10
         "
         >
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <p className="text-center text-base">
-              Enter your email and we&apos;ll send you a link to get back into
-              your account.
-            </p>
+          <form
+            className="space-y-6 backdrop-blur-lg"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Input
               disabled={isLoading}
               register={register}
@@ -82,7 +87,7 @@ const ForgotCredentials = ({
                 <Button disabled={isLoading} fullWidth type="submit">
                   {!isLoading ? "Send login link" : "Sending..."}
                 </Button>
-                <span className="text-center text-sm mt-6">
+                <span className="backdrop-blur-lg text-center text-sm mt-6 text-white">
                   Can&apos;t reset your password?
                 </span>
               </div>
@@ -91,18 +96,10 @@ const ForgotCredentials = ({
 
           <div className="mt-6">
             <div className="relative">
-              <div
-                className="
-                absolute 
-                inset-0 
-                flex 
-                items-center
-              "
-              >
-                <div className="w-full border-t border-gray-300" />
-              </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-500">OR</span>
+                <span className="line-design backdrop-blur-sm px-2 text-white">
+                  OR
+                </span>
               </div>
             </div>
 
@@ -114,7 +111,7 @@ const ForgotCredentials = ({
                 setVariant("REGISTER");
                 setForgot(false);
               }}
-              className="bg-white px-2 text-gray-500 cursor-pointer"
+              className="backdrop-blur-lg px-2 text-white cursor-pointer"
             >
               Create new account
             </span>
@@ -131,7 +128,7 @@ const ForgotCredentials = ({
           "
           >
             <button
-              className="text-center border-2 border-black w-full py-1"
+              className="text-center text-white border-2 border-white w-full py-1"
               onClick={() => {
                 setVariant("LOGIN");
                 setForgot(false);
