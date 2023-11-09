@@ -38,7 +38,6 @@ const FinishWorkoutForm = ({
 }: FinishWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [sessionNotes, setSessionNotes] = useState("");
-  const [addNotes, setAddNotes] = useState<Notes>({ id: "" });
   const [noteIds, setNoteIds] = useState<string[]>([]);
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState<string | null>(null);
@@ -52,13 +51,12 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout.map(({ id, lbs, reps, notes }) => {
+    session.Workout.map(({ lbs, reps }) => {
       lbs.map((_, idx) => {
         lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();
         reps.splice(idx, 1, Number(dataReps[0]));
         dataReps.shift();
-        notes.concat(addNotes[id]);
       });
     });
     setSession(session);
@@ -77,14 +75,13 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout?.map(({ id, lbs, reps, notes }) => {
+    session.Workout?.map(({ lbs, reps }) => {
       lbs.map((_, idx) => {
         lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();
         reps.splice(idx, 1, Number(dataReps[0]));
         dataReps.shift();
       });
-      notes = addNotes[id];
     });
     setSession(session);
 
@@ -130,10 +127,16 @@ const FinishWorkoutForm = ({
   };
 
   const handleNotes = (e: ChangeEvent) => {
-    setAddNotes({
-      ...addNotes,
-      [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement)
-        .value,
+    setSession((prev) => {
+      const updated = prev.Workout.map((workout) =>
+        workout.id === (e.target as HTMLInputElement).name
+          ? {
+              ...workout,
+              notes: (e.target as HTMLInputElement).value,
+            }
+          : workout,
+      );
+      return { ...prev, Workout: updated };
     });
   };
 
@@ -200,7 +203,7 @@ const FinishWorkoutForm = ({
             </div>
           </div>
           {session.Workout.map(
-            ({ id, name, sets, lbs, reps, notes, bodyPart }, index) => (
+            ({ id, name, sets, lbs, reps, bodyPart }, index) => (
               <div key={id}>
                 <div className="flex flex-row items-center  my-4">
                   <h1 className="flex-1 text-2xl font-bold">{name}</h1>

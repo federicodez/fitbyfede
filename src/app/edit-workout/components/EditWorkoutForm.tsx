@@ -90,7 +90,7 @@ const EditWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
     const date = data.get("date")?.valueOf();
 
-    session.Workout.map(({ lbs, reps, notes }) => {
+    session.Workout.map(({ lbs, reps }) => {
       lbs.map((_, idx) => {
         lbs.splice(idx, 1, Number(dataLbs[0]));
         dataLbs.shift();

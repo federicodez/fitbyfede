@@ -50,7 +50,6 @@ export const updateWorkout = async (
   notes: string,
 ) => {
   try {
-    console.log("actions: ", notes);
     const updated = await prisma.workout.update({
       where: {
         id,
