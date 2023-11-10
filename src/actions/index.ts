@@ -173,22 +173,26 @@ export const createWorkoutSession = async () => {
   }
 };
 
-export const createMany = async (
-  exerciseQueue: string[],
-  sessionId: string,
-) => {
-  const exercises: Data = [];
-  data.filter((workout) => {
-    exerciseQueue.map((exercise) => {
-      if (exercise === workout.name) {
-        exercises.push(workout);
-      }
-    });
-  });
+export const createMany = async (exerciseQueue: string[]) => {
   try {
+    const exercises: Data = [];
+    data.filter((workout) => {
+      exerciseQueue.map((exercise) => {
+        if (exercise === workout.name) {
+          exercises.push(workout);
+        }
+      });
+    });
+
     const currentUser = await getCurrentUser();
 
     if (!currentUser?.id) {
+      return null;
+    }
+
+    const session = await createWorkoutSession();
+
+    if (!session) {
       return null;
     }
 
@@ -208,12 +212,14 @@ export const createMany = async (
               reps: [0],
               notes: "",
               userId: currentUser.id,
-              workoutSessionId: sessionId,
+              workoutSessionId: session.id,
             },
           });
         },
       ),
     );
+
+    return session;
   } catch (err: any) {
     console.log("Error creating many workouts: ", err);
   }

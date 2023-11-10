@@ -10,17 +10,17 @@ type MenuOptionsProps = {
 };
 
 const MenuOptions = ({ session, setShowOptions }: MenuOptionsProps) => (
-  <div className="absolute z-10 flex flex-row w-fit bg-white rounded-md p-2 cursor-pointer right-20">
+  <div className="absolute z-10 flex flex-row w-fit bg-[#8ebbff] rounded-md p-2 cursor-pointer right-20">
     <button
       onClick={() => setShowOptions(false)}
-      className="bg-gray-300 w-8 px-2 h-fit rounded-md"
+      className="bg-[#2f3651] w-8 px-2 h-fit rounded-md"
     >
       <HiX />
     </button>
     <div className="flex flex-col w-full gap-3 ml-5">
       <Link href={`/edit-workout/${session.id}`} className="flex flex-row">
         <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
-        <span className="text-lg px-1">Edit Workout</span>
+        <span className="text-lg px-1 text-[#2f3651]">Edit Workout</span>
       </Link>
       <RemoveBtn id={session.id} />
     </div>

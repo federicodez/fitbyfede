@@ -30,16 +30,14 @@
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: dark light;
 }
 
 body {
   font-family: system-ui;
   margin: 0;
-  color: #000;
   font-size: var(--fs-400);
   line-height: 1.5;
-  background: var(--bg-primary);
 }
 
 Image,
@@ -79,19 +77,22 @@ p {
 
 /******************************/
 
+.p-color {
+  background-color: var(--bg-primary);
+}
+
 .wrapper {
   width: min(50rem, 100% - 2rem);
   margin-inline: auto;
 }
 
 .auth-image {
-  background: url("/bgImage.webp") no-repeat center center fixed;
+  background: url("/bgImage.jpeg") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   height: 100%;
-  overflow: hidden;
 }
 
 .primary-header {
@@ -128,9 +129,9 @@ p {
   border: 2px solid #8d99ae;
   border-radius: 20px;
   color: #495057;
-  background-color: #fff;
+  background-color: #8ebbff;
   padding: 5px 32px;
-  width: 15rem;
+  width: 35rem;
   margin: 2rem auto;
 }
 
@@ -317,10 +318,6 @@ p {
 
 .profile {
   margin: auto;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* flex-direction: column; */
 }
 
 .profile-card {
@@ -404,5 +401,18 @@ p {
 @media (max-width: 868px) {
   .profile-card {
     margin: 1.5rem auto;
+  }
+
+  .auth-image {
+    background: url("/bgImage.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100%;
+  }
+
+  .home-link {
+    width: 25rem;
   }
 }

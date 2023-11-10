@@ -31,8 +31,10 @@ export const Pagination = ({
       {pages.map((page) => (
         <li
           key={page}
-          className={`cursor-pointer ${
-            currentPage === page ? "bg-gray-800 text-white" : null
+          className={`cursor-pointer mb-5 ${
+            currentPage === page
+              ? "bg-[#8ebbff] text-black"
+              : "bg-[#2f3651] text-[#8ebbff]"
           }`}
         >
           <a

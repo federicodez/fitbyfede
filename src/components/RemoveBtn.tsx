@@ -18,7 +18,7 @@ const RemoveBtn = ({ id }: RemoveProps) => {
   return (
     <button className="remove-btn flex flex-row" onClick={removeWorkout}>
       <HiOutlineTrash className="text-red-500" />
-      <span className="text-lg px-1">Delete</span>
+      <span className="text-lg px-1 text-[#2f3651]">Delete</span>
     </button>
   );
 };

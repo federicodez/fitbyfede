@@ -32,12 +32,13 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
     <div
       className={`
       fixed 
+      text-black
       top-1/2 
       left-1/2 
       -translate-y-1/2 
       -translate-x-1/2 
       rounded-lg 
-      bg-gray-100 
+      bg-[#8ebbff] 
       w-[450px] 
       md:w-[850px] 
       md:top-1/2
@@ -49,14 +50,14 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
     >
       <div className="flex flex-row justify-between m-2">
         <button
-          className="bg-gray-400 px-2 py-1 rounded-md"
+          className="bg-[#2f3651] px-2 py-1 rounded-md"
           onClick={() => setShowWorkoutDetails(false)}
         >
           <HiX />
         </button>
         {session?.name}
         <Link href={`/edit-workout/${session.id}`} className="flex flex-row">
-          <span className="text-lg text-blue-500">Edit</span>
+          <span className="text-2xl text-[#2f3651]">Edit</span>
         </Link>
       </div>
       <div className="flex flex-col">

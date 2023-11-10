@@ -5,9 +5,8 @@ import Sessions from "./Sessions";
 import Detailed from "./Detailed";
 import MenuOptions from "./MenuOptions";
 import Link from "next/link";
-import { HiPencilAlt, HiX } from "react-icons/hi";
 import moment from "moment";
-import { Workout, WorkoutSession } from "@/types";
+import { WorkoutSession } from "@/types";
 import { SlOptions } from "react-icons/sl";
 
 type WorkoutListProps = {
@@ -38,7 +37,7 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                 setShowWorkoutDetails={setShowWorkoutDetails}
               />
             </div>
-            <div className="wrapper my-2 p-2 rounded-lg shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+            <div className="wrapper my-2 p-2 rounded-lg border-[#8ebbff] border-4 p-color">
               <div className="flex justify-between">
                 {moment(session.createdAt).format("dddd, MMM Do")}
                 <div
@@ -52,7 +51,7 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                   />
                 </div>
                 <div onClick={() => setShowOptions(session.id)}>
-                  <SlOptions />
+                  <SlOptions className="text-[#8ebbff] text-xl mr-2" />
                 </div>
               </div>
               <div onClick={() => setShowWorkoutDetails(session.id)}>

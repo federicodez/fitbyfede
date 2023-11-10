@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, MouseEvent, Suspense, ChangeEvent } from "react";
+import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
-import { CustomButton, SetOptions, ReplaceBtn } from "@/components";
+import { CustomButton, ReplaceBtn } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import AddExercise from "./AddExercise";
 import MenuOptions from "./MenuOptions";
@@ -138,13 +138,19 @@ const FinishWorkoutForm = ({
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
-      <div className="wrapper container">
+      <div className="m-5 p-2 p-color rounded-md">
         <form action={handleSubmit}>
-          <div className="flex flex-row justify-between mt-3">
-            <button onClick={() => router.push("/workouts")}>
-              <HiX className="bg-gray-300 rounded-md" />
+          <div className="flex flex-row justify-between">
+            <button
+              className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
+              onClick={() => router.push("/workouts")}
+            >
+              <HiX />
             </button>
-            <button type="submit" className="bg-blue-300 rounded-md px-2">
+            <button
+              type="submit"
+              className="bg-blue-300 text-blue-950 rounded-md px-2"
+            >
               Finish
             </button>
           </div>

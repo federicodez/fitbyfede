@@ -59,7 +59,7 @@ const ForgotCredentials = ({
           </p>
         </div>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="backdrop-blur-lg mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
           className="
           px-4
@@ -69,10 +69,7 @@ const ForgotCredentials = ({
           sm:px-10
         "
         >
-          <form
-            className="space-y-6 backdrop-blur-lg"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <Input
               disabled={isLoading}
               register={register}
@@ -87,7 +84,7 @@ const ForgotCredentials = ({
                 <Button disabled={isLoading} fullWidth type="submit">
                   {!isLoading ? "Send login link" : "Sending..."}
                 </Button>
-                <span className="backdrop-blur-lg text-center text-sm mt-6 text-white">
+                <span className="text-center text-sm mt-6 text-white">
                   Can&apos;t reset your password?
                 </span>
               </div>
@@ -97,9 +94,7 @@ const ForgotCredentials = ({
           <div className="mt-6">
             <div className="relative">
               <div className="relative flex justify-center text-sm">
-                <span className="line-design backdrop-blur-sm px-2 text-white">
-                  OR
-                </span>
+                <span className="line-design px-2 text-white">OR</span>
               </div>
             </div>
 
@@ -111,7 +106,7 @@ const ForgotCredentials = ({
                 setVariant("REGISTER");
                 setForgot(false);
               }}
-              className="backdrop-blur-lg px-2 text-white cursor-pointer"
+              className=" px-2 text-white cursor-pointer"
             >
               Create new account
             </span>

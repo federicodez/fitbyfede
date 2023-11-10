@@ -3,14 +3,11 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import { BsGoogle } from "react-icons/bs";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-
+import { FcGoogle } from "react-icons/fc";
 import Input from "@/components/inputs/Input";
-import AuthSocialButton from "./AuthSocialButton";
 import ForgotCredentials from "./RecoverCredentials";
-import Button from "@/components/Button";
 import { toast } from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
@@ -127,7 +124,7 @@ const AuthForm = () => {
             : "Create your account"}
         </h2>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="backdrop-blur-lg mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
           className="
           px-4
@@ -137,10 +134,7 @@ const AuthForm = () => {
           sm:px-10
         "
         >
-          <form
-            className="space-y-6 backdrop-blur-lg p-2"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="space-y-6  p-2" onSubmit={handleSubmit(onSubmit)}>
             {variant === "REGISTER" && (
               <Input
                 disabled={isLoading}
@@ -170,9 +164,13 @@ const AuthForm = () => {
               type="password"
             />
             <div>
-              <Button disabled={isLoading} fullWidth type="submit">
+              <button
+                disabled={isLoading}
+                type="submit"
+                className="flex flex-row gap-5 justify-center items-center rounded-full w-full text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"
+              >
                 {variant === "LOGIN" ? "Sign in" : "Register"}
-              </Button>
+              </button>
             </div>
           </form>
 
@@ -186,16 +184,19 @@ const AuthForm = () => {
             </div>
 
             <div className="my-6 flex">
-              <AuthSocialButton
-                icon={BsGoogle}
+              <button
+                className="flex flex-row gap-5 justify-center items-center bg-white rounded-full w-full text-black"
                 onClick={() => socialAction("google")}
-              />
+              >
+                <FcGoogle />
+                SIGN IN WITH GOOGLE
+              </button>
             </div>
           </div>
           <div className="relative flex justify-center text-sm">
             <span
               onClick={() => setForgot(true)}
-              className="backdrop-blur-sm px-2 text-white cursor-pointer"
+              className="px-2 text-white cursor-pointer"
             >
               Forgot password?
             </span>
@@ -211,15 +212,12 @@ const AuthForm = () => {
             text-white
           "
           >
-            <div className="backdrop-blur-lg">
+            <div className="">
               {variant === "LOGIN"
                 ? "New to FitbyFede?"
                 : "Already have an account?"}
             </div>
-            <div
-              onClick={toggleVariant}
-              className="backdrop-blur-lg underline cursor-pointer"
-            >
+            <div onClick={toggleVariant} className="underline cursor-pointer">
               {variant === "LOGIN" ? "Create an account" : "Login"}
             </div>
           </div>

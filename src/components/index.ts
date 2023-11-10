@@ -1,5 +1,7 @@
 import Avatar from "./Avatar";
+import BodyPartSelection from "./BodyPartSelection";
 import Button from "./Button";
+import CategorySelection from "./CategorySelection";
 import CustomButton from "./CustomButton";
 import EmptyState from "./EmptyState";
 import RemoveBtn from "./RemoveBtn";
@@ -10,7 +12,9 @@ import WorkoutForm from "./WorkoutForm";
 
 export {
   Avatar,
+  BodyPartSelection,
   Button,
+  CategorySelection,
   CustomButton,
   EmptyState,
   RemoveBtn,
