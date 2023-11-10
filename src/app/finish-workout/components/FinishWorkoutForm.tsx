@@ -17,7 +17,6 @@ import {
 } from "@/actions";
 import { SlOptions } from "react-icons/sl";
 import { HiX } from "react-icons/hi";
-import { AiFillEdit } from "react-icons/ai";
 import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
 
@@ -35,7 +34,6 @@ const FinishWorkoutForm = ({
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [sessionNotes, setSessionNotes] = useState("");
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState<string | null>(null);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);

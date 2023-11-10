@@ -139,8 +139,10 @@ const WorkoutSlider = ({
               </li>
             </SwiperSlide>
             <SwiperSlide>
-              <button className={`w-full bg-red-300 rounded-lg px-2`}>
-                Delete
+              <button
+                className={`w-full bg-red-300 text-red-800 rounded-lg px-2`}
+              >
+                Delete Set
               </button>
             </SwiperSlide>
           </Swiper>

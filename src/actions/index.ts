@@ -173,7 +173,10 @@ export const createWorkoutSession = async () => {
   }
 };
 
-export const createMany = async (exerciseQueue: string[]) => {
+export const createMany = async (
+  exerciseQueue: string[],
+  session: WorkoutSession,
+) => {
   try {
     const exercises: Data = [];
     data.filter((workout) => {
@@ -190,36 +193,67 @@ export const createMany = async (exerciseQueue: string[]) => {
       return null;
     }
 
-    const session = await createWorkoutSession();
+    if (!session?.id) {
+      const session = await createWorkoutSession();
 
-    if (!session) {
-      return null;
+      if (!session) {
+        return null;
+      }
+
+      const workouts = await Promise.all(
+        exercises.map(
+          async ({ name, bodyPart, id, target, equipment, instructions }) => {
+            await prisma.workout.create({
+              data: {
+                name,
+                bodyPart,
+                gifId: id,
+                target,
+                equipment,
+                instructions,
+                sets: ["1"],
+                lbs: [0],
+                reps: [0],
+                notes: "",
+                userId: currentUser.id,
+                workoutSessionId: session.id,
+              },
+            });
+          },
+        ),
+      );
+
+      if (!workouts) {
+        return null;
+      }
+
+      const result = getSessionById(session.id);
+      return result;
+    } else {
+      await Promise.all(
+        exercises.map(
+          async ({ name, bodyPart, id, target, equipment, instructions }) => {
+            await prisma.workout.create({
+              data: {
+                name,
+                bodyPart,
+                gifId: id,
+                target,
+                equipment,
+                instructions,
+                sets: ["1"],
+                lbs: [0],
+                reps: [0],
+                notes: "",
+                userId: currentUser.id,
+                workoutSessionId: session.id,
+              },
+            });
+          },
+        ),
+      );
+      return session;
     }
-
-    await Promise.all(
-      exercises.map(
-        async ({ name, bodyPart, id, target, equipment, instructions }) => {
-          await prisma.workout.create({
-            data: {
-              name,
-              bodyPart,
-              gifId: id,
-              target,
-              equipment,
-              instructions,
-              sets: ["1"],
-              lbs: [0],
-              reps: [0],
-              notes: "",
-              userId: currentUser.id,
-              workoutSessionId: session.id,
-            },
-          });
-        },
-      ),
-    );
-
-    return session;
   } catch (err: any) {
     console.log("Error creating many workouts: ", err);
   }

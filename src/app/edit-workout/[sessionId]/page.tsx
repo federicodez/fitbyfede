@@ -17,13 +17,13 @@ const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
 
     if (workouts && session) {
       const previous = (await getPreviousWorkout(workouts)) || [];
-      return previous ? (
+      return (
         <EditWorkoutForm
           previous={previous}
           initialSession={session}
           recentWorkouts={recentWorkouts}
         />
-      ) : null;
+      );
     }
   } catch (err) {
     console.log(err);

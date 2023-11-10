@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useEffect, ChangeEvent } from "react";
+import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { CustomButton, ReplaceBtn } from "@/components";
@@ -16,9 +16,7 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
-import AddExercise from "./AddExercise";
-import WorkoutSlider from "./WorkoutSlider";
-import MenuOptions from "./MenuOptions";
+import { AddExercise, WorkoutSlider, MenuOptions } from "./index";
 import { AiFillEdit } from "react-icons/ai";
 
 type EditWorkoutFormProps = {
@@ -174,14 +172,20 @@ const EditWorkoutForm = ({
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
-      <div className="wrapper container pb-20">
+      <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
         <form className="workout-form" action={handleSubmit}>
           <div className="flex flex-row justify-between mt-3">
-            <button onClick={() => router.push("/workouts")}>
-              <HiX className="bg-gray-300 rounded-md" />
+            <button
+              className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
+              onClick={() => router.push("/workouts")}
+            >
+              <HiX />
             </button>
             <h1>Edit Workout</h1>
-            <button type="submit" className="bg-blue-300 rounded-md px-2">
+            <button
+              type="submit"
+              className="bg-blue-300 text-white rounded-md px-2"
+            >
               Save
             </button>
           </div>
@@ -260,7 +264,9 @@ const EditWorkoutForm = ({
             ({ id, name, sets, lbs, reps, bodyPart }, index) => (
               <div key={id} className="">
                 <div className="flex flex-row items-center my-4">
-                  <h1 className="flex-1 text-2xl font-bold">{name}</h1>
+                  <h1 className="capitalize flex-1 text-2xl font-bold">
+                    {name}
+                  </h1>
 
                   <div className="flex-initial w-fit">
                     <div className="relative">
@@ -366,9 +372,9 @@ const EditWorkoutForm = ({
     </Suspense>
   ) : (
     <AddExercise
-      sessionId={session.id}
+      session={session}
       setAddExercise={setAddExercise}
-      setWorkouts={setWorkouts}
+      setSession={setSession}
       recentWorkouts={recentWorkouts}
     />
   );

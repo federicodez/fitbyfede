@@ -78,7 +78,7 @@ const MenuOptions = ({
             setOpenMenu(false);
           }}
         >
-          <TbReplace className="text-blue-499" />
+          <TbReplace className="text-black" />
           <span>Replace</span>
           <span>Exercise</span>
         </div>

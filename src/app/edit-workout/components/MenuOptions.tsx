@@ -39,13 +39,13 @@ const MenuOptions = ({
       <div
         className={
           openMenu === id
-            ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
+            ? "absolute w-56 z-10 bg-[#8ebbff] text-black rounded-lg right-0 p-2 cursor-pointer"
             : "hidden"
         }
       >
         <div
           onClick={() => setOpenMenu(false)}
-          className="flex justify-center text-black bg-gray-300 px-2 py-1 mb-5 h-fit rounded-md right-0"
+          className="flex justify-center text-white bg-[#2f3651] px-2 py-1 mb-5 h-fit rounded-md right-0"
         >
           <HiX />
         </div>
@@ -56,13 +56,13 @@ const MenuOptions = ({
           }}
           className="flex flex-row items-center gap-2"
         >
-          <AiFillEdit className="text-blue-500" />
+          <AiFillEdit className="text-black" />
           <span>Add</span>
           <span>a</span>
           <span>Note</span>
         </div>
         <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
-          <MdAdd className="text-blue-500" />
+          <MdAdd className="text-black" />
           <span>Add</span>
           <span>Warm-up</span>
           <span>Sets</span>
@@ -74,12 +74,12 @@ const MenuOptions = ({
             setOpenMenu(false);
           }}
         >
-          <TbReplace className="text-blue-499" />
+          <TbReplace className="text-black" />
           <span>Replace</span>
           <span>Exercise</span>
         </div>
         <div className="flex flex-row items-center gap-2 my-5">
-          <BiTimer className="text-blue-500" />
+          <BiTimer className="text-black" />
           <span>Auto</span>
           <span>Rest</span>
           <span>Timer</span>
@@ -92,8 +92,8 @@ const MenuOptions = ({
           }}
         >
           <HiX className="text-red-500" />
-          <span>Remove</span>
-          <span>Exercise</span>
+          <span className="text-red-800">Remove</span>
+          <span className="text-red-800">Exercise</span>
         </div>
       </div>
     </>

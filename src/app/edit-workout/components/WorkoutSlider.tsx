@@ -92,11 +92,11 @@ const WorkoutSlider = ({
             onSlideChange={(swiper) => handleDeleteSet(id, setId, swiper)}
           >
             <SwiperSlide>
-              <li className="flex flex-row justify-evenly border-t-2 border-black py-2">
+              <li className="flex flex-row justify-evenly py-2">
                 <div className="relative h-full">
                   <CustomButton
                     title={set}
-                    containerStyles="bg-gray-300 rounded-lg w-20 pl-[0.5]"
+                    containerStyles="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"
                     handleClick={() => {
                       setSetOptions(id);
                       setSetIndex(setId);
@@ -139,8 +139,10 @@ const WorkoutSlider = ({
               </li>
             </SwiperSlide>
             <SwiperSlide>
-              <button className={`w-full bg-red-300 rounded-lg px-2`}>
-                Delete
+              <button
+                className={`w-full bg-red-300 text-red-800 rounded-lg px-2`}
+              >
+                Delete Set
               </button>
             </SwiperSlide>
           </Swiper>
