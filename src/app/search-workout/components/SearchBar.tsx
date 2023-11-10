@@ -11,7 +11,6 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { BodyPartSelection, CategorySelection } from "@/components";
 import { Pagination, paginate } from "@/components/Pagination";
 import Image from "next/image";
-import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
 
 type SearchBarProps = {
@@ -140,7 +139,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         </div>
         <ul className="">
           {recent.length ? (
-            <h3 className="most-recent-title text-black">RECENT</h3>
+            <h3 className="filtered-title font-bold text-center backdrop-blur-lg">
+              RECENT
+            </h3>
           ) : null}
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">

@@ -138,12 +138,12 @@ const FinishWorkoutForm = ({
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
-      <div className="m-5 p-2 p-color rounded-md">
+      <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
         <form action={handleSubmit}>
           <div className="flex flex-row justify-between">
             <button
               className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
-              onClick={() => router.push("/workouts")}
+              onClick={removeWorkout}
             >
               <HiX />
             </button>
@@ -165,33 +165,10 @@ const FinishWorkoutForm = ({
                   />
                 </div>
               ) : (
-                <strong>{session?.name}</strong>
+                <strong onClick={() => setWorkoutName(" ")}>
+                  {session?.name}
+                </strong>
               )}
-              <div
-                onMouseLeave={() => setSessionOptions(false)}
-                className={
-                  sessionOptions
-                    ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg p-2 cursor-pointer"
-                    : "hidden"
-                }
-              >
-                <div
-                  onClick={() => {
-                    setWorkoutName(" ");
-                    setSessionOptions(false);
-                  }}
-                  className="flex flex-row items-center gap-2"
-                >
-                  <AiFillEdit />
-                  <span>Edit</span>
-                  <span>Workout</span>
-                  <span>Name</span>
-                </div>
-              </div>
-              <SlOptions
-                onClick={() => setSessionOptions(true)}
-                className="bg-gray-300 rounded-md py-1"
-              />
             </div>
             <div>
               <div className="flex flex-col gap-2">
@@ -208,7 +185,9 @@ const FinishWorkoutForm = ({
             ({ id, name, sets, lbs, reps, bodyPart }, index) => (
               <div key={id}>
                 <div className="flex flex-row items-center  my-4">
-                  <h1 className="flex-1 text-2xl font-bold">{name}</h1>
+                  <h1 className="capitalize flex-1 text-2xl font-bold">
+                    {name}
+                  </h1>
                   <div className="flex-initial w-fit">
                     <div className="relative">
                       <MenuOptions
@@ -223,7 +202,7 @@ const FinishWorkoutForm = ({
                       />
                     </div>
                     <div onClick={() => setOpenMenu(id)}>
-                      <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
+                      <SlOptions className="flex w-fit bg-gray-300 text-black rounded-md px-2 right-0" />
                     </div>
                   </div>
                 </div>
@@ -279,11 +258,12 @@ const FinishWorkoutForm = ({
                   previous={previous}
                 />
                 <div className="workout-form__btn">
-                  <CustomButton
-                    title="Add Set"
-                    containerStyles="workout-form__add-btn"
-                    handleClick={() => addSet(id)}
-                  />
+                  <button
+                    className="rounded-full bg-gray-300 text-black"
+                    onClick={() => addSet(id)}
+                  >
+                    Add Set
+                  </button>
                 </div>
               </div>
             ),
@@ -291,7 +271,7 @@ const FinishWorkoutForm = ({
           <div className="workout-form__btn">
             <button
               type="submit"
-              className="rounded-lg bg-blue-300 text-blue-900"
+              className="rounded-full bg-blue-300 text-blue-900"
               formAction={(data) => {
                 setAddExercise(true);
                 addAnotherExercise(data);
