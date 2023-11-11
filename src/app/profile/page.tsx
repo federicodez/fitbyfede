@@ -9,7 +9,7 @@ const Profile = async () => {
     return (
       <Navbar>
         <section className="profile wrapper container pb-10">
-          <div className="profile-card">
+          <div className="profile-card p-color">
             <h1 className="profile-title">Profile</h1>
             <Avatar />
           </div>

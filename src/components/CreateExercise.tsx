@@ -46,7 +46,7 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
       rounded-lg 
       bg-[#8ebbff] 
       w-[450px] 
-      h-50
+      h-40
       md:w-[850px] 
       md:top-1/2
       md:left-2/3
@@ -81,76 +81,82 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
       <div className="grid grid-cols-2 h-full justify-center items-center gap-3 my-2">
         <div className="relative w-full h-40 overflow-auto">
           <ul className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0">
-            {showParts
-              ? bodyParts.map((part, idx) => (
-                  <li
-                    key={idx}
-                    className={`flex flex-row cursor-pointer p-2 ${
-                      partSelected === part ? "bg-gray-500" : ""
-                    }`}
+            {showParts ? (
+              bodyParts.map((part, idx) => (
+                <li
+                  key={idx}
+                  className={`flex flex-row cursor-pointer p-2 ${
+                    partSelected === part ? "bg-gray-500" : ""
+                  }`}
+                >
+                  <div
+                    onClick={() => {
+                      setPartSelected(part);
+                      setShowParts(false);
+                    }}
+                    className={`flex flex-col w-full`}
+                    id={part}
                   >
-                    <div
-                      onClick={() => {
-                        setPartSelected(part);
-                        setShowParts(false);
-                      }}
-                      className={`flex flex-col w-full`}
-                      id={part}
-                    >
-                      {part}
-                    </div>
-                    {partSelected === part ? <AiOutlineCheck /> : null}
-                  </li>
-                ))
-              : null}
+                    {part}
+                  </div>
+                  {partSelected === part ? <AiOutlineCheck /> : null}
+                </li>
+              ))
+            ) : (
+              <button
+                onClick={() => {
+                  setShowParts(true);
+                }}
+                className={`w-full rounded-lg px-5 text-black ${
+                  partSelected !== "Any Body Part"
+                    ? "bg-blue-300"
+                    : "bg-gray-50"
+                }`}
+              >
+                {partSelected}
+              </button>
+            )}
           </ul>
-          <button
-            onClick={() => {
-              setShowParts(true);
-            }}
-            className={`w-full rounded-lg px-5 text-black ${
-              partSelected !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
-            }`}
-          >
-            {partSelected}
-          </button>
         </div>
 
         <div className="relative w-full h-full overflow-auto">
           <ul className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0">
-            {showCategories
-              ? categories.map((category, idx) => (
-                  <li
-                    key={idx}
-                    className={`flex flex-row cursor-pointer p-2 ${
-                      categorySelected === category ? "bg-gray-500" : ""
-                    }`}
+            {showCategories ? (
+              categories.map((category, idx) => (
+                <li
+                  key={idx}
+                  className={`flex flex-row cursor-pointer p-2 ${
+                    categorySelected === category ? "bg-gray-500" : ""
+                  }`}
+                >
+                  <div
+                    onClick={() => {
+                      setCategorySelected(category);
+                      setShowCategories(false);
+                    }}
+                    className={`flex flex-col w-full`}
+                    id={category}
                   >
-                    <div
-                      onClick={() => {
-                        setCategorySelected(category);
-                        setShowCategories(false);
-                      }}
-                      className={`flex flex-col w-full`}
-                      id={category}
-                    >
-                      {category}
-                    </div>
-                    {categorySelected === category ? <AiOutlineCheck /> : null}
-                  </li>
-                ))
-              : null}
+                    {category}
+                  </div>
+                  {categorySelected === category ? <AiOutlineCheck /> : null}
+                </li>
+              ))
+            ) : (
+              <button
+                onClick={() => {
+                  setShowCategories(true);
+                }}
+                className={`w-full rounded-lg px-5 text-black ${
+                  categorySelected !== "Any Category"
+                    ? "bg-blue-300"
+                    : "bg-gray-50"
+                }`}
+              >
+                {categorySelected}
+              </button>
+            )}
           </ul>
-          <button
-            onClick={() => {
-              setShowCategories(true);
-            }}
-            className={`w-full rounded-lg px-5 text-black ${
-              categorySelected !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
-            }`}
-          >
-            {categorySelected}
-          </button>
         </div>
       </div>
     </div>
