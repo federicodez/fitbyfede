@@ -7,8 +7,10 @@ import { CustomButton } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import { HiOutlineTrash } from "react-icons/hi2";
 import { bodyParts, categories } from "@/constants";
-import { WorkoutSession } from "@prisma/client";
+import { WorkoutSession } from "@/types";
 import { createWorkoutSession } from "@/actions";
+import { BodyPartSelection, CategorySelection, WorkoutSlider } from "./";
+import data from "@/constants/exerciseData.json";
 
 const CreateWorkoutForm = () => {
   const [exercise, setExercise] = useState("");
@@ -19,27 +21,12 @@ const CreateWorkoutForm = () => {
   const [setIndex, setSetIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [showParts, setShowParts] = useState(false);
-  const [bodyPartBtn, setBodyPartBtn] = useState("");
+  const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoriesBtn, setCategoriesBtn] = useState("");
+  const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
+  const [recents, setRecents] = useState(data);
 
   const router = useRouter();
-
-  const handleParts = async (query: string) => {
-    try {
-      setBodyPartBtn(query);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleCategories = async (query: string) => {
-    try {
-      setCategoriesBtn(query);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleSubmit = async (data: FormData) => {
     const dataLbs = data.getAll("lbs")?.valueOf();
@@ -132,8 +119,7 @@ const CreateWorkoutForm = () => {
 
   return (
     <>
-      {isLoading && <LoadingModel />}
-      <div className="wrapper container">
+      <div className="wrapper container p-color rounded-md">
         <form action={handleSubmit} className="flex flex-col m-4">
           <div className="grid grid-cols-3 m-5">
             <label htmlFor="exercise" className="cols-span-1 text-center">
@@ -148,61 +134,22 @@ const CreateWorkoutForm = () => {
             />
           </div>
 
-          <div className="flex justify-center items-center flex-row gap-5 m-5">
-            <button
-              onClick={() => {
-                setShowParts(!showParts);
-              }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
-            >
-              {bodyPartBtn ? bodyPartBtn : "Any Body Part"}
-            </button>
-            <ul className="flex flex-col">
-              {showParts
-                ? bodyParts.map((part, idx) => (
-                    <li key={idx}>
-                      <option
-                        onClick={() => {
-                          handleParts(part);
-                          setShowParts(false);
-                        }}
-                        className="flex flex-col"
-                        value={part}
-                      >
-                        {part}
-                      </option>
-                    </li>
-                  ))
-                : null}
-            </ul>
-            <button
-              onClick={() => {
-                setShowCategories(!categories);
-              }}
-              className="w-fit h-fit rounded-lg bg-gray-50 px-5"
-            >
-              {categoriesBtn ? categoriesBtn : "Any Category"}
-            </button>
-            <ul>
-              {showCategories
-                ? categories.map((category, idx) => (
-                    <li key={idx}>
-                      <option
-                        onClick={() => {
-                          handleCategories(category);
-                          setShowCategories(false);
-                        }}
-                        className="flex flex-col"
-                        value={category}
-                      >
-                        {category}
-                      </option>
-                    </li>
-                  ))
-                : null}
-            </ul>
+          <div className="grid grid-cols-2 justify-center items-center gap-3 my-2">
+            <BodyPartSelection
+              bodyPartBtn={bodyPartBtn}
+              categoriesBtn={categoriesBtn}
+              showParts={showParts}
+              setBodyPartBtn={setBodyPartBtn}
+              setShowParts={setShowParts}
+            />
+            <CategorySelection
+              bodyPartBtn={bodyPartBtn}
+              categoriesBtn={categoriesBtn}
+              showCategories={showCategories}
+              setShowCategories={setShowCategories}
+              setCategoriesBtn={setCategoriesBtn}
+            />
           </div>
-
           <div
             onMouseLeave={() => setSetOptions(!setOptions)}
             className={
@@ -239,47 +186,21 @@ const CreateWorkoutForm = () => {
               Failure
             </option>
           </div>
-          {sets?.map((set, setId) => (
-            <div key={setId} className="grid grid-cols-3 gap-4" id="sets-list">
-              <div className="col-span-1">
-                <div className="flex justify-around">
-                  <button type="button" onClick={() => handleDeleteSet(setId)}>
-                    <HiOutlineTrash />
-                  </button>
-                  <div>
-                    <span>Set</span>
-                    <CustomButton
-                      title={set}
-                      containerStyles="workout-form__input"
-                      handleClick={() => {
-                        setSetOptions(!setOptions);
-                        setSetIndex(setId);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-1 justify-self-center">
-                <label htmlFor="lbs">Weight: </label>
-                <input
-                  type="number"
-                  name="lbs"
-                  id="lbs"
-                  placeholder="0"
-                  className="workout-form__input"
-                  required
-                />
-              </div>
-              <div className="col-span-1 justify-self-center">
-                <label htmlFor="reps">Reps: </label>
-                <input
-                  type="number"
-                  name="reps"
-                  id="reps"
-                  placeholder="0"
-                  className="workout-form__input"
-                  required
-                />
+          {sets?.map((set, setIdx) => (
+            <div key={setIdx}>
+              <div className="flex justify-evenly">
+                <span className="flex justify-center items-center w-full">
+                  Set
+                </span>
+                <span className="flex justify-center items-center w-full">
+                  Previous
+                </span>
+                <span className="flex justify-center items-center w-full">
+                  lbs
+                </span>
+                <span className="flex justify-center items-center w-full">
+                  Reps
+                </span>
               </div>
             </div>
           ))}

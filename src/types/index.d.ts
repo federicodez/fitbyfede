@@ -54,3 +54,12 @@ export type WorkoutSession = {
   createdAt: Date;
   Workout: Workout[];
 };
+
+export type Exercise = {
+  id: string;
+  name: string;
+  bodyPart: string;
+  category: string;
+  userId: string;
+  createdAt: Date;
+};

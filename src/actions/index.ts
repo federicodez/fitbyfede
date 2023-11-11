@@ -175,7 +175,7 @@ export const createWorkoutSession = async () => {
 
 export const createMany = async (
   exerciseQueue: string[],
-  session: WorkoutSession,
+  session?: WorkoutSession,
 ) => {
   try {
     const exercises: Data = [];
@@ -487,5 +487,32 @@ export const getPreviousWorkout = async (workouts: Workout[]) => {
     return result;
   } catch (error) {
     console.log("Error loading previous workouts ", error);
+  }
+};
+
+export const addExercise = async (
+  name: string,
+  bodyPart: string,
+  category: string,
+) => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+
+    const exercise = await prisma.exercise.create({
+      data: {
+        name,
+        bodyPart,
+        category,
+        userId: currentUser.id,
+      },
+    });
+    console.log("actions: ", exercise);
+    return exercise;
+  } catch (error) {
+    console.log(error);
   }
 };

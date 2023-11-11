@@ -42,87 +42,12 @@ const AddExercise = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [workoutData, setWorkoutData] = useState(data);
   const [workouts, setWorkouts] = useState(data);
 
-  const paginatedWorkouts = paginate(workoutData, currentPage, workoutsPerPage);
+  const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
-  };
-
-  const handleParts = async (query: string) => {
-    let filtered;
-    try {
-      if (query === "any" && categoriesBtn === "Any Category") {
-        setPartsActivated(false);
-        setBodyPartBtn("Any Body Part");
-        setWorkoutData(data);
-      } else if (query === "any" && categoriesBtn !== "Any Category") {
-        setBodyPartBtn("Any Body Part");
-        const categories = data.filter(
-          ({ equipment }) => equipment === categoriesBtn,
-        );
-        setWorkoutData(categories);
-        setPartsActivated(false);
-      } else if (categoriesBtn !== "Any Category") {
-        const filtered: Data = [];
-        data.filter((item) => {
-          if (item.bodyPart === query && item.equipment === categoriesBtn) {
-            filtered.push(item);
-          }
-        });
-        setWorkoutData(filtered);
-        setBodyPartBtn(query);
-        const recentParts = recentWorkouts.filter(
-          ({ bodyPart }) => bodyPart === query,
-        );
-        setRecent(recentParts);
-      } else {
-        filtered = data.filter(({ bodyPart }) => bodyPart === query);
-        setWorkoutData(filtered);
-        setBodyPartBtn(query);
-        const recentParts = recentWorkouts.filter(
-          ({ bodyPart }) => bodyPart === query,
-        );
-        setRecent(recentParts);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleCategories = async (query: string) => {
-    let categories;
-    try {
-      if (query === "any" && bodyPartBtn === "Any Body Part") {
-        setCategoriesBtn("Any Category");
-        setWorkoutData(data);
-        setCategoryActivated(false);
-      } else if (query === "any" && bodyPartBtn !== "Any Body Part") {
-        setCategoriesBtn("Any Category");
-        const filtered = data.filter(
-          ({ bodyPart }) => bodyPart === bodyPartBtn,
-        );
-        setWorkoutData(filtered);
-        setCategoryActivated(false);
-      } else if (bodyPartBtn !== "Any Body Part") {
-        const filtered: Data = [];
-        data.filter((item) => {
-          if (item.equipment === query && item.bodyPart === bodyPartBtn) {
-            filtered.push(item);
-          }
-        });
-        setWorkoutData(filtered);
-        setCategoriesBtn(query);
-      } else {
-        categories = data.filter(({ equipment }) => equipment === query);
-        setWorkoutData(categories);
-        setCategoriesBtn(query);
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleClick = async () => {
@@ -130,9 +55,9 @@ const AddExercise = ({
       const newSession = await createMany(exerciseQueue, session);
       if (newSession) {
         setSession(newSession);
+        router.refresh();
+        setAddExercise(false);
       }
-      router.refresh();
-      setAddExercise(false);
     } catch (error) {
       console.log(error);
     }
@@ -210,6 +135,7 @@ const AddExercise = ({
             categoriesBtn={categoriesBtn}
             showParts={showParts}
             setRecent={setRecent}
+            setWorkouts={setWorkouts}
             setBodyPartBtn={setBodyPartBtn}
             setShowParts={setShowParts}
           />
@@ -218,6 +144,7 @@ const AddExercise = ({
             bodyPartBtn={bodyPartBtn}
             categoriesBtn={categoriesBtn}
             showCategories={showCategories}
+            setWorkouts={setWorkouts}
             setShowCategories={setShowCategories}
             setCategoriesBtn={setCategoriesBtn}
           />
@@ -311,7 +238,7 @@ const AddExercise = ({
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
-              workouts={workoutData.length}
+              workouts={workouts.length}
               onPageChange={onPageChange}
             />
           </div>

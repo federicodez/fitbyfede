@@ -2,67 +2,33 @@
 
 import React, { useState } from "react";
 import { bodyParts, categories } from "@/constants";
-import { Workout, Data } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
-import { WorkoutSession } from "@prisma/client";
-import data from "@/constants/exerciseData.json";
 
 type BodyPartSelectionProps = {
-  data: Data;
   bodyPartBtn: string;
-  recentWorkouts: Workout[];
   categoriesBtn: string;
   showParts: boolean;
-  setWorkouts: React.Dispatch<React.SetStateAction<Data>>;
-  setRecent: React.Dispatch<React.SetStateAction<Workout[]>>;
   setBodyPartBtn: React.Dispatch<React.SetStateAction<string>>;
   setShowParts: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BodyPartSelection = ({
-  data,
   bodyPartBtn,
-  recentWorkouts,
   categoriesBtn,
   showParts,
-  setRecent,
-  setWorkouts,
   setBodyPartBtn,
   setShowParts,
 }: BodyPartSelectionProps) => {
   const handleParts = async (query: string) => {
-    let filtered;
     try {
       if (query === "any" && categoriesBtn === "Any Category") {
         setBodyPartBtn("Any Body Part");
-        setWorkouts(data);
       } else if (query === "any" && categoriesBtn !== "Any Category") {
         setBodyPartBtn("Any Body Part");
-        const categories = data.filter(
-          ({ equipment }) => equipment === categoriesBtn,
-        );
-        setWorkouts(categories);
       } else if (categoriesBtn !== "Any Category") {
-        const filtered: Data = [];
-        data.filter((item) => {
-          if (item.bodyPart === query && item.equipment === categoriesBtn) {
-            filtered.push(item);
-          }
-        });
-        setWorkouts(filtered);
         setBodyPartBtn(query);
-        const recentParts = recentWorkouts.filter(
-          ({ bodyPart }) => bodyPart === query,
-        );
-        setRecent(recentParts);
       } else {
-        filtered = data.filter(({ bodyPart }) => bodyPart === query);
-        setWorkouts(filtered);
         setBodyPartBtn(query);
-        const recentParts = recentWorkouts.filter(
-          ({ bodyPart }) => bodyPart === query,
-        );
-        setRecent(recentParts);
       }
     } catch (error) {
       console.log(error);
