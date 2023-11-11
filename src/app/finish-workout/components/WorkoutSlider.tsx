@@ -119,7 +119,7 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.lbs[setId]
                         : ""
                     }`}
-                    className="bg-gray-300 rounded-lg w-20"
+                    className="bg-gray-300 text-black rounded-lg w-20"
                   />
                 </div>
                 <div className="">
@@ -133,7 +133,8 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.reps[setId]
                         : ""
                     }`}
-                    className="bg-gray-300 rounded-lg w-20"
+                    className="bg-gray-300 text-black rounded-lg w-20"
+                    required
                   />
                 </div>
               </li>

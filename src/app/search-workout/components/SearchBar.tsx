@@ -82,7 +82,6 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
         <div className="flex flex-row justify-between my-8">
           <div
             onClick={() => {
-              console.log("fire");
               setCreate(true);
             }}
             className="text-white p-color px-6 py-0 rounded-md cursor-pointer"

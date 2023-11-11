@@ -3,6 +3,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
+import { ReplaceBtn } from "@/components";
 
 type Notes = {
   note: string;
@@ -12,10 +13,11 @@ type MenuOptionsProps = {
   id: string;
   noteIds: string[];
   setNoteIds: React.Dispatch<React.SetStateAction<string[]>>;
-  replace: boolean;
+  replace: string | boolean;
   openMenu: string | boolean;
   setOpenMenu: React.Dispatch<React.SetStateAction<string | boolean>>;
-  setReplace: React.Dispatch<React.SetStateAction<boolean>>;
+  setReplace: React.Dispatch<React.SetStateAction<string | boolean>>;
+  setAddExercise: React.Dispatch<React.SetStateAction<boolean>>;
   removeExercise: (id: string) => void;
 };
 
@@ -27,6 +29,7 @@ const MenuOptions = ({
   openMenu,
   setOpenMenu,
   setReplace,
+  setAddExercise,
   removeExercise,
 }: MenuOptionsProps) => {
   const handleNotes = (id: string) => {
@@ -40,6 +43,16 @@ const MenuOptions = ({
 
   return (
     <>
+      {replace ? (
+        <ReplaceBtn
+          id={id}
+          replace={replace}
+          setReplace={setReplace}
+          setOpenMenu={setOpenMenu}
+          removeExercise={removeExercise}
+          setAddExercise={setAddExercise}
+        />
+      ) : null}
       <div
         className={
           openMenu === id

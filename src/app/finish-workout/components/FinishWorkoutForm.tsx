@@ -37,7 +37,7 @@ const FinishWorkoutForm = ({
   const [workoutName, setWorkoutName] = useState<string | null>(null);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
-  const [replace, setReplace] = useState(false);
+  const [replace, setReplace] = useState<string | boolean>(false);
   const router = useRouter();
   const { time } = useTimerContext();
 
@@ -196,6 +196,7 @@ const FinishWorkoutForm = ({
                         openMenu={openMenu}
                         setOpenMenu={setOpenMenu}
                         setReplace={setReplace}
+                        setAddExercise={setAddExercise}
                         removeExercise={removeExercise}
                       />
                     </div>
@@ -212,14 +213,6 @@ const FinishWorkoutForm = ({
                     onChange={(e) => handleNotes(e)}
                   />
                 </div>
-                <ReplaceBtn
-                  id={id}
-                  replace={replace}
-                  setReplace={setReplace}
-                  setOpenMenu={setOpenMenu}
-                  removeExercise={removeExercise}
-                  setAddExercise={setAddExercise}
-                />
                 <div className="flex justify-evenly">
                   <span className="flex justify-center items-center w-full">
                     Set

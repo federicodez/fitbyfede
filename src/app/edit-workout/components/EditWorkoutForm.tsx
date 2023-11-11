@@ -38,7 +38,7 @@ const EditWorkoutForm = ({
   const [dateInput, setDateInput] = useState(false);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
-  const [replace, setReplace] = useState(false);
+  const [replace, setReplace] = useState<string | boolean>(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const router = useRouter();
 
@@ -278,6 +278,7 @@ const EditWorkoutForm = ({
                         openMenu={openMenu}
                         setOpenMenu={setOpenMenu}
                         setReplace={setReplace}
+                        setAddExercise={setAddExercise}
                         removeExercise={removeExercise}
                       />
                     </div>
@@ -295,14 +296,6 @@ const EditWorkoutForm = ({
                     onChange={(e) => handleNotes(e)}
                   />
                 </div>
-                <ReplaceBtn
-                  id={id}
-                  replace={replace}
-                  setReplace={setReplace}
-                  setOpenMenu={setOpenMenu}
-                  removeExercise={removeExercise}
-                  setAddExercise={setAddExercise}
-                />
                 <div className="flex justify-evenly">
                   <span className="flex justify-center items-center w-full">
                     Set
@@ -340,11 +333,12 @@ const EditWorkoutForm = ({
                   previous={previous}
                 />
                 <div className="workout-form__btn">
-                  <CustomButton
-                    title="Add Set"
-                    handleClick={() => addSet(id)}
-                    containerStyles="workout-form__add-btn"
-                  />
+                  <button
+                    onClick={() => addSet(id)}
+                    className="mx-10 rounded-full bg-gray-300 text-black"
+                  >
+                    Add Set
+                  </button>
                 </div>
               </div>
             ),

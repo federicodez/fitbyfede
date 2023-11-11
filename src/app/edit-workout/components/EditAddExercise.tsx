@@ -11,7 +11,11 @@ import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
-import { EditBodyPartSelection, EditCategorySelection } from "./index";
+import {
+  CreateExercise,
+  EditBodyPartSelection,
+  EditCategorySelection,
+} from "./index";
 
 type AddExerciseProps = {
   session: WorkoutSession;
@@ -27,6 +31,7 @@ const AddExercise = ({
   setSession,
 }: AddExerciseProps) => {
   const router = useRouter();
+  const [create, setCreate] = useState(false);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
 
@@ -87,15 +92,14 @@ const AddExercise = ({
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div className="flex flex-row justify-between my-8">
-          <button
-            type="button"
-            className="text-[#03045e] p-color px-6 py-0 rounded-md"
-            id="create-btn"
+          <div
+            onClick={() => {
+              setCreate(true);
+            }}
+            className="text-white p-color px-6 py-0 rounded-md cursor-pointer"
           >
-            <Link href="/create-workout" className="text-[#8ebbff]">
-              New
-            </Link>
-          </button>
+            New
+          </div>
           <button
             type="button"
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
@@ -149,6 +153,7 @@ const AddExercise = ({
             setCategoriesBtn={setCategoriesBtn}
           />
         </div>
+        {create && <CreateExercise create={create} setCreate={setCreate} />}
         <ul className="">
           {recent.length ? (
             <h3 className="filtered-title font-bold text-center backdrop-blur-lg">

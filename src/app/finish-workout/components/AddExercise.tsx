@@ -126,7 +126,7 @@ const AddExercise = ({
 
   const handleClick = async () => {
     try {
-      await createMany(exerciseQueue, session.id);
+      await createMany(exerciseQueue, session);
       const newSession = await getSessionById(session.id);
       if (newSession) {
         setSession(newSession);

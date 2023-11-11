@@ -11,12 +11,14 @@ import { Pagination, paginate } from "@/components/Pagination";
 import LoadingModel from "@/components/models/LoadingModel";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import { BodyPartSelection, CategorySelection } from "@/components";
+import CreateExercise from "./CreateExercise";
 
 type SearchExercisesProps = {
   recentWorkouts: Workout[];
 };
 
 const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
+  const [create, setCreate] = useState(false);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
 
@@ -52,15 +54,14 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div className="flex flex-row justify-between my-8">
-          <button
-            type="button"
-            className="text-[#03045e] p-color px-6 py-0 rounded-md"
-            id="create-btn"
+          <div
+            onClick={() => {
+              setCreate(true);
+            }}
+            className="text-white p-color px-6 py-0 rounded-md cursor-pointer"
           >
-            <Link href="/create-workout" className="text-[#8ebbff]">
-              New
-            </Link>
-          </button>
+            New
+          </div>
           <button
             type="button"
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
@@ -102,6 +103,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
             setWorkouts={setWorkouts}
           />
         </div>
+        {create && <CreateExercise create={create} setCreate={setCreate} />}
         <ul className="">
           {recent.length ? (
             <h3 className="filtered-title font-bold text-center backdrop-blur-lg">
