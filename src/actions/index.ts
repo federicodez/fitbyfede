@@ -47,7 +47,7 @@ export const updateWorkout = async (
   sets: string[],
   lbs: number[],
   reps: number[],
-  notes: string,
+  notes?: string,
 ) => {
   try {
     const updated = await prisma.workout.update({

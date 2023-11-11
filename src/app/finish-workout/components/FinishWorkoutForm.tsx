@@ -89,21 +89,25 @@ const FinishWorkoutForm = ({
     }
   };
 
-  const addSet = async (id: string) => {
-    const workout = session.Workout.filter((workout) => workout.id === id);
-    const { sets, lbs, reps, notes } = workout[0];
-    try {
-      const lastSet = sets[sets.length - 1];
-      if (!!Number(lastSet)) {
-        const set = Number(lastSet) + 1;
-        sets?.push(String(set));
-      } else {
-        sets?.push("1");
-      }
+  const addSet = async (
+    id: string,
+    sets: string[],
+    lbs: number[],
+    reps: number[],
+  ) => {
+    const lastSet = sets[sets.length - 1];
+    if (!!Number(lastSet)) {
+      const set = Number(lastSet) + 1;
+      sets.push(String(set));
+    } else {
+      sets.push("1");
+    }
 
-      lbs?.push(0);
-      reps?.push(0);
-      await updateWorkout(id, sets, lbs, reps, notes);
+    lbs.push(0);
+    reps.push(0);
+
+    try {
+      await updateWorkout(id, sets, lbs, reps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -251,7 +255,7 @@ const FinishWorkoutForm = ({
                 <div className="workout-form__btn">
                   <button
                     className="rounded-full bg-gray-300 text-black"
-                    onClick={() => addSet(id)}
+                    onClick={() => addSet(id, sets, lbs, reps)}
                   >
                     Add Set
                   </button>
