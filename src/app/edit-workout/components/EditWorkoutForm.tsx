@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, MouseEvent, Suspense, useEffect } from "react";
+import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
-import { CustomButton, SetOptions } from "@/components";
+import { CustomButton, ReplaceBtn } from "@/components";
 import {
   updateWorkout,
-  changeWorkoutSet,
-  deleteSet,
-  updateWorkoutWithDate,
   updateWorkoutSession,
   updateWorkouts,
   updateDate,
@@ -19,45 +16,31 @@ import LoadingModel from "@/components/models/LoadingModel";
 import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
-import AddExercise from "./AddExercise";
+import { AddExercise, WorkoutSlider, MenuOptions } from "./index";
 import { AiFillEdit } from "react-icons/ai";
-import { MdAdd } from "react-icons/md";
-import { TbReplace } from "react-icons/tb";
-import { BiTimer } from "react-icons/bi";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/scss";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
-  items: Workout[];
-  session: WorkoutSession;
+  initialSession: WorkoutSession;
   recentWorkouts: Workout[];
 };
 
 const EditWorkoutForm = ({
   previous,
-  items,
-  session,
+  initialSession,
   recentWorkouts,
 }: EditWorkoutFormProps) => {
-  const date = session;
+  const date = initialSession;
   const [notes, setNotes] = useState<string>("");
+  const [noteIds, setNoteIds] = useState<string[]>([]);
   const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
-  const [setOptions, setSetOptions] = useState<string | null>(null);
-  const [setIndex, setSetIndex] = useState<number>(0);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
-  const [replace, setReplace] = useState(false);
-  const [workouts, setWorkouts] = useState<Workout[]>(items);
+  const [replace, setReplace] = useState<string | boolean>(false);
+  const [session, setSession] = useState<WorkoutSession>(initialSession);
   const router = useRouter();
-
-  useEffect(() => {
-    if (session?.notes) {
-      setNotes(session?.notes);
-    }
-  }, []);
 
   const hours = Math.floor(session?.time / 360000);
   const minutes = Math.floor((session?.time % 360000) / 6000);
@@ -67,33 +50,23 @@ const EditWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    workouts.map(({ lbs, reps }) => {
-      lbs.map((_, id) => {
-        lbs.splice(id, 1, Number(dataLbs[0]));
-        dataLbs.shift();
-        reps.splice(id, 1, Number(dataReps[0]));
-        dataReps.shift();
-      });
-    });
-    setWorkouts(workouts);
-
     try {
       if (workoutName) {
         await updateWorkoutSession(
-          session?.id,
+          session.id,
           workoutName,
           notes,
-          session?.time,
+          session.time,
         );
       } else {
         await updateWorkoutSession(
-          session?.id,
+          session.id,
           session?.name,
           notes,
-          session?.time,
+          session.time,
         );
       }
-      await updateWorkouts(workouts);
+      await updateWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -104,16 +77,6 @@ const EditWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
     const date = data.get("date")?.valueOf();
-
-    workouts.map(({ lbs, reps }) => {
-      lbs.map((_, idx) => {
-        lbs.splice(idx, 1, Number(dataLbs[0]));
-        dataLbs.shift();
-        reps.splice(idx, 1, Number(dataReps[0]));
-        dataReps.shift();
-      });
-    });
-    setWorkouts(workouts);
 
     try {
       if (workoutName) {
@@ -132,9 +95,9 @@ const EditWorkoutForm = ({
         );
       }
       if (!date && date !== undefined) {
-        await updateDate(workouts, session, date);
+        await updateDate(session, date);
       } else {
-        await updateWorkouts(workouts);
+        await updateWorkouts(session, dataLbs, dataReps);
       }
       router.push("/workouts");
     } catch (error) {
@@ -142,47 +105,20 @@ const EditWorkoutForm = ({
     }
   };
 
-  const addSet = async (id: string) => {
-    const workout = workouts.filter((workout) => workout.id === id);
-    const { sets, lbs, reps } = workout[0];
+  const addSet = async (
+    id: string,
+    sets: string[],
+    lbs: number[],
+    reps: number[],
+  ) => {
     try {
-      const lastSet = sets[sets.length - 1];
-      if (!!Number(lastSet)) {
-        const set = Number(lastSet) + 1;
-        sets?.push(String(set));
-      } else {
-        sets?.push("1");
+      const updated = await updateWorkout(id, sets, lbs, reps);
+      if (updated) {
+        setSession(updated);
+        router.refresh();
       }
-
-      lbs?.push(0);
-      reps?.push(0);
-      await updateWorkout(id, sets, lbs, reps);
-      router.refresh();
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const changeSet = async (id: string, e: MouseEvent) => {
-    const workout = workouts.filter((workout) => workout.id === id);
-    const { sets } = workout[0];
-    const { target } = e;
-    if (target) {
-      const set = (target as HTMLButtonElement).value;
-      sets.splice(setIndex, 1, set);
-      const newSet: string[] = [];
-      let i = 1;
-      sets.map((set) => {
-        if (!!Number(set)) {
-          newSet.push(String(i));
-          i++;
-        } else {
-          newSet.push(set);
-        }
-      });
-
-      await changeWorkoutSet(id, newSet);
-      router.refresh();
     }
   };
 
@@ -192,40 +128,43 @@ const EditWorkoutForm = ({
   };
 
   const removeExercise = async (id: string) => {
-    await deleteWorkout(id);
-    router.refresh();
+    const session = await deleteWorkout(id);
+    if (session) {
+      setSession(session);
+      router.refresh();
+    }
   };
 
-  const handleDeleteSet = async (id: string, setId: number) => {
-    const workout = workouts.filter((workout) => workout.id === id);
-    const { sets, lbs, reps } = workout[0];
-
-    sets.splice(setId, 1);
-    lbs.splice(setId, 1);
-    reps.splice(setId, 1);
-    if (!sets.length) {
-      sets.push("1");
-      lbs.push(0);
-      reps.push(0);
-    }
-    try {
-      await deleteSet(id, sets, lbs, reps);
-      router.refresh();
-    } catch (err: any) {
-      console.log(err);
-    }
+  const handleNotes = (e: ChangeEvent) => {
+    setSession((prev) => {
+      const updated = prev.Workout.map((workout) =>
+        workout.id === (e.target as HTMLInputElement).name
+          ? {
+              ...workout,
+              notes: (e.target as HTMLInputElement).value,
+            }
+          : workout,
+      );
+      return { ...prev, Workout: updated };
+    });
   };
 
   return !addExercise ? (
     <Suspense fallback={<LoadingModel />}>
-      <div className="wrapper container pb-20">
+      <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
         <form className="workout-form" action={handleSubmit}>
           <div className="flex flex-row justify-between mt-3">
-            <button onClick={() => router.push("/workouts")}>
-              <HiX className="bg-gray-300 rounded-md" />
+            <button
+              className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
+              onClick={() => router.push("/workouts")}
+            >
+              <HiX />
             </button>
             <h1>Edit Workout</h1>
-            <button type="submit" className="bg-blue-300 rounded-md px-2">
+            <button
+              type="submit"
+              className="bg-blue-300 text-white rounded-md px-2"
+            >
               Save
             </button>
           </div>
@@ -300,174 +239,91 @@ const EditWorkoutForm = ({
               </div>
             )}
           </div>
-          {items.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
-            <div key={id} className="">
-              <div className="flex flex-row  my-4">
-                <h1 className="flex-1 text-2xl font-bold">{name}</h1>
+          {session.Workout.map(
+            ({ id, name, sets, lbs, reps, bodyPart }, index) => (
+              <div key={id} className="">
+                <div className="flex flex-row items-center my-4">
+                  <h1 className="capitalize flex-1 text-2xl font-bold">
+                    {name}
+                  </h1>
 
-                <div className="flex-initial w-fit">
-                  <div className="relative">
-                    <div
-                      onMouseLeave={() => setOpenMenu(false)}
-                      className={
-                        openMenu === id
-                          ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg right-0 p-2 cursor-pointer"
-                          : "hidden"
-                      }
-                    >
-                      <div
-                        onClick={() => {
-                          setNotes(" ");
-                          setOpenMenu(false);
-                        }}
-                        className="flex flex-row items-center gap-2"
-                      >
-                        <AiFillEdit className="text-blue-500" />
-                        <span>Add</span>
-                        <span>a</span>
-                        <span>Note</span>
-                      </div>
-                      <div className="flex flex-row items-center flex-nowrap gap-2 my-5">
-                        <MdAdd className="text-blue-500" />
-                        <span>Add</span>
-                        <span>Warm-up</span>
-                        <span>Sets</span>
-                      </div>
-                      <div
-                        className="flex flex-row items-center gap-2 my-5"
-                        onClick={() => {
-                          setReplace(!replace);
-                          setOpenMenu(false);
-                        }}
-                      >
-                        <TbReplace className="text-blue-499" />
-                        <span>Replace</span>
-                        <span>Exercise</span>
-                      </div>
-                      <div className="flex flex-row items-center gap-2 my-5">
-                        <BiTimer className="text-blue-500" />
-                        <span>Auto</span>
-                        <span>Rest</span>
-                        <span>Timer</span>
-                      </div>
-                      <div
-                        className={
-                          openMenu
-                            ? "flex flex-row items-center gap-2"
-                            : "hidden"
-                        }
-                        onClick={() => {
-                          removeExercise(id);
-                          setOpenMenu(false);
-                        }}
-                      >
-                        <HiX className="text-red-500" />
-                        <span>Remove</span>
-                        <span>Exercise</span>
-                      </div>
+                  <div className="flex-initial w-fit">
+                    <div className="relative">
+                      <MenuOptions
+                        id={id}
+                        noteIds={noteIds}
+                        setNoteIds={setNoteIds}
+                        replace={replace}
+                        openMenu={openMenu}
+                        setOpenMenu={setOpenMenu}
+                        setReplace={setReplace}
+                        setAddExercise={setAddExercise}
+                        removeExercise={removeExercise}
+                      />
+                    </div>
+                    <div onClick={() => setOpenMenu(id)}>
+                      <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
                     </div>
                   </div>
-                  <div onClick={() => setOpenMenu(id)}>
-                    <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
-                  </div>
+                </div>
+
+                <div className={noteIds.includes(id) ? "" : "hidden"}>
+                  <input
+                    type="text"
+                    name={id}
+                    className="bg-white rounded-md w-full"
+                    onChange={(e) => handleNotes(e)}
+                  />
+                </div>
+                <div className="flex justify-evenly">
+                  <span className="flex justify-center items-center w-full">
+                    Set
+                  </span>
+                  <span className="flex justify-center items-center w-full">
+                    Previous
+                  </span>
+                  {bodyPart === "cardio" ? (
+                    <span className="flex justify-center items-center w-full">
+                      mile
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center w-full">
+                      lbs
+                    </span>
+                  )}
+                  {bodyPart === "cardio" ? (
+                    <span className="flex justify-center items-center w-full">
+                      Time
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center w-full">
+                      Reps
+                    </span>
+                  )}
+                </div>
+
+                <WorkoutSlider
+                  id={id}
+                  index={index}
+                  sets={sets}
+                  lbs={lbs}
+                  reps={reps}
+                  session={session}
+                  setSession={setSession}
+                  previous={previous}
+                />
+                <div className="workout-form__btn">
+                  <button
+                    type="button"
+                    onClick={() => addSet(id, sets, lbs, reps)}
+                    className="mx-10 rounded-full bg-gray-300 text-black"
+                  >
+                    Add Set
+                  </button>
                 </div>
               </div>
-
-              <div className="flex justify-evenly">
-                <span className="flex justify-center items-center w-full">
-                  Set
-                </span>
-                <span className="flex justify-center items-center w-full">
-                  Previous
-                </span>
-                {bodyPart === "cardio" ? (
-                  <span className="flex justify-center items-center w-full">
-                    mile
-                  </span>
-                ) : (
-                  <span className="flex justify-center items-center w-full">
-                    lbs
-                  </span>
-                )}
-                {bodyPart === "cardio" ? (
-                  <span className="flex justify-center items-center w-full">
-                    Time
-                  </span>
-                ) : (
-                  <span className="flex justify-center items-center w-full">
-                    Reps
-                  </span>
-                )}
-              </div>
-              <ul className="flex flex-col gap-4">
-                {sets?.map((set, setId) => (
-                  <div key={setId} className="">
-                    <SetOptions
-                      id={id}
-                      setId={setId}
-                      setIndex={setIndex}
-                      setOptions={setOptions}
-                      setSetOptions={setSetOptions}
-                      changeSet={changeSet}
-                    />
-                    <Swiper
-                      spaceBetween={50}
-                      slidesPerView={1}
-                      onSlideChange={() => handleDeleteSet(id, setId)}
-                    >
-                      <SwiperSlide>
-                        <li className="flex flex-row justify-evenly">
-                          <div className="relative h-full">
-                            <CustomButton
-                              title={set}
-                              containerStyles="bg-gray-300 rounded-lg w-20 pl-[0.5]"
-                              handleClick={() => {
-                                setSetOptions(id);
-                                setSetIndex(setId);
-                              }}
-                            />
-                          </div>
-                          {previous?.[index]?.lbs[setId] ? (
-                            <div className="bg-gray-300 rounded-lg w-fit m-1 px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
-                          ) : (
-                            <div className="border-4 rounded-lg w-20 h-fit my-2 border-gray-300"></div>
-                          )}
-                          <div className="">
-                            <input
-                              type="string"
-                              name="lbs"
-                              defaultValue={`${lbs[setId] ? lbs[setId] : ""}`}
-                              className="bg-gray-300 rounded-lg w-20"
-                            />
-                          </div>
-                          <div className="">
-                            <input
-                              type="string"
-                              name="reps"
-                              defaultValue={`${reps[setId] ? reps[setId] : ""}`}
-                              className="bg-gray-300 rounded-lg w-20"
-                            />
-                          </div>
-                        </li>
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        <button className={`w-full bg-red-300 rounded-lg px-2`}>
-                          Delete
-                        </button>
-                      </SwiperSlide>
-                    </Swiper>
-                  </div>
-                ))}
-              </ul>
-              <div className="workout-form__btn">
-                <CustomButton
-                  title="Add Set"
-                  handleClick={() => addSet(id)}
-                  containerStyles="workout-form__add-btn"
-                />
-              </div>
-            </div>
-          ))}
+            ),
+          )}
           <div className="workout-form__btn">
             <button
               type="submit"
@@ -491,9 +347,9 @@ const EditWorkoutForm = ({
     </Suspense>
   ) : (
     <AddExercise
-      sessionId={session.id}
+      session={session}
       setAddExercise={setAddExercise}
-      setWorkouts={setWorkouts}
+      setSession={setSession}
       recentWorkouts={recentWorkouts}
     />
   );

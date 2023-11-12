@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { SlOptions } from "react-icons/sl";
 import { useTimerContext } from "@/context/TimerContext";
+import { BiTimer } from "react-icons/bi";
 
 const StartTimer = () => {
   const { time, setTime } = useTimerContext();
@@ -36,15 +37,11 @@ const StartTimer = () => {
 
   return (
     <div className="flex items-center flex-row gap-2">
-      <p className="text-center">
-        {hours ? `${hours}:` : ""}
-        {minutes.toString().padStart(2)}:{seconds.toString().padStart(2, "0")}
-      </p>
       <div
         className="flex justify-center"
         onClick={() => setTimerOptions(true)}
       >
-        <SlOptions className="flex w-fit bg-gray-300 rounded-md px-1" />
+        <BiTimer className="flex w-fit rounded-md px-1" />
         <div
           onMouseLeave={() => setTimerOptions(false)}
           className={
@@ -64,6 +61,10 @@ const StartTimer = () => {
           </button>
         </div>
       </div>
+      <p className="text-center">
+        {hours ? `${hours}:` : ""}
+        {minutes.toString().padStart(2)}:{seconds.toString().padStart(2, "0")}
+      </p>
     </div>
   );
 };

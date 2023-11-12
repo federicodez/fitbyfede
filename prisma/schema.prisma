@@ -35,6 +35,7 @@ model User {
   accounts       Account[]
   workouts       Workout[]
   WorkoutSession WorkoutSession[]
+  exercises      Exercise[]
 }
 
 model Workout {
@@ -51,6 +52,7 @@ model Workout {
   lbs              Int[]
   reps             Int[]
   sets             String[]
+  notes            String
   workoutSessionId String         @db.ObjectId
   user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   WorkoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
@@ -63,7 +65,17 @@ model WorkoutSession {
   notes      String?
   userId     String    @db.ObjectId
   createdAt  DateTime  @default(now())
-  workoutIds String[]  @db.ObjectId
+  workoutIds String[]
   Workout    Workout[]
   User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Exercise {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  bodyPart  String
+  category  String
+  createdAt DateTime @default(now())
+  userId    String   @db.ObjectId
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

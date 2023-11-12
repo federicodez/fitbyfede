@@ -12,7 +12,11 @@ import Image from "next/image";
 import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
-import { BodyPartSelection, CategorySelection, CreateExercise } from "./";
+import {
+  EditBodyPartSelection,
+  EditCategorySelection,
+  CreateExercise,
+} from "./";
 
 type AddExerciseProps = {
   session: WorkoutSession;
@@ -130,7 +134,7 @@ const AddExercise = ({
           />
         </form>
         <div className="grid grid-cols-2 justify-center items-center gap-3 my-2">
-          <BodyPartSelection
+          <EditBodyPartSelection
             data={data}
             bodyPartBtn={bodyPartBtn}
             recentWorkouts={recentWorkouts}
@@ -141,7 +145,7 @@ const AddExercise = ({
             setBodyPartBtn={setBodyPartBtn}
             setShowParts={setShowParts}
           />
-          <CategorySelection
+          <EditCategorySelection
             data={data}
             bodyPartBtn={bodyPartBtn}
             categoriesBtn={categoriesBtn}

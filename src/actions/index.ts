@@ -47,8 +47,19 @@ export const updateWorkout = async (
   sets: string[],
   lbs: number[],
   reps: number[],
+  notes?: string,
 ) => {
   try {
+    const lastSet = sets[sets.length - 1];
+    if (!!Number(lastSet)) {
+      const set = Number(lastSet) + 1;
+      sets.push(String(set));
+    } else {
+      sets.push("1");
+    }
+
+    lbs.push(0);
+    reps.push(0);
     const updated = await prisma.workout.update({
       where: {
         id,
@@ -57,9 +68,16 @@ export const updateWorkout = async (
         sets,
         lbs,
         reps,
+        notes,
       },
     });
-    return updated;
+
+    const session = await getSessionById(updated.workoutSessionId);
+
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (error) {
     console.log("Error updating workout: ", error);
   }
@@ -90,23 +108,46 @@ export const updateWorkoutWithDate = async (
   }
 };
 
-export const updateWorkouts = async (workouts: Workout[]) => {
+export const updateWorkouts = async (
+  session: WorkoutSession,
+  dataLbs: number[],
+  dataReps: number[],
+) => {
   try {
-    workouts.map(async ({ id, sets, lbs, reps }) => {
-      await updateWorkout(id, sets, lbs, reps);
+    session.Workout.map(async ({ id, sets, lbs, reps }) => {
+      lbs.map((_, idx) => {
+        lbs.splice(idx, 1, Number(dataLbs[0]));
+        dataLbs.shift();
+        reps.splice(idx, 1, Number(dataReps[0]));
+        dataReps.shift();
+      });
+
+      await prisma.workout.update({
+        where: {
+          id,
+        },
+        data: {
+          sets,
+          lbs,
+          reps,
+        },
+      });
+
+      const updated = await getSessionById(session.id);
+
+      if (!updated) {
+        return null;
+      }
+      return updated;
     });
   } catch (error) {
     console.log("Error updating workouts ", error);
   }
 };
 
-export const updateDate = async (
-  workouts: Workout[],
-  session: WorkoutSession,
-  date: string,
-) => {
+export const updateDate = async (session: WorkoutSession, date: string) => {
   try {
-    workouts.map(async ({ id, sets, lbs, reps }) => {
+    session.Workout.map(async ({ id, sets, lbs, reps }) => {
       await updateWorkoutWithDate(id, sets, lbs, reps, date);
     });
     await prisma.workoutSession.update({
@@ -120,10 +161,21 @@ export const updateDate = async (
 
 export const changeWorkoutSet = async (id: string, sets: string[]) => {
   try {
-    await prisma.workout.update({
+    const updated = await prisma.workout.update({
       where: { id },
       data: { sets },
     });
+
+    if (!updated) {
+      return null;
+    }
+
+    const session = await getSessionById(updated.workoutSessionId);
+
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (err: any) {
     console.log(err);
   }
@@ -166,6 +218,7 @@ export const createWorkoutSession = async () => {
         userId: currentUser.id,
         name: timer,
         time: 0,
+        notes: "",
       },
     });
     return session;
@@ -176,44 +229,85 @@ export const createWorkoutSession = async () => {
 
 export const createMany = async (
   exerciseQueue: string[],
-  sessionId: string,
+  session?: WorkoutSession,
 ) => {
-  const exercises: Data = [];
-  data.filter((workout) => {
-    exerciseQueue.map((exercise) => {
-      if (exercise === workout.name) {
-        exercises.push(workout);
-      }
-    });
-  });
   try {
+    const exercises: Data = [];
+    data.filter((workout) => {
+      exerciseQueue.map((exercise) => {
+        if (exercise === workout.name) {
+          exercises.push(workout);
+        }
+      });
+    });
+
     const currentUser = await getCurrentUser();
 
     if (!currentUser?.id) {
       return null;
     }
 
-    await Promise.all(
-      exercises.map(
-        async ({ name, bodyPart, id, target, equipment, instructions }) => {
-          await prisma.workout.create({
-            data: {
-              name,
-              bodyPart,
-              gifId: id,
-              target,
-              equipment,
-              instructions,
-              sets: ["1"],
-              lbs: [0],
-              reps: [0],
-              userId: currentUser.id,
-              workoutSessionId: sessionId,
-            },
-          });
-        },
-      ),
-    );
+    if (!session?.id) {
+      const session = await createWorkoutSession();
+
+      if (!session) {
+        return null;
+      }
+
+      const workouts = await Promise.all(
+        exercises.map(
+          async ({ name, bodyPart, id, target, equipment, instructions }) => {
+            await prisma.workout.create({
+              data: {
+                name,
+                bodyPart,
+                gifId: id,
+                target,
+                equipment,
+                instructions,
+                sets: ["1"],
+                lbs: [0],
+                reps: [0],
+                notes: "",
+                userId: currentUser.id,
+                workoutSessionId: session.id,
+              },
+            });
+          },
+        ),
+      );
+
+      if (!workouts) {
+        return null;
+      }
+
+      const result = getSessionById(session.id);
+      return result;
+    } else {
+      await Promise.all(
+        exercises.map(
+          async ({ name, bodyPart, id, target, equipment, instructions }) => {
+            await prisma.workout.create({
+              data: {
+                name,
+                bodyPart,
+                gifId: id,
+                target,
+                equipment,
+                instructions,
+                sets: ["1"],
+                lbs: [0],
+                reps: [0],
+                notes: "",
+                userId: currentUser.id,
+                workoutSessionId: session.id,
+              },
+            });
+          },
+        ),
+      );
+      return session;
+    }
   } catch (err: any) {
     console.log("Error creating many workouts: ", err);
   }
@@ -262,6 +356,7 @@ export const createWorkout = async (
         sets: sets,
         lbs: lbs,
         reps: reps,
+        notes: "",
         userId: currentUser.id,
         workoutSessionId: session.id,
       },
@@ -310,7 +405,12 @@ export const deleteSession = async (sessionId: string) => {
 
 export const deleteWorkout = async (id: string) => {
   try {
-    await prisma.workout.delete({ where: { id } });
+    const deleted = await prisma.workout.delete({ where: { id } });
+    const session = await getSessionById(deleted.workoutSessionId);
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (error) {
     console.log("Error deleting workout: ", error);
   }
@@ -321,16 +421,48 @@ export const deleteSet = async (
   sets: string[],
   lbs: number[],
   reps: number[],
+  setId: number,
 ) => {
   try {
-    await prisma.workout.update({
+    let i = 1;
+    const newSet: string[] = [];
+
+    sets.splice(setId, 1);
+    lbs.splice(setId, 1);
+    reps.splice(setId, 1);
+
+    sets.map((set) => {
+      if (!!Number(set)) {
+        newSet.push(String(i));
+        i++;
+      } else {
+        newSet.push(set);
+      }
+    });
+    if (!sets.length) {
+      newSet.push("1");
+      lbs.push(0);
+      reps.push(0);
+    }
+
+    const updated = await prisma.workout.update({
       where: { id },
       data: {
-        sets,
+        sets: newSet,
         lbs,
         reps,
       },
     });
+
+    if (!updated) {
+      return null;
+    }
+
+    const session = await getSessionById(updated.workoutSessionId);
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (err: any) {
     console.log("Error deleting set: ", err);
   }
@@ -362,7 +494,7 @@ export const getMostRecentWorkouts = async () => {
 };
 
 export const updateWorkoutSession = async (
-  sessionId: string,
+  id: string,
   name: string,
   notes: string,
   time: number,
@@ -370,12 +502,12 @@ export const updateWorkoutSession = async (
   try {
     if (notes) {
       await prisma.workoutSession.update({
-        where: { id: sessionId },
+        where: { id },
         data: { name: name, time: time, notes: notes },
       });
     } else {
       await prisma.workoutSession.update({
-        where: { id: sessionId },
+        where: { id },
         data: { name: name, time: time },
       });
     }
@@ -388,6 +520,7 @@ export const getSessionById = async (sessionId: string) => {
   try {
     const session = await prisma.workoutSession.findUnique({
       where: { id: sessionId },
+      include: { Workout: true },
     });
     return session;
   } catch (error) {
@@ -404,6 +537,8 @@ export const getSessions = async () => {
     }
     const sessions = await prisma.workoutSession.findMany({
       where: { userId: currentUser.id },
+      include: { Workout: true },
+      orderBy: { createdAt: "desc" },
     });
     if (!sessions?.length) {
       throw new Error("Failed to fetch sessions");
@@ -443,5 +578,32 @@ export const getPreviousWorkout = async (workouts: Workout[]) => {
     return result;
   } catch (error) {
     console.log("Error loading previous workouts ", error);
+  }
+};
+
+export const addExercise = async (
+  name: string,
+  bodyPart: string,
+  category: string,
+) => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+      return null;
+    }
+
+    const exercise = await prisma.exercise.create({
+      data: {
+        name,
+        bodyPart,
+        category,
+        userId: currentUser.id,
+      },
+    });
+    console.log("actions: ", exercise);
+    return exercise;
+  } catch (error) {
+    console.log(error);
   }
 };

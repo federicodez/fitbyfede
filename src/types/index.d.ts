@@ -27,6 +27,7 @@ export type Workout = {
   sets: string[];
   lbs: number[];
   reps: number[];
+  notes: string;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -50,5 +51,15 @@ export type WorkoutSession = {
   notes?: string | null;
   userId: string;
   workoutIds: string[];
+  createdAt: Date;
+  Workout: Workout[];
+};
+
+export type Exercise = {
+  id: string;
+  name: string;
+  bodyPart: string;
+  category: string;
+  userId: string;
   createdAt: Date;
 };

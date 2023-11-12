@@ -1,9 +1,6 @@
-import { getMostRecentWorkouts } from "@/actions";
-import dynamic from "next/dynamic";
+import { createWorkoutSession, getMostRecentWorkouts } from "@/actions";
 import Navbar from "@/components/navbar/Navbar";
-const SearchBar = dynamic(() => import("./components/SearchBar"), {
-  ssr: false,
-});
+import SearchBar from "./components/SearchBar";
 
 const SearchWorkout = async () => {
   try {

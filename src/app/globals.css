@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #c5dff8;
+  --bg-primary: #2f3651;
   --clr-red-900: hsla(360, 100%, 17%, 1);
   --clr-blue-500: hsla(227, 47%, 23%, 1);
   --clr-blue-900: hsla(227, 100%, 17%, 1);
+  --clr-btn: #8ebbff;
 
   --ff-base: "Outfit", sans-serif;
 
@@ -29,16 +30,14 @@
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: dark light;
 }
 
 body {
   font-family: system-ui;
   margin: 0;
-  color: #000;
   font-size: var(--fs-400);
   line-height: 1.5;
-  background: var(--bg-primary);
 }
 
 Image,
@@ -49,13 +48,51 @@ video {
   display: block;
 }
 
+button {
+  color: var(--clr-btn);
+}
+
 p {
   max-width: 65ch;
+}
+
+/********Line design**********/
+.line-design {
+  display: flex;
+  flex-direction: row;
+}
+.line-design:before,
+.line-design:after {
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid white;
+  margin: auto;
+}
+.line-design:before {
+  margin-right: 10px;
+}
+.line-design:after {
+  margin-left: 10px;
+}
+
+/******************************/
+
+.p-color {
+  background-color: var(--bg-primary);
 }
 
 .wrapper {
   width: min(50rem, 100% - 2rem);
   margin-inline: auto;
+}
+
+.auth-image {
+  background: url("/bgImage.jpeg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
 }
 
 .primary-header {
@@ -92,13 +129,10 @@ p {
   border: 2px solid #8d99ae;
   border-radius: 20px;
   color: #495057;
-  background-color: #fff;
+  background-color: #8ebbff;
   padding: 5px 32px;
-  width: 15rem;
-  margin: 1rem;
-  margin-bottom: 3rem;
-  margin-right: auto;
-  margin-left: auto;
+  width: 35rem;
+  margin: 2rem auto;
 }
 
 .workoutlist {
@@ -284,10 +318,6 @@ p {
 
 .profile {
   margin: auto;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* flex-direction: column; */
 }
 
 .profile-card {
@@ -372,46 +402,17 @@ p {
   .profile-card {
     margin: 1.5rem auto;
   }
-  .deleting {
-    transition: all 250 ease-out;
-  }
-  .content {
-    width: auto;
-    position: relative;
-    transform: translateX(0px);
-  }
-  .content.transition {
-    transition: transform 250 ease-out;
-  }
-  .content.deleting {
+
+  .auth-image {
+    background: url("/bgImage.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
     height: 100%;
-    width: auto;
-    position: relative;
-    transform: scale(0) translateX(0px);
   }
-  .delete {
-    position: absolute;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    background: rgba(252, 58, 48, 1);
-    font-weight: 400;
-    display: inline-flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-  .delete button {
-    width: 75px;
-    transition: margin transform 250 ease-in-out;
-    margin-left: 0px;
-    margin-right: 0px;
-    text-align: center;
-    height: 100%;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
+
+  .home-link {
+    width: 25rem;
   }
 }

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import moment from "moment";
 import Link from "next/link";
 import { HiX } from "react-icons/hi";
@@ -7,71 +10,58 @@ import { WorkoutSession } from "@/types";
 
 type DetailedProps = {
   session: WorkoutSession;
-  date: Date;
-  ids: any[];
-  exercises: {
-    [key: string]: string;
-  };
-  sets: {
-    [key: string]: string[];
-  };
-  lbs: {
-    [key: string]: number[];
-  };
-  reps: {
-    [key: string]: number[];
-  };
-  sessionId?: string;
-  setShowWorkouts: React.Dispatch<React.SetStateAction<string | boolean>>;
-  setShowSessions: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowWorkoutDetails: React.Dispatch<React.SetStateAction<string | boolean>>;
 };
 
-const Detailed = ({
-  session,
-  date,
-  ids,
-  exercises,
-  sets,
-  lbs,
-  reps,
-  sessionId,
-  setShowWorkouts,
-  setShowSessions,
-}: DetailedProps) => {
+const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
   const hours = Math.floor(session.time / 360000);
   const minutes = Math.floor((session.time % 360000) / 6000);
   const seconds = Math.floor((session.time % 6000) / 100);
-  const lbSum = ids.map((id) =>
-    lbs[id].reduce((acc, curr) => {
+
+  const sum = session.Workout?.map(({ lbs, reps }) => {
+    const lb = lbs.reduce((acc, curr) => {
       return acc + curr;
-    }, 0),
-  );
-  const repSum = ids.map((id) =>
-    reps[id].reduce((acc, curr) => {
+    }, 0);
+    const rep = reps.reduce((acc, curr) => {
       return acc + curr;
-    }, 0),
-  );
-  const sum = lbSum[0] * repSum[0];
+    }, 0);
+    return lb * rep;
+  });
 
   return (
-    <div className="absolute z-10 rounded-md bg-gray-100 w-full shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+    <div
+      className={`
+      fixed 
+      text-black
+      top-1/2 
+      left-1/2 
+      -translate-y-1/2 
+      -translate-x-1/2 
+      rounded-lg 
+      bg-[#8ebbff] 
+      w-[450px] 
+      md:w-[850px] 
+      md:top-1/2
+      md:left-2/3
+      md:-translate-x-3/4
+      md:-translate-y-1/2
+      shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]
+    `}
+    >
       <div className="flex flex-row justify-between m-2">
         <button
-          className="bg-gray-400 px-2 py-1 rounded-md"
-          onClick={() => {
-            setShowWorkouts(false);
-            setShowSessions(true);
-          }}
+          className="bg-[#2f3651] px-2 py-1 rounded-md"
+          onClick={() => setShowWorkoutDetails(false)}
         >
           <HiX />
         </button>
         {session?.name}
-        <Link href={`/edit-workout/${sessionId}`} className="flex flex-row">
-          <span className="text-lg text-blue-500">Edit</span>
+        <Link href={`/edit-workout/${session.id}`} className="flex flex-row">
+          <span className="text-2xl text-[#2f3651]">Edit</span>
         </Link>
       </div>
       <div className="flex flex-col">
-        <span>{moment(date).format("llll")}</span>
+        <span>{moment(session.createdAt).format("llll")}</span>
         <div className="flex flex-row justify-evenly">
           <span className="flex flex-row gap-2 justify-center items-center">
             <IoIosTimer className="w-fit" />
@@ -81,36 +71,41 @@ const Detailed = ({
           </span>
           <span className="flex flex-row gap-2 justify-center items-center">
             <FaWeightHanging />
-            {sum}
+            {sum?.[0]}
           </span>
         </div>
       </div>
-      {ids?.map((id: string, idIndex: number) => (
-        <div key={idIndex} className="flex flex-col my-4 ">
-          <div className="flex flex-row justify-evenly my-2">
-            <strong>{exercises[id]}</strong>
-            <strong>1RM</strong>
-          </div>
-          <ul className="workout-card-list">
-            {lbs[id]?.map((lb: number, lbIndex: number) => (
-              <li
-                key={lbIndex}
-                className="workout-card-item flex justify-evenly items-center"
-              >
-                <div className="flex flex-row gap-5">
-                  <div className="">{sets[id][lbIndex]}</div>
-                  <div className="">
-                    {lb
-                      ? `${lb} lbs x ${reps[id][lbIndex]}`
-                      : `${reps[id][lbIndex]} reps`}
+      <div className="flex flex-col my-4 ">
+        {session.Workout?.map(({ id, name, sets, lbs, reps, notes }) => (
+          <div key={id}>
+            <div className="flex flex-row justify-evenly my-2">
+              <div className="flex flex-col">
+                <strong>{name}</strong>
+                <span>{notes}</span>
+              </div>
+              <strong>1RM</strong>
+            </div>
+            <ul className="workout-card-list">
+              {lbs?.map((lb: number, lbIndex: number) => (
+                <li
+                  key={lbIndex}
+                  className="workout-card-item flex justify-evenly items-center"
+                >
+                  <div className="flex flex-row gap-5">
+                    <div className="">{sets[lbIndex]}</div>
+                    <div className="">
+                      {lb
+                        ? `${lb} lbs x ${reps[lbIndex]}`
+                        : `${reps[lbIndex]} reps`}
+                    </div>
                   </div>
-                </div>
-                <div>{Math.floor(lb * (1 + reps[id][lbIndex] / 30))}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+                  <div>{Math.floor(lb * (1 + reps[lbIndex] / 30))}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
