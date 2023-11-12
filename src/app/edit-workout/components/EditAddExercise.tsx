@@ -9,13 +9,14 @@ import { useRouter } from "next/navigation";
 import { Workout, Data, WorkoutSession } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
+import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
 import {
-  CreateExercise,
   EditBodyPartSelection,
   EditCategorySelection,
-} from "./index";
+  CreateExercise,
+} from "./";
 
 type AddExerciseProps = {
   session: WorkoutSession;
@@ -31,9 +32,9 @@ const AddExercise = ({
   setSession,
 }: AddExerciseProps) => {
   const router = useRouter();
-  const [create, setCreate] = useState(false);
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
+  const [create, setCreate] = useState(false);
 
   const [showParts, setShowParts] = useState(false);
   const [partsActivated, setPartsActivated] = useState(false);
@@ -57,12 +58,13 @@ const AddExercise = ({
 
   const handleClick = async () => {
     try {
-      const newSession = await createMany(exerciseQueue, session);
+      await createMany(exerciseQueue, session);
+      const newSession = await getSessionById(session.id);
       if (newSession) {
         setSession(newSession);
-        router.refresh();
-        setAddExercise(false);
       }
+      router.refresh();
+      setAddExercise(false);
     } catch (error) {
       console.log(error);
     }
@@ -148,9 +150,9 @@ const AddExercise = ({
             bodyPartBtn={bodyPartBtn}
             categoriesBtn={categoriesBtn}
             showCategories={showCategories}
-            setWorkouts={setWorkouts}
             setShowCategories={setShowCategories}
             setCategoriesBtn={setCategoriesBtn}
+            setWorkouts={setWorkouts}
           />
         </div>
         {create && <CreateExercise create={create} setCreate={setCreate} />}

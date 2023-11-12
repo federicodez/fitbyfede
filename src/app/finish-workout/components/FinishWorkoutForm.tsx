@@ -45,20 +45,10 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout.map(({ lbs, reps }) => {
-      lbs.map((_, idx) => {
-        lbs.splice(idx, 1, Number(dataLbs[0]));
-        dataLbs.shift();
-        reps.splice(idx, 1, Number(dataReps[0]));
-        dataReps.shift();
-      });
-    });
-    setSession(session);
-
     try {
       const name = workoutName ?? session.name;
       await updateWorkoutSession(session.id, name, sessionNotes, time);
-      await updateWorkouts(session);
+      await updateWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -69,20 +59,10 @@ const FinishWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout?.map(({ lbs, reps }) => {
-      lbs.map((_, idx) => {
-        lbs.splice(idx, 1, Number(dataLbs[0]));
-        dataLbs.shift();
-        reps.splice(idx, 1, Number(dataReps[0]));
-        dataReps.shift();
-      });
-    });
-    setSession(session);
-
     try {
       const name = workoutName ?? session.name;
       await updateWorkoutSession(session.id, name, sessionNotes, time);
-      await updateWorkouts(session);
+      await updateWorkouts(session, dataLbs, dataReps);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -95,20 +75,12 @@ const FinishWorkoutForm = ({
     lbs: number[],
     reps: number[],
   ) => {
-    const lastSet = sets[sets.length - 1];
-    if (!!Number(lastSet)) {
-      const set = Number(lastSet) + 1;
-      sets.push(String(set));
-    } else {
-      sets.push("1");
-    }
-
-    lbs.push(0);
-    reps.push(0);
-
     try {
-      await updateWorkout(id, sets, lbs, reps);
-      router.refresh();
+      const updated = await updateWorkout(id, sets, lbs, reps);
+      if (updated) {
+        setSession(updated);
+        router.refresh();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -120,8 +92,11 @@ const FinishWorkoutForm = ({
   };
 
   const removeExercise = async (id: string) => {
-    await deleteWorkout(id);
-    router.refresh();
+    const session = await deleteWorkout(id);
+    if (session) {
+      setSession(session);
+      router.refresh();
+    }
   };
 
   const handleNotes = (e: ChangeEvent) => {
@@ -250,6 +225,7 @@ const FinishWorkoutForm = ({
                   lbs={lbs}
                   reps={reps}
                   session={session}
+                  setSession={setSession}
                   previous={previous}
                 />
                 <div className="workout-form__btn">

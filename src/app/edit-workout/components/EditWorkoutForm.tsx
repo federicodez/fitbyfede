@@ -50,16 +50,6 @@ const EditWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
-    session.Workout.map(({ lbs, reps }) => {
-      lbs.map((_, id) => {
-        lbs.splice(id, 1, Number(dataLbs[0]));
-        dataLbs.shift();
-        reps.splice(id, 1, Number(dataReps[0]));
-        dataReps.shift();
-      });
-    });
-    setSession(session);
-
     try {
       if (workoutName) {
         await updateWorkoutSession(
@@ -76,7 +66,7 @@ const EditWorkoutForm = ({
           session.time,
         );
       }
-      await updateWorkouts(session);
+      await updateWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -87,16 +77,6 @@ const EditWorkoutForm = ({
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
     const date = data.get("date")?.valueOf();
-
-    session.Workout.map(({ lbs, reps }) => {
-      lbs.map((_, idx) => {
-        lbs.splice(idx, 1, Number(dataLbs[0]));
-        dataLbs.shift();
-        reps.splice(idx, 1, Number(dataReps[0]));
-        dataReps.shift();
-      });
-    });
-    setSession(session);
 
     try {
       if (workoutName) {
@@ -117,7 +97,7 @@ const EditWorkoutForm = ({
       if (!date && date !== undefined) {
         await updateDate(session, date);
       } else {
-        await updateWorkouts(session);
+        await updateWorkouts(session, dataLbs, dataReps);
       }
       router.push("/workouts");
     } catch (error) {
@@ -125,22 +105,18 @@ const EditWorkoutForm = ({
     }
   };
 
-  const addSet = async (id: string) => {
-    const workout = session.Workout.filter((workout) => workout.id === id);
-    const { sets, lbs, reps, notes } = workout[0];
+  const addSet = async (
+    id: string,
+    sets: string[],
+    lbs: number[],
+    reps: number[],
+  ) => {
     try {
-      const lastSet = sets[sets.length - 1];
-      if (!!Number(lastSet)) {
-        const set = Number(lastSet) + 1;
-        sets?.push(String(set));
-      } else {
-        sets?.push("1");
+      const updated = await updateWorkout(id, sets, lbs, reps);
+      if (updated) {
+        setSession(updated);
+        router.refresh();
       }
-
-      lbs?.push(0);
-      reps?.push(0);
-      await updateWorkout(id, sets, lbs, reps, notes);
-      router.refresh();
     } catch (error) {
       console.log(error);
     }
@@ -152,8 +128,11 @@ const EditWorkoutForm = ({
   };
 
   const removeExercise = async (id: string) => {
-    await deleteWorkout(id);
-    router.refresh();
+    const session = await deleteWorkout(id);
+    if (session) {
+      setSession(session);
+      router.refresh();
+    }
   };
 
   const handleNotes = (e: ChangeEvent) => {
@@ -330,11 +309,13 @@ const EditWorkoutForm = ({
                   lbs={lbs}
                   reps={reps}
                   session={session}
+                  setSession={setSession}
                   previous={previous}
                 />
                 <div className="workout-form__btn">
                   <button
-                    onClick={() => addSet(id)}
+                    type="button"
+                    onClick={() => addSet(id, sets, lbs, reps)}
                     className="mx-10 rounded-full bg-gray-300 text-black"
                   >
                     Add Set

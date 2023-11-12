@@ -50,6 +50,16 @@ export const updateWorkout = async (
   notes?: string,
 ) => {
   try {
+    const lastSet = sets[sets.length - 1];
+    if (!!Number(lastSet)) {
+      const set = Number(lastSet) + 1;
+      sets.push(String(set));
+    } else {
+      sets.push("1");
+    }
+
+    lbs.push(0);
+    reps.push(0);
     const updated = await prisma.workout.update({
       where: {
         id,
@@ -61,7 +71,13 @@ export const updateWorkout = async (
         notes,
       },
     });
-    return updated;
+
+    const session = await getSessionById(updated.workoutSessionId);
+
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (error) {
     console.log("Error updating workout: ", error);
   }
@@ -92,10 +108,37 @@ export const updateWorkoutWithDate = async (
   }
 };
 
-export const updateWorkouts = async (session: WorkoutSession) => {
+export const updateWorkouts = async (
+  session: WorkoutSession,
+  dataLbs: number[],
+  dataReps: number[],
+) => {
   try {
-    session.Workout.map(async ({ id, sets, lbs, reps, notes }) => {
-      await updateWorkout(id, sets, lbs, reps, notes);
+    session.Workout.map(async ({ id, sets, lbs, reps }) => {
+      lbs.map((_, idx) => {
+        lbs.splice(idx, 1, Number(dataLbs[0]));
+        dataLbs.shift();
+        reps.splice(idx, 1, Number(dataReps[0]));
+        dataReps.shift();
+      });
+
+      await prisma.workout.update({
+        where: {
+          id,
+        },
+        data: {
+          sets,
+          lbs,
+          reps,
+        },
+      });
+
+      const updated = await getSessionById(session.id);
+
+      if (!updated) {
+        return null;
+      }
+      return updated;
     });
   } catch (error) {
     console.log("Error updating workouts ", error);
@@ -118,10 +161,21 @@ export const updateDate = async (session: WorkoutSession, date: string) => {
 
 export const changeWorkoutSet = async (id: string, sets: string[]) => {
   try {
-    await prisma.workout.update({
+    const updated = await prisma.workout.update({
       where: { id },
       data: { sets },
     });
+
+    if (!updated) {
+      return null;
+    }
+
+    const session = await getSessionById(updated.workoutSessionId);
+
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (err: any) {
     console.log(err);
   }
@@ -351,7 +405,12 @@ export const deleteSession = async (sessionId: string) => {
 
 export const deleteWorkout = async (id: string) => {
   try {
-    await prisma.workout.delete({ where: { id } });
+    const deleted = await prisma.workout.delete({ where: { id } });
+    const session = await getSessionById(deleted.workoutSessionId);
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (error) {
     console.log("Error deleting workout: ", error);
   }
@@ -362,16 +421,48 @@ export const deleteSet = async (
   sets: string[],
   lbs: number[],
   reps: number[],
+  setId: number,
 ) => {
   try {
-    await prisma.workout.update({
+    let i = 1;
+    const newSet: string[] = [];
+
+    sets.splice(setId, 1);
+    lbs.splice(setId, 1);
+    reps.splice(setId, 1);
+
+    sets.map((set) => {
+      if (!!Number(set)) {
+        newSet.push(String(i));
+        i++;
+      } else {
+        newSet.push(set);
+      }
+    });
+    if (!sets.length) {
+      newSet.push("1");
+      lbs.push(0);
+      reps.push(0);
+    }
+
+    const updated = await prisma.workout.update({
       where: { id },
       data: {
-        sets,
+        sets: newSet,
         lbs,
         reps,
       },
     });
+
+    if (!updated) {
+      return null;
+    }
+
+    const session = await getSessionById(updated.workoutSessionId);
+    if (!session) {
+      return null;
+    }
+    return session;
   } catch (err: any) {
     console.log("Error deleting set: ", err);
   }

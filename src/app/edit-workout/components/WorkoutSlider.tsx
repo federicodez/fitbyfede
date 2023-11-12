@@ -15,6 +15,7 @@ type WorkoutSliderProps = {
   lbs: number[];
   reps: number[];
   session: WorkoutSession;
+  setSession: React.Dispatch<React.SetStateAction<WorkoutSession>>;
   previous: Workout[] | [];
 };
 
@@ -25,6 +26,7 @@ const WorkoutSlider = ({
   lbs,
   reps,
   session,
+  setSession,
   previous,
 }: WorkoutSliderProps) => {
   const [setOptions, setSetOptions] = useState<string | null>(null);
@@ -49,8 +51,12 @@ const WorkoutSlider = ({
         }
       });
 
-      await changeWorkoutSet(id, newSet);
-      router.refresh();
+      const updated = await changeWorkoutSet(id, newSet);
+
+      if (updated) {
+        setSession(updated);
+        router.refresh();
+      }
     }
   };
 
@@ -58,17 +64,12 @@ const WorkoutSlider = ({
     try {
       const workout = session.Workout.filter((workout) => workout.id === id);
       const { sets, lbs, reps } = workout[0];
-      sets.splice(setId, 1);
-      lbs.splice(setId, 1);
-      reps.splice(setId, 1);
-      if (!sets.length) {
-        sets.push("1");
-        lbs.push(0);
-        reps.push(0);
+      const updated = await deleteSet(id, sets, lbs, reps, setId);
+      if (updated) {
+        setSession(updated);
+        swiper.slideTo(0);
+        router.refresh();
       }
-      await deleteSet(id, sets, lbs, reps);
-      swiper.slideTo(0);
-      router.refresh();
     } catch (err: any) {
       console.log(err);
     }
