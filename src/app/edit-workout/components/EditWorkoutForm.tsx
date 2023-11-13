@@ -242,28 +242,24 @@ const EditWorkoutForm = ({
           {session.Workout.map(
             ({ id, name, sets, lbs, reps, bodyPart }, index) => (
               <div key={id} className="">
-                <div className="flex flex-row items-center my-4">
-                  <h1 className="capitalize flex-1 text-2xl font-bold">
-                    {name}
-                  </h1>
+                <div className="flex flex-row justify-between items-center my-4">
+                  <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
 
-                  <div className="flex-initial w-fit">
-                    <div className="relative">
-                      <MenuOptions
-                        id={id}
-                        noteIds={noteIds}
-                        setNoteIds={setNoteIds}
-                        replace={replace}
-                        openMenu={openMenu}
-                        setOpenMenu={setOpenMenu}
-                        setReplace={setReplace}
-                        setAddExercise={setAddExercise}
-                        removeExercise={removeExercise}
-                      />
-                    </div>
-                    <div onClick={() => setOpenMenu(id)}>
-                      <SlOptions className="flex w-fit bg-gray-400 rounded-md px-2 right-0" />
-                    </div>
+                  <div className="relative">
+                    <MenuOptions
+                      id={id}
+                      noteIds={noteIds}
+                      setNoteIds={setNoteIds}
+                      replace={replace}
+                      openMenu={openMenu}
+                      setOpenMenu={setOpenMenu}
+                      setReplace={setReplace}
+                      setAddExercise={setAddExercise}
+                      removeExercise={removeExercise}
+                    />
+                  </div>
+                  <div onClick={() => setOpenMenu(id)}>
+                    <SlOptions className="flex w-10 bg-gray-400 rounded-md px-2 right-0" />
                   </div>
                 </div>
 

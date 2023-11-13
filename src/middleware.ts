@@ -11,6 +11,7 @@ export const config = {
     "/workouts/:path*",
     "/create-workout/:path*",
     "/edit-workout/:path*",
+    "/exercise/:path*",
     "/profile/:path*",
     "/search-workout/:path*",
   ],

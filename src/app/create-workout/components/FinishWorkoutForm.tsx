@@ -226,6 +226,7 @@ const FinishWorkoutForm = ({
                 />
                 <div className="workout-form__btn">
                   <button
+                    type="button"
                     className="rounded-full bg-gray-300 text-black"
                     onClick={() => addSet(id, sets, lbs, reps)}
                   >

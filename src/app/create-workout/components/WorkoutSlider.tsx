@@ -127,6 +127,7 @@ const WorkoutSlider = ({
             </SwiperSlide>
             <SwiperSlide>
               <button
+                type="button"
                 className={`w-full bg-red-300 text-red-800 rounded-lg px-2`}
               >
                 Delete Set
