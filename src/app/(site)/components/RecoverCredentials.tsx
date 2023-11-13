@@ -5,6 +5,8 @@ import { AiFillLock } from "react-icons/ai";
 import Input from "@/components/inputs/Input";
 import Button from "@/components/Button";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -18,6 +20,7 @@ const ForgotCredentials = ({
   setVariant,
 }: ForgotCredentialsProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -29,9 +32,27 @@ const ForgotCredentials = ({
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-    console.log("data: ", data);
+    const { email } = data;
+    try {
+      const res = await fetch("/api/forget-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      if (res.status === 400) {
+        toast.error("This email is already registered");
+      }
+      if (res.status === 200) {
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error("Error, try again");
+      console.log(error);
+    }
   };
   return (
     <>

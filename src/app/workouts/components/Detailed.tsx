@@ -39,7 +39,7 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
       -translate-x-1/2 
       rounded-lg 
       bg-[#8ebbff] 
-      w-[450px] 
+      w-96 
       md:w-[850px] 
       md:top-1/2
       md:left-2/3

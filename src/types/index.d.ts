@@ -13,6 +13,8 @@ export type CurrentUser = {
   email: string;
   hashedPassword: string | null;
   emailVerified: string | null;
+  resetToken?: string | null;
+  resetTokeExpiry?: number | null;
   image: string | null;
 };
 

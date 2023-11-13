@@ -21,7 +21,23 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
 
   return (
     <section>
-      <Link href="/search-workout" className="home-link">
+      <Link
+        href="/search-workout"
+        className={`
+          flex 
+          justify-center 
+          items-center 
+          border-2 
+          font-bold 
+          rounded-full
+          w-80
+          mx-auto
+          my-5
+          bg-[#8ebbff]
+          text-[#495057]
+          sm:mx-auto
+        `}
+      >
         Start a Workout
       </Link>
       <ul className="workoutlist">

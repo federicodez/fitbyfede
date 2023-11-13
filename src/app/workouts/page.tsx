@@ -2,7 +2,7 @@ import { getSessions } from "@/actions";
 import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 const Workouts = async () => {
   try {

@@ -34,25 +34,10 @@ const WorkoutSlider = ({
   const router = useRouter();
 
   const changeSet = async (id: string, e: MouseEvent) => {
-    const workout = session.Workout.filter((workout) => workout.id === id);
-    const { sets } = workout[0];
     const { target } = e;
     if (target) {
       const set = (target as HTMLButtonElement).value;
-      sets.splice(setIndex, 1, set);
-      const newSet: string[] = [];
-      let i = 1;
-      sets.map((set) => {
-        if (!!Number(set)) {
-          newSet.push(String(i));
-          i++;
-        } else {
-          newSet.push(set);
-        }
-      });
-
-      const updated = await changeWorkoutSet(id, newSet);
-
+      const updated = await changeWorkoutSet(id, session, setIndex, set);
       if (updated) {
         setSession(updated);
         router.refresh();
