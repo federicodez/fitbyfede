@@ -14,7 +14,7 @@ const Workouts = async () => {
       return <EmptyState />;
     }
   } catch (err) {
-    console.log(err);
+    console.log("workouts error ", err);
   }
 };
 

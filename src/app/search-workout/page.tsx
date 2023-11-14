@@ -11,7 +11,7 @@ const SearchWorkout = async () => {
       </Navbar>
     );
   } catch (err) {
-    console.log(err);
+    console.log("search error ", err);
   }
 };
 

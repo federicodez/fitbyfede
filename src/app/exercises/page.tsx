@@ -15,7 +15,7 @@ const Exercises = async () => {
       </Navbar>
     ) : null;
   } catch (err) {
-    console.log(err);
+    console.log("search exercise error", err);
   }
 };
 

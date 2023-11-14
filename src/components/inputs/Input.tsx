@@ -5,6 +5,7 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 
 interface InputProps {
   label: string;
+  placeholder?: string;
   id: string;
   type?: string;
   required?: boolean;
@@ -17,6 +18,7 @@ const Input: React.FC<InputProps> = ({
   label,
   id,
   register,
+  placeholder,
   required,
   errors,
   type = "text",
@@ -28,10 +30,10 @@ const Input: React.FC<InputProps> = ({
         htmlFor={id}
         className="
           block 
-          text-sm 
+          text-base
           font-medium 
           leading-6 
-          text-white
+          text-blue-300
         "
       >
         {label}
@@ -40,13 +42,14 @@ const Input: React.FC<InputProps> = ({
         <input
           id={id}
           type={type}
+          placeholder={placeholder}
           autoComplete={id}
           disabled={disabled}
           {...register(id, { required })}
           className={clsx(
             `
             form-input
-            bg-cyan-100
+            bg-white
             block 
             w-full 
             rounded-md 

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   existingUser.resetToken = passwordResetToken;
   existingUser.resetTokenExpiry = passwordResetExpires;
-  const resetUrl = `localhost:3000/reset-password/${resetToken}`;
+  const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
   const body = "Reset Password by clicking on following url: " + resetUrl;
 
   await sendEmail({
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
       () => new NextResponse("Reset password email is sent.", { status: 200 }),
     )
     .catch(async (error) => {
+      console.log("send email error: ", error);
       existingUser.resetToken = null;
       existingUser.resetTokenExpiry = null;
       return new NextResponse("Failed sending email, try again", {

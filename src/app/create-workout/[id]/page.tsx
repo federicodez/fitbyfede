@@ -27,7 +27,7 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
       );
     }
   } catch (error) {
-    console.log(error);
+    console.log("create error", error);
   }
 };
 

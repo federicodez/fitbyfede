@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import axios from "axios";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -34,53 +35,41 @@ const ForgotCredentials = ({
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-    const { email } = data;
+
     try {
-      const res = await fetch("/api/forget-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      if (res.status === 400) {
-        toast.error("This email is already registered");
-      }
-      if (res.status === 200) {
-        router.push("/login");
-      }
+      await axios
+        .post("/api/forget-password", data)
+        .then(() => router.push("/"))
+        .catch((error) => console.log("forgot credentials error", error));
     } catch (error) {
       toast.error("Error, try again");
-      console.log(error);
+      console.log("recover error", error);
     }
   };
   return (
     <>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mx-5 px-3 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
         <div className="flex flex-col justify-center items-center">
           <AiFillLock className="flex items-center backdrop-blur-lg rounded-full text-7xl p-2 border-2 border-white text-white" />
-          <h2
-            className="
-            backdrop-blur-lg
-            rounded-md
+          <div className="flex flex-col justify-center px-3 mt-6 items-center text-center overflow-hidden rounded-md">
+            <h2
+              className="
             w-fit
-            mt-6 
             text-center 
-            text-lg 
+            text-2xl 
             font-bold 
             tracking-tight 
             text-white
           "
-          >
-            Trouble logging in?
-          </h2>
-          <p className="backdrop-blur-lg text-center text-base text-white">
-            Enter your email and we&apos;ll send you a link to get back into
-            your account.
-          </p>
+            >
+              Trouble logging in?
+            </h2>
+            <p className="text-center text-base text-white">
+              Enter your email and we&apos;ll send you a link to get back into
+              your account.
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="backdrop-blur-lg mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
           className="
           px-4
@@ -91,21 +80,28 @@ const ForgotCredentials = ({
         "
         >
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <Input
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-              required
-              id="email"
-              label="Email address"
-              type="email"
-            />
+            <div>
+              <Input
+                disabled={isLoading}
+                register={register}
+                errors={errors}
+                required
+                id="email"
+                label="Email"
+                placeholder="Chandler@bing.com"
+                type="email"
+              />
+            </div>
             <div>
               <div className="flex justify-center items-center flex-col">
-                <Button disabled={isLoading} fullWidth type="submit">
+                <button
+                  className="py-2.5 w-full rounded-md bg-blue-400 text-white"
+                  disabled={isLoading}
+                  type="submit"
+                >
                   {!isLoading ? "Send login link" : "Sending..."}
-                </Button>
-                <span className="text-center text-sm mt-6 text-white">
+                </button>
+                <span className="text-center text-sm mt-6 text-white underline">
                   Can&apos;t reset your password?
                 </span>
               </div>
@@ -127,7 +123,7 @@ const ForgotCredentials = ({
                 setVariant("REGISTER");
                 setForgot(false);
               }}
-              className=" px-2 text-white cursor-pointer"
+              className=" px-2 text-white cursor-pointer underline"
             >
               Create new account
             </span>
@@ -144,7 +140,7 @@ const ForgotCredentials = ({
           "
           >
             <button
-              className="text-center text-white border-2 border-white w-full py-1"
+              className="text-center text-white border-2 rounded-md border-white w-full py-2.5 hover:bg-white hover:text-black"
               onClick={() => {
                 setVariant("LOGIN");
                 setForgot(false);

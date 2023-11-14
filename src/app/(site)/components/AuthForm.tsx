@@ -66,7 +66,10 @@ const AuthForm = () => {
             router.push("/workouts");
           }
         })
-        .catch(() => toast.error("Something went wrong!"))
+        .catch((error) => {
+          console.log("authform error", error);
+          toast.error("Something went wrong!");
+        })
         .finally(() => setIsLoading(false));
     }
 
@@ -106,12 +109,10 @@ const AuthForm = () => {
 
   return !forgot ? (
     <>
-      <div className="flex justify-center items-center sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mx-5 px-5 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
         <h2
           className="
             mt-6 
-            backdrop-blur-lg
-            w-fit
             text-center 
             text-3xl 
             font-bold 
@@ -119,22 +120,23 @@ const AuthForm = () => {
             text-white
           "
         >
-          {variant === "LOGIN"
-            ? "Sign in to your account"
-            : "Create your account"}
+          {variant === "LOGIN" ? (
+            <div className="flex flex-col text-center">
+              <p className="text-3xl">Welcome Back!</p>
+              <p className="text-lg font-normal">Sign in to your account</p>
+            </div>
+          ) : (
+            "Create your account"
+          )}
         </h2>
-      </div>
-      <div className="backdrop-blur-lg mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
           className="
-          px-4
           py-8
           shadow
           sm:rounded-lg
-          sm:px-10
         "
         >
-          <form className="space-y-6  p-2" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-6 w-full" onSubmit={handleSubmit(onSubmit)}>
             {variant === "REGISTER" && (
               <Input
                 disabled={isLoading}
@@ -152,6 +154,7 @@ const AuthForm = () => {
               required
               id="email"
               label="Email address"
+              placeholder="chandler@bing.com"
               type="email"
             />
             <Input
@@ -161,13 +164,14 @@ const AuthForm = () => {
               required
               id="password"
               label="Password"
+              placeholder="*********"
               type="password"
             />
             <div>
               <button
                 disabled={isLoading}
                 type="submit"
-                className="flex flex-row gap-5 justify-center items-center rounded-full w-full text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"
+                className="flex flex-row py-2.5 gap-5 justify-center items-center rounded-md w-full text-white bg-blue-400 hover:bg-sky-600 focus-visible:outline-sky-600"
               >
                 {variant === "LOGIN" ? "Sign in" : "Register"}
               </button>
@@ -177,15 +181,13 @@ const AuthForm = () => {
           <div className="mt-6">
             <div className="relative">
               <div className="relative flex justify-center text-sm">
-                <span className="line-design px-2 text-white">
-                  Or continue with
-                </span>
+                <span className="line-design px-2 text-white">OR</span>
               </div>
             </div>
 
             <div className="my-6 flex">
               <button
-                className="flex flex-row gap-5 justify-center items-center bg-white rounded-full w-full text-black"
+                className="flex flex-row gap-5 py-2.5 justify-center items-center bg-white rounded-md w-full text-black text-base"
                 onClick={() => socialAction("google")}
               >
                 <FcGoogle />
@@ -212,10 +214,12 @@ const AuthForm = () => {
             text-white
           "
           >
-            <div className="">
-              {variant === "LOGIN"
-                ? "New to FitbyFede?"
-                : "Already have an account?"}
+            <div>
+              {variant === "LOGIN" ? (
+                <p className="text-blue-400">New to FitbyFede?</p>
+              ) : (
+                <p>Already have an account?</p>
+              )}
             </div>
             <div onClick={toggleVariant} className="underline cursor-pointer">
               {variant === "LOGIN" ? "Create an account" : "Login"}
