@@ -13,7 +13,11 @@ export const authOptions: AuthOptions = {
       credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
-        email: { label: "Email", type: "email" },
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "jon.snow@castleblack.com",
+        },
       },
       async authorize(credentials) {
         // check to see if email and password is valid

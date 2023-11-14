@@ -32,7 +32,7 @@ model User {
   emailVerified    DateTime?
   image            String?
   hashedPassword   String?
-  resetToken       String?
+  resetToken       String?          @unique
   resetTokenExpiry Int?
   accounts         Account[]
   workouts         Workout[]

@@ -12,7 +12,7 @@ export type CurrentUser = {
   name: string;
   email: string;
   hashedPassword: string | null;
-  emailVerified: string | null;
+  emailVerified?: string | null;
   resetToken?: string | null;
   resetTokeExpiry?: number | null;
   image: string | null;

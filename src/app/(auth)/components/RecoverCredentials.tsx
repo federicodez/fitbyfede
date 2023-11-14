@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import { resetPassword } from "@/actions/users/resetPassword";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -37,10 +37,9 @@ const ForgotCredentials = ({
     setIsLoading(true);
 
     try {
-      await axios
-        .post("/api/forget-password", data)
-        .then(() => router.push("/"))
-        .catch((error) => console.log("forgot credentials error", error));
+      await resetPassword(data.email);
+      setVariant("LOGIN");
+      setForgot(false);
     } catch (error) {
       toast.error("Error, try again");
       console.log("recover error", error);

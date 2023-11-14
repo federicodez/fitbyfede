@@ -5,19 +5,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Data, Workout, WorkoutSession } from "@/types";
 import data from "@/constants/exerciseData.json";
 
-// export const getExerciseData = async () => {
-//   try {
-//     const res = await fetch(process.env.EXERCISE_DB_URL as string);
-//
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch data");
-//     }
-//     return res.json();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const getWorkouts = async () => {
   try {
     const currentUser = await getCurrentUser();
@@ -622,6 +609,6 @@ export const addExercise = async (
     console.log("actions: ", exercise);
     return exercise;
   } catch (error) {
-    console.log(error);
+    console.log("Error adding exercise ", error);
   }
 };
