@@ -5,11 +5,9 @@ import crypto from "crypto";
 export const verifyToken = async (token: string) => {
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { resetToken: hashedToken },
   });
-
-  console.log("server user ", user);
 
   if (!user) {
     return null;
