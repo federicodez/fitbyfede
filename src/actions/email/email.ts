@@ -2,9 +2,9 @@
 import prisma from "@/db";
 import bcrypt from "bcrypt";
 
-export const changePassword = async (id: string, newPassword: string) => {
+export const changePassword = async (id: string, password: string) => {
   try {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const updated = await prisma.user.update({
       where: { id },
       data: {

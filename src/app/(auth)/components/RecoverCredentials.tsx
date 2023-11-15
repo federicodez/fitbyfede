@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { AiFillLock } from "react-icons/ai";
 import Input from "@/components/inputs/Input";
-import Button from "@/components/Button";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { resetPassword } from "@/actions/users/resetPassword";
 
@@ -21,7 +19,6 @@ const ForgotCredentials = ({
   setVariant,
 }: ForgotCredentialsProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const {
     register,
@@ -35,7 +32,6 @@ const ForgotCredentials = ({
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-
     try {
       await resetPassword(data.email);
       setVariant("LOGIN");
@@ -98,7 +94,7 @@ const ForgotCredentials = ({
                   disabled={isLoading}
                   type="submit"
                 >
-                  {!isLoading ? "Send login link" : "Sending..."}
+                  {!isLoading ? "Send link" : "Sending..."}
                 </button>
                 <span className="text-center text-sm mt-6 text-white underline">
                   Can&apos;t reset your password?
