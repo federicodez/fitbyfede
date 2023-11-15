@@ -49,7 +49,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
     try {
       const session = await createMany(exerciseQueue);
       if (session) {
-        router.push(`/finish-workout/${session.id}`);
+        router.push(`/create-workout/${session.id}`);
       }
     } catch (error) {
       console.log(error);

@@ -26,7 +26,7 @@ const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
       );
     }
   } catch (err) {
-    console.log(err);
+    console.log("edit error", err);
   }
 };
 

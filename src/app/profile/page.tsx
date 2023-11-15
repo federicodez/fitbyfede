@@ -18,7 +18,7 @@ const Profile = async () => {
       </Navbar>
     );
   } catch (err) {
-    console.log(err);
+    console.log("profile error ", err);
   }
 };
 

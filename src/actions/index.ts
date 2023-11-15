@@ -5,19 +5,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Data, Workout, WorkoutSession } from "@/types";
 import data from "@/constants/exerciseData.json";
 
-// export const getExerciseData = async () => {
-//   try {
-//     const res = await fetch(process.env.EXERCISE_DB_URL as string);
-//
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch data");
-//     }
-//     return res.json();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const getWorkouts = async () => {
   try {
     const currentUser = await getCurrentUser();
@@ -159,11 +146,29 @@ export const updateDate = async (session: WorkoutSession, date: string) => {
   }
 };
 
-export const changeWorkoutSet = async (id: string, sets: string[]) => {
+export const changeWorkoutSet = async (
+  id: string,
+  session: WorkoutSession,
+  setIndex: number,
+  set: string,
+) => {
+  const workout = session.Workout.filter((workout) => workout.id === id);
+  const { sets } = workout[0];
+  sets.splice(setIndex, 1, set);
+  const newSet: string[] = [];
+  let i = 1;
+  sets.map((set) => {
+    if (!!Number(set)) {
+      newSet.push(String(i));
+      i++;
+    } else {
+      newSet.push(set);
+    }
+  });
   try {
     const updated = await prisma.workout.update({
       where: { id },
-      data: { sets },
+      data: { sets: newSet },
     });
 
     if (!updated) {
@@ -604,6 +609,6 @@ export const addExercise = async (
     console.log("actions: ", exercise);
     return exercise;
   } catch (error) {
-    console.log(error);
+    console.log("Error adding exercise ", error);
   }
 };
