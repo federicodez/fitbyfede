@@ -12,54 +12,56 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
   const { token } = params;
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [verified, setVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
-
-  console.log("user: ", user);
 
   useEffect(() => {
     (async () => {
       const user = await verifyToken(token);
       if (user) {
         setUser(user);
+        setIsVerified(true);
       }
     })();
   }, [token]);
 
   const handleSubmit = async () => {
+    setLoading(true);
     if (user?.id) {
       await changePassword(user.id, newPassword);
+      setLoading(false);
       router.push("/");
     }
   };
 
-  return (
-    <div>
+  return isVerified ? (
+    <div className="mx-5 my-10 px-5 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
       <form className="space-y-6" onSubmit={handleSubmit}>
-        <label htmlFor="password">Password</label>
-        <input
-          required
-          id="password"
-          type="password"
-          name="password"
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
+        <div className="flex flex-col">
+          <label htmlFor="password" className="text-blue-400 font-bold">
+            Password
+          </label>
+          <input
+            required
+            id="password"
+            type="password"
+            name="password"
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="bg-white rounded-md pl-2 text-black"
+            placeholder="*********"
+          />
+        </div>
         <div>
           <div className="flex justify-center items-center flex-col">
             <Button disabled={isLoading} fullWidth type="submit">
               {!isLoading ? "Reset Password" : "Resetting..."}
             </Button>
-            <span className="text-center text-sm mt-6 text-white">
-              Can&apos;t reset your password?
-            </span>
           </div>
         </div>
       </form>
     </div>
-  );
+  ) : null;
 };
 
 export default ResetPassword;
