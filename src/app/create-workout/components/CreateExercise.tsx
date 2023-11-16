@@ -61,7 +61,7 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
         >
           <HiX role="presentation" />
         </button>
-        <h3 className="text-xl">Create New Exercise</h3>
+        <h1 className="text-xl">Create New Exercise</h1>
         <button
           className="text-[#8ebbff] bg-[#2f3651] px-6 py-0 rounded-md"
           onClick={submitExercise}
@@ -98,7 +98,7 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
                 >
                   {part}
                 </div>
-                {partSelected === part ? <AiOutlineCheck /> : null}
+                {partSelected === part ? <AiOutlineCheck role="none" /> : null}
               </li>
             ))}
           </ul>
@@ -134,7 +134,9 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
                 >
                   {category}
                 </div>
-                {categorySelected === category ? <AiOutlineCheck /> : null}
+                {categorySelected === category ? (
+                  <AiOutlineCheck role="none" />
+                ) : null}
               </li>
             ))}
           </ul>

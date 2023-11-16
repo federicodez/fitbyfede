@@ -107,7 +107,7 @@ const AddExercise = ({
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
             id="cancel-btn"
           >
-            <Link href="/workouts">
+            <Link rel="noopener" href="/workouts">
               <HiX role="presentation" />
             </Link>
           </button>
@@ -124,7 +124,7 @@ const AddExercise = ({
             {exerciseQueue?.length ? `Add (${exerciseQueue?.length})` : "Add"}
           </button>
         </div>
-        <form className="searchbar-form">
+        <form rel="noopener" className="searchbar-form">
           <input
             onChange={(e) => setQuery(e.target.value)}
             type="text"
@@ -192,9 +192,9 @@ const AddExercise = ({
                   } justify-self-end rounded-md text-black w-fit p-1 mr-5`}
                 >
                   {exerciseQueue.includes(name) ? (
-                    <AiOutlineCheck role="presentation" />
+                    <AiOutlineCheck role="none" />
                   ) : (
-                    <AiOutlineQuestion role="presentation" />
+                    <AiOutlineQuestion role="none" />
                   )}
                 </div>
               </div>
@@ -236,9 +236,9 @@ const AddExercise = ({
                     } justify-self-end text-black rounded-md w-fit p-1 mr-5`}
                   >
                     {exerciseQueue.includes(name) ? (
-                      <AiOutlineCheck role="presentation" />
+                      <AiOutlineCheck role="none" />
                     ) : (
-                      <AiOutlineQuestion role="presentation" />
+                      <AiOutlineQuestion role="none" />
                     )}
                   </div>
                 </div>
@@ -272,7 +272,7 @@ const AddExercise = ({
                 className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
                 onClick={() => setDetails(false)}
               >
-                <HiX />
+                <HiX role="presentation" />
               </button>
               <h2 className="text-center m-2 font-bold" id="name">
                 {name}

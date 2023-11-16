@@ -61,7 +61,7 @@ const MenuOptions = ({
           onClick={() => setOpenMenu(false)}
           className="flex justify-center text-white bg-[#2f3651] px-2 py-1 mb-5 h-fit rounded-md right-0"
         >
-          <HiX />
+          <HiX role="presentation" />
         </div>
         <div
           role="button"

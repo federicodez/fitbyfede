@@ -77,7 +77,11 @@ const ForgotCredentials = ({
           sm:px-10
         "
         >
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            rel="noopener"
+            className="space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div>
               <Input
                 disabled={isLoading}

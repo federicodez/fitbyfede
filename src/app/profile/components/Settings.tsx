@@ -29,7 +29,7 @@ const Settings = () => {
         className="px-4 py-px bg-[#8ebbff] rounded-md w-fit border"
         onClick={() => setOptions(true)}
       >
-        <SlOptions className="text-black" />
+        <SlOptions role="presentation" className="text-black" />
       </div>
       {tryDelete && (
         <DeleteAccountBtn tryDelete={tryDelete} setTryDelete={setTryDelete} />

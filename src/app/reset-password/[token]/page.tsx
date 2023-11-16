@@ -49,12 +49,17 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
 
   return isVerified ? (
     <div className="mx-5 my-10 px-5 py-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
-      <form className="space-y-6 w-full" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        rel="noopener"
+        className="space-y-6 w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="flex flex-col">
           <Input
             disabled={isLoading}
             register={register}
             errors={errors}
+            aria-required
             required
             id="password"
             label="Password"

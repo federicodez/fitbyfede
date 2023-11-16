@@ -18,7 +18,11 @@ const MenuOptions = ({ session, setShowOptions }: MenuOptionsProps) => (
       <HiX role="presentation" />
     </button>
     <div className="flex flex-col w-full gap-3 ml-5">
-      <Link href={`/edit-workout/${session.id}`} className="flex flex-row">
+      <Link
+        rel="noopener"
+        href={`/edit-workout/${session.id}`}
+        className="flex flex-row"
+      >
         <HiPencilAlt
           role="presentation"
           className="workoutlist__edit-btn text-blue-700"

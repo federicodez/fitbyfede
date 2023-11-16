@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import moment from "moment";
 import Link from "next/link";
 import { HiX } from "react-icons/hi";
@@ -56,7 +55,11 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
           <HiX role="presentation" />
         </button>
         {session?.name}
-        <Link href={`/edit-workout/${session.id}`} className="flex flex-row">
+        <Link
+          rel="noopener"
+          href={`/edit-workout/${session.id}`}
+          className="flex flex-row"
+        >
           <span className="text-2xl text-[#2f3651]">Edit</span>
         </Link>
       </div>
