@@ -1,6 +1,9 @@
-import { createWorkoutSession, getMostRecentWorkouts } from "@/actions";
+import dynamic from "next/dynamic";
+import { getMostRecentWorkouts } from "@/actions";
 import Navbar from "@/components/navbar/Navbar";
-import SearchBar from "./components/SearchBar";
+const SearchBar = dynamic(() => import("./components/SearchBar"), {
+  loading: () => <p className="animate-bounce">Loading...</p>,
+});
 
 const SearchWorkout = async () => {
   try {

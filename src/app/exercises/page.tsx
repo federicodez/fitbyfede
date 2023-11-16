@@ -1,10 +1,9 @@
-import dynamic from "next/dynamic";
-const SearchExercises = dynamic(() => import("./components/SearchExercises"), {
-  ssr: false,
-});
-// import SearchExercises from "./components/SearchExercises";
 import Navbar from "@/components/navbar/Navbar";
 import { getMostRecentWorkouts } from "@/actions";
+import dynamic from "next/dynamic";
+const SearchExercises = dynamic(() => import("./components/SearchExercises"), {
+  loading: () => <p className="animate-bounce">Loading...</p>,
+});
 
 const Exercises = async () => {
   try {

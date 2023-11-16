@@ -4,7 +4,13 @@ import {
   getSessionById,
   getPreviousWorkout,
 } from "@/actions";
-import FinishWorkoutForm from "../components/FinishWorkoutForm";
+import dynamic from "next/dynamic";
+const FinishWorkoutForm = dynamic(
+  () => import("../components/FinishWorkoutForm"),
+  {
+    loading: () => <p className="animate-bounce">Loading...</p>,
+  },
+);
 
 const FinishWorkout = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

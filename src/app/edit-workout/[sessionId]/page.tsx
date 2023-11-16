@@ -4,7 +4,10 @@ import {
   getSessionById,
   getWorkoutsBySessionId,
 } from "@/actions";
-import EditWorkoutForm from "../components/EditWorkoutForm";
+import dynamic from "next/dynamic";
+const EditWorkoutForm = dynamic(() => import("../components/EditWorkoutForm"), {
+  loading: () => <p className="animate-bounce">Loading...</p>,
+});
 
 const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {
   const { sessionId } = params;

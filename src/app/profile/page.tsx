@@ -1,9 +1,13 @@
-import { Avatar } from "@/components";
-import Statistics from "./components/WorkoutStatistics";
-import { getWorkouts, getSessions } from "@/actions";
+import dynamic from "next/dynamic";
+import { getWorkouts } from "@/actions";
 import Navbar from "@/components/navbar/Navbar";
 import Settings from "./components/Settings";
-import PieChart from "./components/PieChart";
+const Avatar = dynamic(() => import("@/components/Avatar"), {
+  loading: () => <p className="animate-bounce">Loading...</p>,
+});
+const PieChart = dynamic(() => import("./components/PieChart"), {
+  loading: () => <p className="animate-bounce">Loading...</p>,
+});
 
 const Profile = async () => {
   try {

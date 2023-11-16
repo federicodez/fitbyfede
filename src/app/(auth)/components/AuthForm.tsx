@@ -2,13 +2,14 @@
 
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import Input from "@/components/inputs/Input";
 import ForgotCredentials from "./RecoverCredentials";
 import { toast } from "react-hot-toast";
+import AddToHomeScreen from "@/components/addToHomeScreen/AddToHomeScreen";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -108,7 +109,8 @@ const AuthForm = () => {
   };
 
   return !forgot ? (
-    <main>
+    <main className="flex flex-col items-center sm:py-20">
+      <AddToHomeScreen />
       <div className="mx-5 px-5 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
         <div
           className="
@@ -122,7 +124,9 @@ const AuthForm = () => {
         >
           {variant === "LOGIN" ? (
             <div className="flex flex-col text-center">
-              <h1 className="text-3xl">Welcome Back!</h1>
+              <h1 className="text-2xl font-bold text-center">
+                Welcome to FitbyFede!
+              </h1>
               <h2 className="text-lg font-normal">Sign in to your account</h2>
             </div>
           ) : (
