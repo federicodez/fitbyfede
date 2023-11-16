@@ -122,7 +122,7 @@ const FinishWorkoutForm = ({
               className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
               onClick={removeWorkout}
             >
-              <HiX />
+              <HiX role="presentation" />
             </button>
             <button
               type="submit"
@@ -142,7 +142,7 @@ const FinishWorkoutForm = ({
                   />
                 </div>
               ) : (
-                <strong onClick={() => setWorkoutName(" ")}>
+                <strong role="button" onClick={() => setWorkoutName(" ")}>
                   {session?.name}
                 </strong>
               )}
@@ -175,8 +175,11 @@ const FinishWorkoutForm = ({
                       setAddExercise={setAddExercise}
                       removeExercise={removeExercise}
                     />
-                    <div onClick={() => setOpenMenu(id)}>
-                      <SlOptions className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0" />
+                    <div role="button" onClick={() => setOpenMenu(id)}>
+                      <SlOptions
+                        role="presentation"
+                        className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+                      />
                     </div>
                   </div>
                 </div>

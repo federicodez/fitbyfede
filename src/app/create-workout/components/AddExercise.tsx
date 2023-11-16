@@ -90,21 +90,21 @@ const AddExercise = ({
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div className="flex flex-row justify-between my-8">
-          <div
+          <button
             onClick={() => {
               setCreate(true);
             }}
             className="text-white p-color px-6 py-0 rounded-md cursor-pointer"
           >
             New
-          </div>
+          </button>
           <button
             type="button"
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
             id="cancel-btn"
           >
             <Link href="/workouts">
-              <HiX />
+              <HiX role="presentation" />
             </Link>
           </button>
           <button
@@ -154,13 +154,14 @@ const AddExercise = ({
         {create && <CreateExercise create={create} setCreate={setCreate} />}
         <ul className="">
           {recent.length ? (
-            <h3 className="filtered-title font-bold text-center backdrop-blur-lg">
+            <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
               RECENT
-            </h3>
+            </h1>
           ) : null}
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">
               <div
+                role="button"
                 className="grid grid-cols-4 items-center rounded-md bg-[#2f3651] shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]"
                 onClick={() => addToExercises(name)}
               >
@@ -180,27 +181,29 @@ const AddExercise = ({
                   <span className="w-full">{bodyPart}</span>
                 </div>
                 <div
+                  role="button"
                   onClick={() => setDetails(id)}
                   className={`${
                     exerciseQueue.includes(name) ? "bg-[#8ebbff]" : "bg-white"
                   } justify-self-end rounded-md text-black w-fit p-1 mr-5`}
                 >
                   {exerciseQueue.includes(name) ? (
-                    <AiOutlineCheck className="" />
+                    <AiOutlineCheck role="presentation" />
                   ) : (
-                    <AiOutlineQuestion className="" />
+                    <AiOutlineQuestion role="presentation" />
                   )}
                 </div>
               </div>
             </li>
           ))}
-          <h3 className="filtered-title font-bold text-center backdrop-blur-lg">
+          <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
             EXERCISES
-          </h3>
+          </h1>
           <ul className="">
             {filteredExercises?.map(({ bodyPart, id, name }) => (
               <li key={id} className="my-4">
                 <div
+                  role="button"
                   className="grid grid-cols-4 items-center bg-[#2f3651] rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]"
                   onClick={() => addToExercises(name)}
                 >
@@ -222,15 +225,16 @@ const AddExercise = ({
                     </div>
                   </div>
                   <div
+                    role="button"
                     onClick={() => setDetails(id)}
                     className={`${
                       exerciseQueue.includes(name) ? "bg-[#8ebbff]" : "bg-white"
                     } justify-self-end text-black rounded-md w-fit p-1 mr-5`}
                   >
                     {exerciseQueue.includes(name) ? (
-                      <AiOutlineCheck />
+                      <AiOutlineCheck role="presentation" />
                     ) : (
-                      <AiOutlineQuestion />
+                      <AiOutlineQuestion role="presentation" />
                     )}
                   </div>
                 </div>
@@ -264,11 +268,11 @@ const AddExercise = ({
                 className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
                 onClick={() => setDetails(false)}
               >
-                <HiX />
+                <HiX role="presentation" />
               </button>
-              <h3 className="text-center m-2 font-bold" id="name">
+              <h2 className="text-center m-2 font-bold" id="name">
                 {name}
-              </h3>
+              </h2>
               <Image
                 className="flex self-center rounded-md"
                 id="gif"
@@ -298,9 +302,9 @@ const AddExercise = ({
                 >
                   <HiX />
                 </button>
-                <h3 className="text-center m-2 font-bold" id="name">
+                <h2 className="text-center m-2 font-bold" id="name">
                   {name}
-                </h3>
+                </h2>
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
@@ -311,9 +315,9 @@ const AddExercise = ({
                   blurDataURL="URL"
                   placeholder="blur"
                 />
-                <h3 className="text-center m-2 underline font-semibold">
+                <h2 className="text-center m-2 underline font-semibold">
                   Instructions
-                </h3>
+                </h2>
                 <ol className="px-10">
                   {instructions.map((item, itemId) => (
                     <li key={itemId} id="intructions" className="list-decimal">
@@ -321,9 +325,9 @@ const AddExercise = ({
                     </li>
                   ))}
                 </ol>
-                <h3 className="underline m-2 font-semibold text-center">
+                <h2 className="underline m-2 font-semibold text-center">
                   Secondary Mucles
-                </h3>
+                </h2>
                 <ol className="px-10" type="1">
                   {secondaryMuscles.map((muscle, muscleId) => (
                     <li

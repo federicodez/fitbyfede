@@ -158,7 +158,7 @@ const EditWorkoutForm = ({
               className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
               onClick={() => router.push("/workouts")}
             >
-              <HiX />
+              <HiX role="presentation" />
             </button>
             <h1>Edit Workout</h1>
             <button
@@ -191,28 +191,31 @@ const EditWorkoutForm = ({
                   }
                 >
                   <div
+                    role="button"
                     onClick={() => {
                       setWorkoutName(" ");
                       setSessionOptions(false);
                     }}
                     className="flex flex-row items-center gap-2 m-1"
                   >
-                    <AiFillEdit className="text-blue-500" />
+                    <AiFillEdit role="presentation" className="text-blue-500" />
                     <span>Edit</span>
                     <span>Workout</span>
                     <span>Name</span>
                   </div>
                   <div
+                    role="button"
                     className="flex flex-row items-center gap-2 m-1"
                     onClick={() => setDateInput(true)}
                   >
-                    <AiFillEdit className="text-blue-500" />
+                    <AiFillEdit role="presentation" className="text-blue-500" />
                     <span>Edit</span>
                     <span>Workout</span>
                     <span>Date</span>
                   </div>
                 </div>
                 <SlOptions
+                  role="button"
                   onClick={() => setSessionOptions(true)}
                   className="bg-gray-300 rounded-md py-1"
                 />
@@ -258,7 +261,7 @@ const EditWorkoutForm = ({
                       removeExercise={removeExercise}
                     />
                   </div>
-                  <div onClick={() => setOpenMenu(id)}>
+                  <div role="button" onClick={() => setOpenMenu(id)}>
                     <SlOptions className="flex w-10 bg-gray-400 rounded-md px-2 right-0" />
                   </div>
                 </div>

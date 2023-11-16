@@ -47,7 +47,9 @@ const PieChart = ({ workouts }: PieChartProps) => {
     ],
   };
 
-  return <Pie className="chart" id="pie" data={data} />;
+  return (
+    <Pie className="border rounded-lg p-color p-4 my-5" id="pie" data={data} />
+  );
 };
 
 export default PieChart;
