@@ -66,11 +66,17 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                     setShowOptions={setShowOptions}
                   />
                 </div>
-                <div onClick={() => setShowOptions(session.id)}>
-                  <SlOptions className="text-[#8ebbff] text-xl mr-2" />
+                <div role="button" onClick={() => setShowOptions(session.id)}>
+                  <SlOptions
+                    role="presentation"
+                    className="text-[#8ebbff] text-xl mr-2"
+                  />
                 </div>
               </div>
-              <div onClick={() => setShowWorkoutDetails(session.id)}>
+              <div
+                role="button"
+                onClick={() => setShowWorkoutDetails(session.id)}
+              >
                 <Sessions session={session} />
               </div>
             </div>

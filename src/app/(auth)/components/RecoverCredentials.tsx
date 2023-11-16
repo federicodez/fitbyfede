@@ -42,10 +42,13 @@ const ForgotCredentials = ({
     }
   };
   return (
-    <>
+    <main>
       <div className="mx-5 px-3 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
         <div className="flex flex-col justify-center items-center">
-          <AiFillLock className="flex items-center backdrop-blur-lg rounded-full text-7xl p-2 border-2 border-white text-white" />
+          <AiFillLock
+            role="presentation"
+            className="flex items-center backdrop-blur-lg rounded-full text-7xl p-2 border-2 border-white text-white"
+          />
           <div className="flex flex-col justify-center px-3 mt-6 items-center text-center overflow-hidden rounded-md">
             <h2
               className="
@@ -83,7 +86,7 @@ const ForgotCredentials = ({
                 required
                 id="email"
                 label="Email"
-                placeholder="Chandler@bing.com"
+                placeholder="jon.snow@castleblack.com"
                 type="email"
               />
             </div>
@@ -146,7 +149,7 @@ const ForgotCredentials = ({
           </div>
         </div>
       </div>
-    </>
+    </main>
   );
 };
 

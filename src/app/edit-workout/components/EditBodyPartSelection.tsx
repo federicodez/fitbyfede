@@ -84,6 +84,7 @@ const BodyPartSelection = ({
                 }`}
               >
                 <div
+                  role="button"
                   onClick={() => {
                     handleParts(part);
                     setShowParts(false);

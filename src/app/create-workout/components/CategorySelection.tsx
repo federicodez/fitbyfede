@@ -67,6 +67,7 @@ const CategorySelection = ({
                 }`}
               >
                 <div
+                  role="button"
                   onClick={() => {
                     handleCategories(category);
                     setShowCategories(false);

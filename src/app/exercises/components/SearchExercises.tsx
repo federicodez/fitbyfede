@@ -54,21 +54,21 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
     <Suspense fallback={<LoadingModel />}>
       <div className="wrapper container">
         <div className="flex flex-row justify-between my-8">
-          <div
+          <button
             onClick={() => {
               setCreate(true);
             }}
             className="text-white p-color px-6 py-0 rounded-md cursor-pointer"
           >
             New
-          </div>
+          </button>
           <button
             type="button"
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
             id="cancel-btn"
           >
             <Link href="/workouts">
-              <HiX />
+              <HiX role="presentation" />
             </Link>
           </button>
         </div>
@@ -106,9 +106,9 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
         {create && <CreateExercise create={create} setCreate={setCreate} />}
         <ul className="">
           {recent.length ? (
-            <h3 className="filtered-title font-bold text-center backdrop-blur-lg">
+            <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
               RECENT
-            </h3>
+            </h1>
           ) : null}
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">
@@ -129,6 +129,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                   <span className="w-full">{bodyPart}</span>
                 </div>
                 <div
+                  role="button"
                   onClick={() => setDetails(id)}
                   className="justify-self-end bg-white rounded-md text-black w-fit p-1 mr-5"
                 >
@@ -137,9 +138,9 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
               </div>
             </li>
           ))}
-          <h3 className="filtered-title font-bold text-center backdrop-blur-lg">
+          <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
             EXERCISES
-          </h3>
+          </h1>
           <ul className="">
             {filteredExercises?.map(({ bodyPart, id, name }) => (
               <li key={id} className="my-4">
@@ -162,10 +163,11 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                     </div>
                   </div>
                   <div
+                    role="button"
                     onClick={() => setDetails(id)}
                     className="justify-self-end bg-white text-black rounded-md w-fit p-1 mr-5"
                   >
-                    <AiOutlineQuestion />
+                    <AiOutlineQuestion role="presentation" />
                   </div>
                 </div>
               </li>
@@ -198,11 +200,11 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                 className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
                 onClick={() => setDetails(false)}
               >
-                <HiX />
+                <HiX role="presentation" />
               </button>
-              <h3 className="text-center m-2 font-bold" id="name">
+              <h1 className="text-center m-2 font-bold" id="name">
                 {name}
-              </h3>
+              </h1>
               <Image
                 className="flex self-center rounded-md"
                 id="gif"
@@ -211,9 +213,9 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                 width={400}
                 alt="exercise gif"
               />
-              <h3 className="text-center m-2 underline font-semibold">
+              <h1 className="text-center m-2 underline font-semibold">
                 Instructions
-              </h3>
+              </h1>
               <ol className="px-10">
                 {instructions.map((item, itemId) => (
                   <li key={itemId} id="intructions" className="list-decimal">
@@ -242,9 +244,9 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                 >
                   <HiX />
                 </button>
-                <h3 className="text-center m-2 font-bold" id="name">
+                <h1 className="text-center m-2 font-bold" id="name">
                   {name}
-                </h3>
+                </h1>
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
@@ -255,9 +257,9 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                   blurDataURL="URL"
                   placeholder="blur"
                 />
-                <h3 className="text-center m-2 underline font-semibold">
+                <h2 className="text-center m-2 underline font-semibold">
                   Instructions
-                </h3>
+                </h2>
                 <ol className="px-10">
                   {instructions.map((item, itemId) => (
                     <li key={itemId} id="intructions" className="list-decimal">
@@ -265,9 +267,9 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                     </li>
                   ))}
                 </ol>
-                <h3 className="underline m-2 font-semibold text-center">
+                <h2 className="underline m-2 font-semibold text-center">
                   Secondary Mucles
-                </h3>
+                </h2>
                 <ol className="px-10" type="1">
                   {secondaryMuscles.map((muscle, muscleId) => (
                     <li

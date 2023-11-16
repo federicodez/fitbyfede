@@ -108,7 +108,7 @@ const AuthForm = () => {
   };
 
   return !forgot ? (
-    <>
+    <main>
       <div className="mx-5 px-5 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
         <h2
           className="
@@ -122,11 +122,11 @@ const AuthForm = () => {
         >
           {variant === "LOGIN" ? (
             <div className="flex flex-col text-center">
-              <p className="text-3xl">Welcome Back!</p>
-              <p className="text-lg font-normal">Sign in to your account</p>
+              <h1 className="text-3xl">Welcome Back!</h1>
+              <h2 className="text-lg font-normal">Sign in to your account</h2>
             </div>
           ) : (
-            "Create your account"
+            <h1 className="text-3xl">Create your account</h1>
           )}
         </h2>
         <div
@@ -145,6 +145,7 @@ const AuthForm = () => {
                 required
                 id="name"
                 label="Name"
+                placeholder="Jon Snow"
               />
             )}
             <Input
@@ -154,7 +155,7 @@ const AuthForm = () => {
               required
               id="email"
               label="Email address"
-              placeholder="chandler@bing.com"
+              placeholder="jon.snow@castleblack.com"
               type="email"
             />
             <Input
@@ -190,13 +191,15 @@ const AuthForm = () => {
                 className="flex flex-row gap-5 py-2.5 justify-center items-center bg-white rounded-md w-full text-black text-base"
                 onClick={() => socialAction("google")}
               >
-                <FcGoogle />
+                <FcGoogle role="presentation" />
                 SIGN IN WITH GOOGLE
               </button>
             </div>
           </div>
           <div className="relative flex justify-center text-sm">
             <span
+              role="button"
+              tabIndex={0}
               onClick={() => setForgot(true)}
               className="px-2 text-white cursor-pointer"
             >
@@ -221,13 +224,18 @@ const AuthForm = () => {
                 <p>Already have an account?</p>
               )}
             </div>
-            <div onClick={toggleVariant} className="underline cursor-pointer">
+            <div
+              role="button"
+              tabIndex={1}
+              onClick={toggleVariant}
+              className="underline cursor-pointer"
+            >
               {variant === "LOGIN" ? "Create an account" : "Login"}
             </div>
           </div>
         </div>
       </div>
-    </>
+    </main>
   ) : (
     <ForgotCredentials setForgot={setForgot} setVariant={setVariant} />
   );

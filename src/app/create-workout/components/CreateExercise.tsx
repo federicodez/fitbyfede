@@ -59,7 +59,7 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
           onClick={() => setCreate(false)}
           className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
         >
-          <HiX />
+          <HiX role="presentation" />
         </button>
         <h3 className="text-xl">Create New Exercise</h3>
         <button
@@ -88,6 +88,7 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
                 }`}
               >
                 <div
+                  role="button"
                   onClick={() => {
                     setPartSelected(part);
                     setShowParts(false);
@@ -123,6 +124,7 @@ const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
                 }`}
               >
                 <div
+                  role="button"
                   onClick={() => {
                     setCategorySelected(category);
                     setShowCategories(false);

@@ -1,4 +1,4 @@
-import { Workout } from "@/types";
+import { Workout, WorkoutSession } from "@/types";
 import PieChart from "./PieChart";
 
 type StatisticsProps = {

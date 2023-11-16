@@ -53,7 +53,7 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
           className="bg-[#2f3651] px-2 py-1 rounded-md"
           onClick={() => setShowWorkoutDetails(false)}
         >
-          <HiX />
+          <HiX role="presentation" />
         </button>
         {session?.name}
         <Link href={`/edit-workout/${session.id}`} className="flex flex-row">
@@ -64,13 +64,13 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
         <span>{moment(session.createdAt).format("llll")}</span>
         <div className="flex flex-row justify-evenly">
           <span className="flex flex-row gap-2 justify-center items-center">
-            <IoIosTimer className="w-fit" />
+            <IoIosTimer className="w-fit" role="presentation" />
             {hours ? `${hours}:` : ""}
             {minutes.toString().padStart(2)}:
             {seconds.toString().padStart(2, "0")}
           </span>
           <span className="flex flex-row gap-2 justify-center items-center">
-            <FaWeightHanging />
+            <FaWeightHanging role="presentation" />
             {sum?.[0]}
           </span>
         </div>
