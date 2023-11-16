@@ -142,6 +142,7 @@ const AuthForm = () => {
                 disabled={isLoading}
                 register={register}
                 errors={errors}
+                aria-required
                 required
                 id="name"
                 label="Name"
@@ -152,6 +153,7 @@ const AuthForm = () => {
               disabled={isLoading}
               register={register}
               errors={errors}
+              aria-required
               required
               id="email"
               label="Email address"
@@ -163,6 +165,7 @@ const AuthForm = () => {
               register={register}
               errors={errors}
               required
+              aria-required
               id="password"
               label="Password"
               placeholder="*********"
@@ -172,7 +175,7 @@ const AuthForm = () => {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="flex flex-row py-2.5 gap-5 justify-center items-center rounded-md w-full text-white bg-blue-400 hover:bg-sky-600 focus-visible:outline-sky-600"
+                className="flex flex-row py-2.5 gap-5 justify-center items-center rounded-md w-full text-black bg-blue-300 hover:bg-blue-800 hover:text-white"
               >
                 {variant === "LOGIN" ? "Sign in" : "Register"}
               </button>

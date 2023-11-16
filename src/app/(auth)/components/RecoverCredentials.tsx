@@ -50,7 +50,7 @@ const ForgotCredentials = ({
             className="flex items-center backdrop-blur-lg rounded-full text-7xl p-2 border-2 border-white text-white"
           />
           <div className="flex flex-col justify-center px-3 mt-6 items-center text-center overflow-hidden rounded-md">
-            <h2
+            <h1
               className="
             w-fit
             text-center 
@@ -61,7 +61,7 @@ const ForgotCredentials = ({
           "
             >
               Trouble logging in?
-            </h2>
+            </h1>
             <p className="text-center text-base text-white">
               Enter your email and we&apos;ll send you a link to get back into
               your account.
@@ -83,6 +83,7 @@ const ForgotCredentials = ({
                 disabled={isLoading}
                 register={register}
                 errors={errors}
+                aria-required
                 required
                 id="email"
                 label="Email"
@@ -116,7 +117,8 @@ const ForgotCredentials = ({
             <div className="mt-6 flex"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span
+            <div
+              role="button"
               onClick={() => {
                 setVariant("REGISTER");
                 setForgot(false);
@@ -124,7 +126,7 @@ const ForgotCredentials = ({
               className=" px-2 text-white cursor-pointer underline"
             >
               Create new account
-            </span>
+            </div>
           </div>
           <div
             className="

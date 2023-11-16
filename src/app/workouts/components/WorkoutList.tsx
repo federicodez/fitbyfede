@@ -22,6 +22,7 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
   return (
     <section>
       <Link
+        aria-label="start a workout"
         href="/search-workout"
         className={`
           flex 
