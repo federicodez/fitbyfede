@@ -94,7 +94,7 @@ const BodyPartSelection = ({
                 >
                   {part}
                 </div>
-                {bodyPartBtn === part ? <AiOutlineCheck /> : null}
+                {bodyPartBtn === part ? <AiOutlineCheck role="none" /> : null}
               </li>
             ))
           : null}

@@ -67,12 +67,12 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
             id="cancel-btn"
           >
-            <Link href="/workouts">
+            <Link rel="noopener" href="/workouts">
               <HiX role="presentation" />
             </Link>
           </button>
         </div>
-        <form className="searchbar-form">
+        <form rel="noopener" className="searchbar-form">
           <input
             onChange={(e) => setQuery(e.target.value)}
             type="text"
@@ -133,7 +133,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                   onClick={() => setDetails(id)}
                   className="justify-self-end bg-white rounded-md text-black w-fit p-1 mr-5"
                 >
-                  <AiOutlineQuestion className="" />
+                  <AiOutlineQuestion role="presentation" />
                 </div>
               </div>
             </li>
@@ -242,7 +242,7 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
                   className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
                   onClick={() => setDetails(false)}
                 >
-                  <HiX />
+                  <HiX role="presentation" />
                 </button>
                 <h1 className="text-center m-2 font-bold" id="name">
                   {name}

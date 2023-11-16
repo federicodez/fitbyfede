@@ -81,6 +81,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
       <div className="wrapper container">
         <div className="flex flex-row justify-between my-8">
           <div
+            role="button"
             onClick={() => {
               setCreate(true);
             }}
@@ -93,8 +94,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
             id="cancel-btn"
           >
-            <Link href="/workouts">
-              <HiX />
+            <Link rel="noopener" href="/workouts">
+              <HiX role="presentation" />
             </Link>
           </button>
           <button
@@ -260,9 +261,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
               >
                 <HiX role="presentation" />
               </button>
-              <h3 className="text-center m-2 font-bold" id="name">
+              <h2 className="text-center m-2 font-bold" id="name">
                 {name}
-              </h3>
+              </h2>
               <Image
                 className="flex self-center rounded-md"
                 id="gif"
@@ -292,9 +293,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                 >
                   <HiX role="presentation" />
                 </button>
-                <h3 className="text-center m-2 font-bold" id="name">
+                <h2 className="text-center m-2 font-bold" id="name">
                   {name}
-                </h3>
+                </h2>
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
@@ -305,9 +306,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                   blurDataURL="URL"
                   placeholder="blur"
                 />
-                <h3 className="text-center m-2 underline font-semibold">
+                <h2 className="text-center m-2 underline font-semibold">
                   Instructions
-                </h3>
+                </h2>
                 <ol className="px-10">
                   {instructions.map((item, itemId) => (
                     <li key={itemId} id="intructions" className="list-decimal">
@@ -315,9 +316,9 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
                     </li>
                   ))}
                 </ol>
-                <h3 className="underline m-2 font-semibold text-center">
+                <h2 className="underline m-2 font-semibold text-center">
                   Secondary Mucles
-                </h3>
+                </h2>
                 <ol className="px-10" type="1">
                   {secondaryMuscles.map((muscle, muscleId) => (
                     <li

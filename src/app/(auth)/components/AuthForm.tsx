@@ -110,7 +110,7 @@ const AuthForm = () => {
   return !forgot ? (
     <main>
       <div className="mx-5 px-5 pt-5 sm:mx-auto sm:w-full sm:max-w-md rounded-md backdrop-blur-lg overflow-hidden border border-white">
-        <h2
+        <div
           className="
             mt-6 
             text-center 
@@ -128,7 +128,7 @@ const AuthForm = () => {
           ) : (
             <h1 className="text-3xl">Create your account</h1>
           )}
-        </h2>
+        </div>
         <div
           className="
           py-8
@@ -136,7 +136,11 @@ const AuthForm = () => {
           sm:rounded-lg
         "
         >
-          <form className="space-y-6 w-full" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            rel="noopener"
+            className="space-y-6 w-full"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {variant === "REGISTER" && (
               <Input
                 disabled={isLoading}

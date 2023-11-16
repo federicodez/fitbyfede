@@ -262,7 +262,10 @@ const EditWorkoutForm = ({
                     />
                   </div>
                   <div role="button" onClick={() => setOpenMenu(id)}>
-                    <SlOptions className="flex w-10 bg-gray-400 rounded-md px-2 right-0" />
+                    <SlOptions
+                      role="presentation"
+                      className="flex w-10 bg-gray-400 rounded-md px-2 right-0"
+                    />
                   </div>
                 </div>
 

@@ -77,7 +77,9 @@ const CategorySelection = ({
                 >
                   {category}
                 </div>
-                {categoriesBtn === category ? <AiOutlineCheck /> : null}
+                {categoriesBtn === category ? (
+                  <AiOutlineCheck role="none" />
+                ) : null}
               </li>
             ))
           : null}
