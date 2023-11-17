@@ -3,7 +3,7 @@
 import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
-import { CustomButton, ReplaceBtn } from "@/components";
+import { CustomButton } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
 import AddExercise from "./AddExercise";
 import MenuOptions from "./MenuOptions";
@@ -20,17 +20,17 @@ import { HiX } from "react-icons/hi";
 import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
 
-type FinishWorkoutFormProps = {
+type CreateWorkoutFormProps = {
   previous: Workout[] | [];
   initialSession: WorkoutSession;
   recentWorkouts: Workout[];
 };
 
-const FinishWorkoutForm = ({
+const CreateWorkoutForm = ({
   previous,
   initialSession,
   recentWorkouts,
-}: FinishWorkoutFormProps) => {
+}: CreateWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [sessionNotes, setSessionNotes] = useState("");
   const [noteIds, setNoteIds] = useState<string[]>([]);
@@ -269,4 +269,4 @@ const FinishWorkoutForm = ({
   );
 };
 
-export default FinishWorkoutForm;
+export default CreateWorkoutForm;

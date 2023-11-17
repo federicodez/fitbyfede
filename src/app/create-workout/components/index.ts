@@ -2,7 +2,7 @@ import AddExercise from "./AddExercise";
 import BodyPartSelection from "./BodyPartSelection";
 import CategorySelection from "./CategorySelection";
 import CreateExercise from "./CreateExercise";
-import FinishWorkoutForm from "./FinishWorkoutForm";
+import CreateWorkoutForm from "./CreateWorkoutForm";
 import MenuOptions from "./MenuOptions";
 import WorkoutSlider from "./WorkoutSlider";
 
@@ -11,7 +11,7 @@ export {
   BodyPartSelection,
   CategorySelection,
   CreateExercise,
-  FinishWorkoutForm,
+  CreateWorkoutForm,
   MenuOptions,
   WorkoutSlider,
 };

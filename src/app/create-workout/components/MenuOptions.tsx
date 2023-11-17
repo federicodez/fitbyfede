@@ -5,10 +5,6 @@ import { TbReplace } from "react-icons/tb";
 import { BiTimer } from "react-icons/bi";
 import { ReplaceBtn } from "@/components";
 
-type Notes = {
-  note: string;
-};
-
 type MenuOptionsProps = {
   id: string;
   noteIds: string[];

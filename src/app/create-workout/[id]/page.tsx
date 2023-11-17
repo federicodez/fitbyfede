@@ -5,14 +5,14 @@ import {
   getPreviousWorkout,
 } from "@/actions";
 import dynamic from "next/dynamic";
-const FinishWorkoutForm = dynamic(
-  () => import("../components/FinishWorkoutForm"),
+const CreateWorkoutForm = dynamic(
+  () => import("../components/CreateWorkoutForm"),
   {
     loading: () => <p className="animate-bounce">Loading...</p>,
   },
 );
 
-const FinishWorkout = async ({ params }: { params: { id: string } }) => {
+const CreateWorkout = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   try {
@@ -24,7 +24,7 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
       const previous = (await getPreviousWorkout(workouts)) || [];
       return (
         previous && (
-          <FinishWorkoutForm
+          <CreateWorkoutForm
             previous={previous}
             initialSession={session}
             recentWorkouts={recentWorkouts}
@@ -37,4 +37,4 @@ const FinishWorkout = async ({ params }: { params: { id: string } }) => {
   }
 };
 
-export default FinishWorkout;
+export default CreateWorkout;
