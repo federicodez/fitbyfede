@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { getWorkouts } from "@/actions";
+import { getWorkouts } from "@/actions/workouts";
 import Navbar from "@/components/navbar/Navbar";
 import Settings from "./components/Settings";
 const Avatar = dynamic(() => import("@/components/Avatar"), {

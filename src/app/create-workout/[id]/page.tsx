@@ -3,7 +3,7 @@ import {
   getMostRecentWorkouts,
   getSessionById,
   getPreviousWorkout,
-} from "@/actions";
+} from "@/actions/workouts";
 import dynamic from "next/dynamic";
 const CreateWorkoutForm = dynamic(
   () => import("../components/CreateWorkoutForm"),

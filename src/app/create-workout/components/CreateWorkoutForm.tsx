@@ -3,21 +3,18 @@
 import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
-import { CustomButton } from "@/components";
+import { AddExercise, CustomButton, StartTimer } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
-import AddExercise from "./AddExercise";
-import MenuOptions from "./MenuOptions";
-import WorkoutSlider from "./WorkoutSlider";
+import { MenuOptions, WorkoutSlider } from "@/components/form";
 import {
   updateWorkout,
-  updateWorkouts,
+  updateManyWorkouts,
   deleteSession,
   deleteWorkout,
   updateWorkoutSession,
-} from "@/actions";
+} from "@/actions/workouts";
 import { SlOptions } from "react-icons/sl";
 import { HiX } from "react-icons/hi";
-import StartTimer from "@/components/Timer";
 import { useTimerContext } from "@/context/TimerContext";
 
 type CreateWorkoutFormProps = {
@@ -48,7 +45,7 @@ const CreateWorkoutForm = ({
     try {
       const name = workoutName ?? session.name;
       await updateWorkoutSession(session.id, name, sessionNotes, time);
-      await updateWorkouts(session, dataLbs, dataReps);
+      await updateManyWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -62,7 +59,7 @@ const CreateWorkoutForm = ({
     try {
       const name = workoutName ?? session.name;
       await updateWorkoutSession(session.id, name, sessionNotes, time);
-      await updateWorkouts(session, dataLbs, dataReps);
+      await updateManyWorkouts(session, dataLbs, dataReps);
       router.push("/workouts");
     } catch (error) {
       console.log(error);

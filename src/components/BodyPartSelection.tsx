@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { bodyParts, categories } from "@/constants";
+import { bodyParts } from "@/constants";
 import { Workout, Data } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
 import { WorkoutSession } from "@prisma/client";

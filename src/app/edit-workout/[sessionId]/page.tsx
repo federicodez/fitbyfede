@@ -3,7 +3,7 @@ import {
   getPreviousWorkout,
   getSessionById,
   getWorkoutsBySessionId,
-} from "@/actions";
+} from "@/actions/workouts";
 import dynamic from "next/dynamic";
 const EditWorkoutForm = dynamic(() => import("../components/EditWorkoutForm"), {
   loading: () => <p className="animate-bounce">Loading...</p>,

@@ -3,21 +3,21 @@
 import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
-import { CustomButton, ReplaceBtn } from "@/components";
+import { AddExercise } from "@/components";
+import { MenuOptions, WorkoutSlider } from "@/components/form";
+import LoadingModel from "@/components/models/LoadingModel";
 import {
   updateWorkout,
   updateWorkoutSession,
-  updateWorkouts,
-  updateDate,
+  updateManyWorkouts,
+  updateManyWorkoutsDate,
   deleteSession,
   deleteWorkout,
-} from "@/actions";
-import LoadingModel from "@/components/models/LoadingModel";
+} from "@/actions/workouts";
 import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
-import moment from "moment";
-import { AddExercise, WorkoutSlider, MenuOptions } from "./index";
 import { AiFillEdit } from "react-icons/ai";
+import moment from "moment";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
@@ -66,7 +66,7 @@ const EditWorkoutForm = ({
           session.time,
         );
       }
-      await updateWorkouts(session, dataLbs, dataReps);
+      await updateManyWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -95,9 +95,9 @@ const EditWorkoutForm = ({
         );
       }
       if (!date && date !== undefined) {
-        await updateDate(session, date);
+        await updateManyWorkoutsDate(session, date);
       } else {
-        await updateWorkouts(session, dataLbs, dataReps);
+        await updateManyWorkouts(session, dataLbs, dataReps);
       }
       router.push("/workouts");
     } catch (error) {
@@ -217,7 +217,7 @@ const EditWorkoutForm = ({
                 <SlOptions
                   role="button"
                   onClick={() => setSessionOptions(true)}
-                  className="bg-gray-300 rounded-md py-1"
+                  className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
                 />
               </div>
             </div>
@@ -264,7 +264,7 @@ const EditWorkoutForm = ({
                   <div role="button" onClick={() => setOpenMenu(id)}>
                     <SlOptions
                       role="presentation"
-                      className="flex w-10 bg-gray-400 rounded-md px-2 right-0"
+                      className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
                     />
                   </div>
                 </div>

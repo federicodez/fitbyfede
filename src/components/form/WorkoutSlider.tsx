@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, MouseEvent } from "react";
+import { useState, MouseEvent } from "react";
 import { CustomButton, SetOptions } from "@/components";
 import { WorkoutSession, Workout } from "@/types";
 import { useRouter } from "next/navigation";
-import { changeWorkoutSet, deleteSet } from "@/actions";
+import { changeWorkoutSet, deleteSet } from "@/actions/workouts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/scss";
 
@@ -78,7 +78,7 @@ const WorkoutSlider = ({
             onSlideChange={(swiper) => handleDeleteSet(id, setId, swiper)}
           >
             <SwiperSlide>
-              <li className="flex flex-row justify-evenly gap-3 py-2">
+              <li className="flex flex-row justify-evenly py-2">
                 <div className="relative h-full">
                   <CustomButton
                     title={set}
@@ -120,8 +120,6 @@ const WorkoutSlider = ({
                         : ""
                     }`}
                     className="bg-gray-300 text-black rounded-lg w-20"
-                    aria-required
-                    required
                   />
                 </div>
               </li>

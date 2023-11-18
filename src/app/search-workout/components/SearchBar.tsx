@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { createMany } from "@/actions";
+import { createManyWorkouts } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
 import { Workout, Data } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
@@ -39,7 +39,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
   const [workoutsPerPage] = useState(50);
   const [workouts, setWorkouts] = useState(data);
 
-  const paginatedPosts = paginate(workouts, currentPage, workoutsPerPage);
+  const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
@@ -47,7 +47,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const handleClick = async () => {
     try {
-      const session = await createMany(exerciseQueue);
+      const session = await createManyWorkouts(exerciseQueue);
       if (session) {
         router.push(`/create-workout/${session.id}`);
       }
@@ -68,8 +68,8 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const filteredExercises =
     query === ""
-      ? paginatedPosts
-      : paginatedPosts?.filter(({ name }) =>
+      ? paginatedWorkouts
+      : paginatedWorkouts?.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")

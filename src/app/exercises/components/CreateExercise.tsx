@@ -3,7 +3,7 @@
 import React, { ChangeEvent, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { bodyParts, categories } from "@/constants";
-import { addExercise } from "@/actions";
+import { addExercise } from "@/actions/workouts";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type CreateExerciseProps = {

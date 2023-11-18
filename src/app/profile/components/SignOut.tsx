@@ -1,11 +1,10 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const SignOut = () => {
   const router = useRouter();
-  const { data: session } = useSession();
 
   return (
     <button

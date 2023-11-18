@@ -1,5 +1,5 @@
-import { bodyParts, categories } from "@/constants";
-import { Workout, Data, WorkoutSession } from "@/types";
+import { categories } from "@/constants";
+import { Data, WorkoutSession } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type CategorySelectionProps = {

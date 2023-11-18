@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { getMostRecentWorkouts } from "@/actions";
+import { getMostRecentWorkouts, getCreatedExercises } from "@/actions/workouts";
 import Navbar from "@/components/navbar/Navbar";
 const SearchBar = dynamic(() => import("./components/SearchBar"), {
   loading: () => <p className="animate-bounce">Loading...</p>,

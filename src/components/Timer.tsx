@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { SlOptions } from "react-icons/sl";
 import { useTimerContext } from "@/context/TimerContext";
 import { BiTimer } from "react-icons/bi";
 

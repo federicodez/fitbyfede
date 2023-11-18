@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components";
 import { verifyToken } from "@/actions/users/verifyToken";
 import { changePassword } from "@/actions/email/email";
@@ -11,7 +11,6 @@ import Input from "@/components/inputs/Input";
 
 const ResetPassword = ({ params }: { params: { token: string } }) => {
   const { token } = params;
-  const [newPassword, setNewPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [user, setUser] = useState<User | null>(null);

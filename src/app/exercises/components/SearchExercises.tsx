@@ -3,13 +3,12 @@
 import { useState, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
-import { bodyParts, categories } from "@/constants";
 import Image from "next/image";
-import { Data, Workout } from "@/types";
+import { Workout } from "@/types";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
 import LoadingModel from "@/components/models/LoadingModel";
-import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
+import { AiOutlineQuestion } from "react-icons/ai";
 import { BodyPartSelection, CategorySelection } from "@/components";
 import CreateExercise from "./CreateExercise";
 
@@ -23,10 +22,8 @@ const SearchExercises = ({ recentWorkouts }: SearchExercisesProps) => {
   const [details, setDetails] = useState<string | boolean>(false);
 
   const [showParts, setShowParts] = useState(false);
-  const [partsActivated, setPartsActivated] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoryActivated, setCategoryActivated] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [recent, setRecent] = useState(recentWorkouts);
