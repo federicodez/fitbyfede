@@ -7,12 +7,17 @@ const SearchBar = dynamic(() => import("./components/SearchBar"), {
 
 const SearchWorkout = async () => {
   try {
-    const recentWorkouts = (await getMostRecentWorkouts()) || [];
-    return (
+    const recentWorkouts = await getMostRecentWorkouts();
+    const createdExercises = await getCreatedExercises();
+
+    return recentWorkouts && createdExercises ? (
       <Navbar>
-        <SearchBar recentWorkouts={recentWorkouts} />
+        <SearchBar
+          recentWorkouts={recentWorkouts}
+          createdExercises={createdExercises}
+        />
       </Navbar>
-    );
+    ) : null;
   } catch (err) {
     console.log("search error ", err);
   }

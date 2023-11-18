@@ -92,7 +92,7 @@ const WorkoutSlider = ({
                 {previous?.[index]?.lbs[setId] ? (
                   <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
                 ) : (
-                  <div className="border-4 rounded-lg w-20 h-fit my-2 border-gray-300"></div>
+                  <div className="rounded-lg w-20 bg-gray-300"></div>
                 )}
                 <div className="">
                   <input

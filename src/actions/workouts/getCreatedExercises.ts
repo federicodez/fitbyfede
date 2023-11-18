@@ -15,7 +15,7 @@ export const getCreatedExercises = async () => {
     });
 
     if (!workouts) {
-      return null;
+      return [];
     }
     return workouts;
   } catch (error) {

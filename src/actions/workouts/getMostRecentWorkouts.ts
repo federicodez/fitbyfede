@@ -21,6 +21,10 @@ export const getMostRecentWorkouts = async () => {
       },
     });
 
+    if (!workouts) {
+      return [];
+    }
+
     return workouts;
   } catch (err: any) {
     console.log("Error loading most recent workouts: ", err);

@@ -4,7 +4,7 @@ import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise } from "@/components";
-import { MenuOptions, WorkoutSlider } from "@/components/form";
+import { HeaderMenu, WorkoutCard } from "@/components/form";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
   updateWorkout,
@@ -16,8 +16,8 @@ import {
 } from "@/actions/workouts";
 import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
-import { AiFillEdit } from "react-icons/ai";
 import moment from "moment";
+import { BiTimer } from "react-icons/bi";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
@@ -150,203 +150,114 @@ const EditWorkoutForm = ({
   };
 
   return !addExercise ? (
-    <Suspense fallback={<LoadingModel />}>
-      <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
-        <form className="workout-form" action={handleSubmit}>
-          <div className="flex flex-row justify-between mt-3">
-            <button
-              className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
-              onClick={() => router.push("/workouts")}
-            >
-              <HiX role="presentation" />
-            </button>
-            <h1>Edit Workout</h1>
-            <button
-              type="submit"
-              className="bg-blue-300 text-white rounded-md px-2"
-            >
-              Save
-            </button>
-          </div>
-          <div className="flex my-4 flex-col">
-            <div className="flex flex-row items-center gap-2">
-              <div className="flex flex-row items-center gap-2">
-                {workoutName ? (
-                  <div className={!workoutName.length ? "hidden" : ""}>
-                    <input
-                      type="text"
-                      className="bg-white rounded-md w-full"
-                      onChange={(e) => setWorkoutName(e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <strong>{session?.name}</strong>
-                )}
-                <div
-                  onMouseLeave={() => setSessionOptions(false)}
-                  className={
-                    sessionOptions
-                      ? "absolute w-56 z-10 bg-gray-800 text-white rounded-lg p-2 cursor-pointer"
-                      : "hidden"
-                  }
-                >
-                  <div
-                    role="button"
-                    onClick={() => {
-                      setWorkoutName(" ");
-                      setSessionOptions(false);
-                    }}
-                    className="flex flex-row items-center gap-2 m-1"
-                  >
-                    <AiFillEdit role="presentation" className="text-blue-500" />
-                    <span>Edit</span>
-                    <span>Workout</span>
-                    <span>Name</span>
-                  </div>
-                  <div
-                    role="button"
-                    className="flex flex-row items-center gap-2 m-1"
-                    onClick={() => setDateInput(true)}
-                  >
-                    <AiFillEdit role="presentation" className="text-blue-500" />
-                    <span>Edit</span>
-                    <span>Workout</span>
-                    <span>Date</span>
-                  </div>
-                </div>
-                <SlOptions
-                  role="button"
-                  onClick={() => setSessionOptions(true)}
-                  className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+    <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+      <form rel="noopener" action={handleSubmit}>
+        <div className="flex flex-row justify-between">
+          <button
+            className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
+            onClick={() => router.push("/workouts")}
+          >
+            <HiX role="presentation" />
+          </button>
+          <h1>Edit Workout</h1>
+          <button
+            type="submit"
+            className="bg-blue-300 text-blue-950 rounded-md px-2"
+          >
+            Save
+          </button>
+        </div>
+        <div className="flex my-4 flex-col">
+          <div className="flex flex-row items-center gap-2">
+            {workoutName ? (
+              <div className={!workoutName.length ? "hidden" : ""}>
+                <input
+                  type="text"
+                  className="bg-white rounded-md w-full"
+                  onChange={(e) => setWorkoutName(e.target.value)}
                 />
+              </div>
+            ) : (
+              <strong>{session?.name}</strong>
+            )}
+            <div
+              className={
+                sessionOptions
+                  ? "absolute w-fit z-10 bg-[#8ebbff] text-[#2f3651] rounded-lg p-2 cursor-pointer"
+                  : "hidden"
+              }
+            >
+              <HeaderMenu
+                setSessionOptions={setSessionOptions}
+                setWorkoutName={setWorkoutName}
+                setDateInput={setDateInput}
+              />
+            </div>
+            <SlOptions
+              role="button"
+              onClick={() => setSessionOptions(true)}
+              className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+            />
+          </div>
+          {dateInput ? (
+            <input
+              name="date"
+              type="datetime-local"
+              className="rounded-md text-white"
+              onMouseLeave={() => setDateInput(false)}
+            />
+          ) : (
+            <div>
+              <div className="flex flex-col gap-2">
+                <div>{moment(date?.createdAt).calendar()}</div>
+                <div className="flex flex-row items-center">
+                  <BiTimer className="flex w-fit rounded-md px-1" />
+                  {hours ? `${hours}:` : ""}
+                  {minutes.toString().padStart(2)}:
+                  {seconds.toString().padStart(2, "0")}
+                </div>
+                <div>{session?.notes}</div>
               </div>
             </div>
-            {dateInput ? (
-              <input
-                name="date"
-                type="datetime-local"
-                className="rounded-md text-white"
-                onMouseLeave={() => setDateInput(false)}
-              />
-            ) : (
-              <div>
-                <div className="flex flex-col gap-2">
-                  <div>{moment(date?.createdAt).calendar()}</div>
-                  <div>
-                    {hours ? `${hours}:` : ""}
-                    {minutes.toString().padStart(2)}:
-                    {seconds.toString().padStart(2, "0")}m
-                  </div>
-                  <div>{session?.notes}</div>
-                </div>
-              </div>
-            )}
-          </div>
-          {session.Workout.map(
-            ({ id, name, sets, lbs, reps, bodyPart }, index) => (
-              <div key={id} className="">
-                <div className="flex flex-row justify-between items-center my-4">
-                  <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
-
-                  <div className="relative">
-                    <MenuOptions
-                      id={id}
-                      noteIds={noteIds}
-                      setNoteIds={setNoteIds}
-                      replace={replace}
-                      openMenu={openMenu}
-                      setOpenMenu={setOpenMenu}
-                      setReplace={setReplace}
-                      setAddExercise={setAddExercise}
-                      removeExercise={removeExercise}
-                    />
-                  </div>
-                  <div role="button" onClick={() => setOpenMenu(id)}>
-                    <SlOptions
-                      role="presentation"
-                      className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
-                    />
-                  </div>
-                </div>
-
-                <div className={noteIds.includes(id) ? "" : "hidden"}>
-                  <input
-                    type="text"
-                    name={id}
-                    className="bg-white rounded-md w-full"
-                    onChange={(e) => handleNotes(e)}
-                  />
-                </div>
-                <div className="flex justify-evenly">
-                  <span className="flex justify-center items-center w-full">
-                    Set
-                  </span>
-                  <span className="flex justify-center items-center w-full">
-                    Previous
-                  </span>
-                  {bodyPart === "cardio" ? (
-                    <span className="flex justify-center items-center w-full">
-                      mile
-                    </span>
-                  ) : (
-                    <span className="flex justify-center items-center w-full">
-                      lbs
-                    </span>
-                  )}
-                  {bodyPart === "cardio" ? (
-                    <span className="flex justify-center items-center w-full">
-                      Time
-                    </span>
-                  ) : (
-                    <span className="flex justify-center items-center w-full">
-                      Reps
-                    </span>
-                  )}
-                </div>
-
-                <WorkoutSlider
-                  id={id}
-                  index={index}
-                  sets={sets}
-                  lbs={lbs}
-                  reps={reps}
-                  session={session}
-                  setSession={setSession}
-                  previous={previous}
-                />
-                <div className="workout-form__btn">
-                  <button
-                    type="button"
-                    onClick={() => addSet(id, sets, lbs, reps)}
-                    className="mx-10 rounded-full bg-gray-300 text-black"
-                  >
-                    Add Set
-                  </button>
-                </div>
-              </div>
-            ),
           )}
-          <div className="workout-form__btn">
-            <button
-              type="submit"
-              className="rounded-lg bg-blue-300 text-blue-900"
-              formAction={(data) => {
-                setAddExercise(true);
-                addAnotherExercise(data);
-              }}
-            >
-              Add Exercise
-            </button>
-            <button
-              onClick={() => removeWorkout()}
-              className="rounded-lg bg-red-300 text-red-900"
-            >
-              Delete Workout
-            </button>
-          </div>
-        </form>
-      </div>
-    </Suspense>
+        </div>
+        <Suspense fallback={<LoadingModel />}>
+          <WorkoutCard
+            session={session}
+            setSession={setSession}
+            previous={previous}
+            noteIds={noteIds}
+            setNoteIds={setNoteIds}
+            replace={replace}
+            setReplace={setReplace}
+            openMenu={openMenu}
+            setOpenMenu={setOpenMenu}
+            setAddExercise={setAddExercise}
+            removeExercise={removeExercise}
+            handleNotes={handleNotes}
+            addSet={addSet}
+          />
+        </Suspense>
+        <div className="workout-form__btn">
+          <button
+            type="submit"
+            className="rounded-md bg-blue-300 text-blue-900"
+            formAction={(data) => {
+              setAddExercise(true);
+              addAnotherExercise(data);
+            }}
+          >
+            Add Exercise
+          </button>
+          <button
+            onClick={removeWorkout}
+            className="rounded-md bg-red-300 text-red-900"
+          >
+            Delete Workout
+          </button>
+        </div>
+      </form>
+    </div>
   ) : (
     <AddExercise
       session={session}

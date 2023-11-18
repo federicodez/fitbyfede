@@ -9,12 +9,12 @@ type PaginationProps = {
 };
 
 export const paginate = (
-  workouts: Data,
+  workouts: Partial<Data>,
   currentPage: number,
   workoutsPerPage: number,
 ) => {
   const startIndex = (currentPage - 1) * workoutsPerPage;
-  return workouts.slice(startIndex, startIndex + workoutsPerPage);
+  return workouts?.slice(startIndex, startIndex + workoutsPerPage);
 };
 
 export const Pagination = ({

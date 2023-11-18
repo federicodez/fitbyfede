@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
 import { createManyWorkouts } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
-import { Workout, Data } from "@/types";
+import { Workout, Data, Exercise } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
   BodyPartSelection,
@@ -19,9 +19,10 @@ import data from "@/constants/exerciseData.json";
 
 type SearchBarProps = {
   recentWorkouts: Workout[];
+  createdExercises: Exercise[];
 };
 
-const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
+const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
@@ -37,7 +38,17 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [workouts, setWorkouts] = useState(data);
+  const [workouts, setWorkouts] = useState<Partial<Data>>(data);
+
+  console.log("created ex ", createdExercises);
+  useEffect(() => {
+    if (createdExercises) {
+      setWorkouts({
+        ...workouts,
+        createdExercises,
+      });
+    }
+  }, []);
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
@@ -117,7 +128,7 @@ const SearchBar = ({ recentWorkouts }: SearchBarProps) => {
             type="text"
             name="query"
             placeholder="Search"
-            className="w-full bg-white rounded-lg"
+            className="w-full bg-white text-black rounded-lg"
           />
         </form>
         <div className="grid grid-cols-2 justify-center items-center gap-3 my-2">
