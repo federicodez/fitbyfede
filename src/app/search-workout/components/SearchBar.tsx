@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
 import { createManyWorkouts } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
-import { Workout, Data, Exercise } from "@/types";
+import { Workout, CustomData } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
   BodyPartSelection,
@@ -15,14 +15,13 @@ import {
 } from "@/components";
 import { Pagination, paginate } from "@/components/Pagination";
 import Image from "next/image";
-import data from "@/constants/exerciseData.json";
 
 type SearchBarProps = {
+  data: CustomData;
   recentWorkouts: Workout[];
-  createdExercises: Exercise[];
 };
 
-const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
+const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
@@ -38,23 +37,11 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [workouts, setWorkouts] = useState<Partial<Data>>(data);
-
-  console.log("created ex ", createdExercises);
-  useEffect(() => {
-    if (createdExercises) {
-      setWorkouts({
-        ...workouts,
-        createdExercises,
-      });
-    }
-  }, []);
+  const [workouts, setWorkouts] = useState(data);
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
-  const onPageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const onPageChange = (page: number) => setCurrentPage(page);
 
   const handleClick = async () => {
     try {
@@ -63,7 +50,7 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
         router.push(`/create-workout/${session.id}`);
       }
     } catch (error) {
-      console.log(error);
+      console.log("Error creating workouts in searchbar ", error);
     }
   };
 
@@ -80,7 +67,7 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
   const filteredExercises =
     query === ""
       ? paginatedWorkouts
-      : paginatedWorkouts?.filter(({ name }) =>
+      : paginatedWorkouts.filter(({ name }) =>
           name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -88,78 +75,71 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
         );
 
   return !details ? (
-    <Suspense fallback={<LoadingModel />}>
-      <div className="wrapper container">
-        <div className="flex flex-row justify-between my-8">
-          <div
-            role="button"
-            onClick={() => {
-              setCreate(true);
-            }}
-            className="text-white p-color px-6 py-0 rounded-md cursor-pointer"
-          >
-            New
-          </div>
-          <button
-            type="button"
-            className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
-            id="cancel-btn"
-          >
-            <Link rel="noopener" href="/workouts">
-              <HiX role="presentation" />
-            </Link>
-          </button>
-          <button
-            type="button"
-            onClick={handleClick}
-            className={
-              exerciseQueue.length
-                ? `text-[#8ebbff] bg-[#2f3651] px-6 py-0 rounded-md`
-                : "bg-[#2f3651] px-9 py-0 rounded-md"
-            }
-            id="__add-btn"
-          >
-            {exerciseQueue?.length ? `Add (${exerciseQueue?.length})` : "Add"}
-          </button>
-        </div>
-        <form className="searchbar-form">
-          <input
-            onChange={(e) => setQuery(e.target.value)}
-            type="text"
-            name="query"
-            placeholder="Search"
-            className="w-full bg-white text-black rounded-lg"
-          />
-        </form>
-        <div className="grid grid-cols-2 justify-center items-center gap-3 my-2">
-          <BodyPartSelection
-            data={data}
-            bodyPartBtn={bodyPartBtn}
-            recentWorkouts={recentWorkouts}
-            categoriesBtn={categoriesBtn}
-            showParts={showParts}
-            setRecent={setRecent}
-            setWorkouts={setWorkouts}
-            setBodyPartBtn={setBodyPartBtn}
-            setShowParts={setShowParts}
-          />
-          <CategorySelection
-            data={data}
-            bodyPartBtn={bodyPartBtn}
-            categoriesBtn={categoriesBtn}
-            showCategories={showCategories}
-            setShowCategories={setShowCategories}
-            setCategoriesBtn={setCategoriesBtn}
-            setWorkouts={setWorkouts}
-          />
-        </div>
-        {create && <CreateExercise create={create} setCreate={setCreate} />}
-        <ul className="">
-          {recent.length ? (
-            <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
-              RECENT
-            </h1>
-          ) : null}
+    <div className="wrapper m-5 p-2 backdrop-blur-lg overflow-hidden rouned-md">
+      <div className="flex flex-row justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            setCreate(true);
+          }}
+          className="text-white p-color w-full py-1.5 rounded-md cursor-pointer"
+        >
+          New
+        </button>
+        <button
+          type="button"
+          className="flex justify-center items-center text-3xl text-[#c1121f] w-full rounded-md bg-[#2f3651]"
+        >
+          <Link rel="noopener" href="/workouts">
+            <HiX role="presentation" />
+          </Link>
+        </button>
+        <button
+          type="button"
+          onClick={handleClick}
+          className="text-[#8ebbff] bg-[#2f3651] w-full py-1.5 rounded-md"
+        >
+          {exerciseQueue?.length ? `Add (${exerciseQueue?.length})` : "Add"}
+        </button>
+      </div>
+      <form className="searchbar-form my-2" rel="noopener">
+        <input
+          onChange={(e) => setQuery(e.target.value)}
+          type="text"
+          name="query"
+          placeholder="Search"
+          className="w-full bg-white text-black rounded-md py-1.5 pl-4"
+        />
+      </form>
+      <div className="grid grid-cols-2 justify-center items-center gap-3 my-2">
+        <BodyPartSelection
+          data={data}
+          bodyPartBtn={bodyPartBtn}
+          recentWorkouts={recentWorkouts}
+          categoriesBtn={categoriesBtn}
+          showParts={showParts}
+          setRecent={setRecent}
+          setWorkouts={setWorkouts}
+          setBodyPartBtn={setBodyPartBtn}
+          setShowParts={setShowParts}
+        />
+        <CategorySelection
+          data={data}
+          bodyPartBtn={bodyPartBtn}
+          categoriesBtn={categoriesBtn}
+          showCategories={showCategories}
+          setShowCategories={setShowCategories}
+          setCategoriesBtn={setCategoriesBtn}
+          setWorkouts={setWorkouts}
+        />
+      </div>
+      {create && <CreateExercise setCreate={setCreate} />}
+      <ul>
+        {recent.length ? (
+          <h1 className="font-bold text-center">RECENT</h1>
+        ) : null}
+
+        <Suspense fallback={<LoadingModel />}>
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">
               <div
@@ -198,10 +178,10 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
               </div>
             </li>
           ))}
-          <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
-            EXERCISES
-          </h1>
-          <ul className="">
+        </Suspense>
+        <h1 className="font-bold text-center">EXERCISES</h1>
+        <ul>
+          <Suspense fallback={<LoadingModel />}>
             {filteredExercises?.map(({ bodyPart, id, name }) => (
               <li key={id} className="my-4">
                 <div
@@ -215,7 +195,8 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
                     src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
                     height={100}
                     width={100}
-                    alt="exercise gif"
+                    alt="exercise"
+                    unoptimized
                     priority
                   />
                   <div className="col-span-2 flex flex-col items-center mx-2">
@@ -242,59 +223,28 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
                 </div>
               </li>
             ))}
-          </ul>
-          <div className="mt-10 mb-20 pb-20">
-            <Pagination
-              currentPage={currentPage}
-              workoutsPerPage={workoutsPerPage}
-              workouts={workouts.length}
-              onPageChange={onPageChange}
-            />
-          </div>
+          </Suspense>
         </ul>
-      </div>
-    </Suspense>
-  ) : (
-    <div className="wrapper container py-3">
-      <ul className="">
-        {recent?.map(({ gifId, id, name }) => (
-          <li key={id} className="my-4">
-            <div
-              className={
-                details === id
-                  ? `flex flex-col p-5 my-10 rounded-md  shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
-                  : "hidden"
-              }
-            >
-              <button
-                className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
-                onClick={() => setDetails(false)}
-              >
-                <HiX role="presentation" />
-              </button>
-              <h2 className="text-center m-2 font-bold" id="name">
-                {name}
-              </h2>
-              <Image
-                className="flex self-center rounded-md"
-                id="gif"
-                src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
-                height={400}
-                width={400}
-                alt="exercise gif"
-              />
-            </div>
-          </li>
-        ))}
+        <div className="mt-10 mb-20 pb-20">
+          <Pagination
+            currentPage={currentPage}
+            workoutsPerPage={workoutsPerPage}
+            workouts={workouts.length}
+            onPageChange={onPageChange}
+          />
+        </div>
       </ul>
-      <ul className="pb-20">
-        {filteredExercises?.map(
-          ({ id, name, secondaryMuscles, instructions }) => (
+    </div>
+  ) : (
+    <div className="wrapper py-3">
+      <ul>
+        <Suspense fallback={<LoadingModel />}>
+          {recent?.map(({ gifId, id, name }) => (
             <li key={id} className="p-color">
               <div
                 className={
                   details === id
-                    ? `flex flex-col p-5 my-2 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                    ? `flex flex-col p-5 my-10 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
                     : "hidden"
                 }
               >
@@ -310,41 +260,80 @@ const SearchBar = ({ recentWorkouts, createdExercises }: SearchBarProps) => {
                 <Image
                   className="flex self-center rounded-md"
                   id="gif"
-                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                  src={`https://fitbyfede-db.s3.amazonaws.com/1080/${gifId}.gif`}
                   height={400}
                   width={400}
                   alt="exercise gif"
-                  blurDataURL="URL"
-                  placeholder="blur"
                 />
-                <h2 className="text-center m-2 underline font-semibold">
-                  Instructions
-                </h2>
-                <ol className="px-10">
-                  {instructions.map((item, itemId) => (
-                    <li key={itemId} id="intructions" className="list-decimal">
-                      {item}
-                    </li>
-                  ))}
-                </ol>
-                <h2 className="underline m-2 font-semibold text-center">
-                  Secondary Mucles
-                </h2>
-                <ol className="px-10" type="1">
-                  {secondaryMuscles.map((muscle, muscleId) => (
-                    <li
-                      className="list-decimal"
-                      key={muscleId}
-                      id="secondary-muscle"
-                    >
-                      {muscle}
-                    </li>
-                  ))}
-                </ol>
               </div>
             </li>
-          ),
-        )}
+          ))}
+        </Suspense>
+      </ul>
+      <ul className="pb-20">
+        <Suspense fallback={<LoadingModel />}>
+          {filteredExercises?.map(
+            ({ id, name, secondaryMuscles, instructions }) => (
+              <li key={id} className="p-color">
+                <div
+                  className={
+                    details === id
+                      ? `flex flex-col p-5 my-2 rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]`
+                      : "hidden"
+                  }
+                >
+                  <button
+                    className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
+                    onClick={() => setDetails(false)}
+                  >
+                    <HiX role="presentation" />
+                  </button>
+                  <h2 className="text-center m-2 font-bold" id="name">
+                    {name}
+                  </h2>
+                  <Image
+                    className="flex self-center rounded-md"
+                    id="gif"
+                    src={`https://fitbyfede-db.s3.amazonaws.com/1080/${id}.gif`}
+                    height={400}
+                    width={400}
+                    alt="exercise gif"
+                    blurDataURL="URL"
+                    placeholder="blur"
+                  />
+                  <h2 className="text-center m-2 underline font-semibold">
+                    Instructions
+                  </h2>
+                  <ol className="px-10">
+                    {instructions?.map((item, itemId) => (
+                      <li
+                        key={itemId}
+                        id="intructions"
+                        className="list-decimal"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ol>
+                  <h2 className="underline m-2 font-semibold text-center">
+                    Secondary Mucles
+                  </h2>
+                  <ol className="px-10" type="1">
+                    {secondaryMuscles?.map((muscle, muscleId) => (
+                      <li
+                        className="list-decimal"
+                        key={muscleId}
+                        id="secondary-muscle"
+                      >
+                        {muscle}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </li>
+            ),
+          )}
+        </Suspense>
       </ul>
     </div>
   );

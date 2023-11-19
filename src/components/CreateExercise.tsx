@@ -7,11 +7,10 @@ import { addExercise } from "@/actions/workouts";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type CreateExerciseProps = {
-  create: boolean;
   setCreate: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const CreateExercise = ({ create, setCreate }: CreateExerciseProps) => {
+const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
   const [exercise, setExercise] = useState("");
   const [showParts, setShowParts] = useState(false);
   const [showCategories, setShowCategories] = useState(false);

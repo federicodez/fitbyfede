@@ -148,7 +148,7 @@ const AddExercise = ({
             setWorkouts={setWorkouts}
           />
         </div>
-        {create && <CreateExercise create={create} setCreate={setCreate} />}
+        {create && <CreateExercise setCreate={setCreate} />}
         <ul className="">
           {recent.length ? (
             <h1 className="filtered-title font-bold text-center backdrop-blur-lg">

@@ -1,14 +1,13 @@
 import { categories } from "@/constants";
-import { Data, WorkoutSession } from "@/types";
+import { Data, CustomData } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type CategorySelectionProps = {
-  data: Data;
+  data: CustomData;
   bodyPartBtn: string;
   categoriesBtn: string;
   showCategories: boolean;
-  setWorkouts: React.Dispatch<React.SetStateAction<Data>>;
-  setSession?: React.Dispatch<React.SetStateAction<WorkoutSession>>;
+  setWorkouts: React.Dispatch<React.SetStateAction<CustomData>>;
   setShowCategories: React.Dispatch<React.SetStateAction<boolean>>;
   setCategoriesBtn: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -19,7 +18,6 @@ const CategorySelection = ({
   categoriesBtn,
   showCategories,
   setWorkouts,
-  setSession,
   setShowCategories,
   setCategoriesBtn,
 }: CategorySelectionProps) => {
@@ -36,7 +34,7 @@ const CategorySelection = ({
         );
         setWorkouts(filtered);
       } else if (bodyPartBtn !== "Any Body Part") {
-        const filtered: Data = [];
+        const filtered: CustomData = [];
         data.filter((item) => {
           if (item.equipment === query && item.bodyPart === bodyPartBtn) {
             filtered.push(item);
@@ -87,7 +85,7 @@ const CategorySelection = ({
         onClick={() => {
           setShowCategories(true);
         }}
-        className={`w-full rounded-lg px-5 text-black ${
+        className={`w-full rounded-md py-1.5 px-5 text-black ${
           categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
         }`}
       >

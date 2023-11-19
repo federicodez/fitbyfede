@@ -18,7 +18,7 @@ export const addExercise = async (
       data: {
         name,
         bodyPart,
-        category,
+        equipment: category,
         userId: currentUser.id,
       },
     });

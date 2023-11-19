@@ -8,8 +8,21 @@ type PaginationProps = {
   onPageChange: (page: number) => void;
 };
 
+type WorkoutData = {
+  id: string;
+  name: string;
+  target: string;
+  bodyPart: string;
+  equipment: string;
+  secondaryMuscles?: string[];
+  instructions?: string[];
+  category?: string;
+  userId?: string;
+  createdAt?: Date;
+}[];
+
 export const paginate = (
-  workouts: Partial<Data>,
+  workouts: WorkoutData,
   currentPage: number,
   workoutsPerPage: number,
 ) => {
