@@ -68,33 +68,33 @@ const BodyPartSelection = ({
 
   return (
     <div className="relative w-full">
-      <ul
-        onMouseLeave={() => setShowParts(false)}
-        className="absolute w-full z-10 bg-gray-800 text-white rounded-lg left-0"
-      >
-        {showParts
-          ? bodyParts.map((part, idx) => (
-              <li
-                key={idx}
-                className={`flex flex-row cursor-pointer p-2 ${
-                  bodyPartBtn === part ? "bg-gray-500" : ""
-                }`}
+      {showParts ? (
+        <ul
+          onMouseLeave={() => setShowParts(false)}
+          className="absolute w-full h-60 z-10 bg-gray-800 text-white rounded-md left-0 overflow-auto"
+        >
+          {bodyParts.map((part, idx) => (
+            <li
+              key={idx}
+              className={`flex flex-row cursor-pointer p-2 ${
+                bodyPartBtn === part ? "bg-gray-500" : ""
+              }`}
+            >
+              <div
+                onClick={() => {
+                  handleParts(part);
+                  setShowParts(false);
+                }}
+                className={`flex flex-col w-full`}
+                id={part}
               >
-                <div
-                  onClick={() => {
-                    handleParts(part);
-                    setShowParts(false);
-                  }}
-                  className={`flex flex-col w-full`}
-                  id={part}
-                >
-                  {part}
-                </div>
-                {bodyPartBtn === part ? <AiOutlineCheck /> : null}
-              </li>
-            ))
-          : null}
-      </ul>
+                {part}
+              </div>
+              {bodyPartBtn === part ? <AiOutlineCheck /> : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <button
         onClick={() => {
           setShowParts(true);

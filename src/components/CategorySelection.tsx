@@ -54,33 +54,33 @@ const CategorySelection = ({
 
   return (
     <div className="relative w-full">
-      <ul
-        onMouseLeave={() => setShowCategories(false)}
-        className="absolute w-full z-10 bg-gray-800 text-white rounded-lg right-0"
-      >
-        {showCategories
-          ? categories.map((category, idx) => (
-              <li
-                key={idx}
-                className={`flex flex-row cursor-pointer p-2 ${
-                  categoriesBtn === category ? "bg-gray-500" : ""
-                }`}
+      {showCategories ? (
+        <ul
+          onMouseLeave={() => setShowCategories(false)}
+          className="absolute w-full h-60 z-10 bg-gray-800 text-white rounded-md right-0 overflow-auto"
+        >
+          {categories.map((category, idx) => (
+            <li
+              key={idx}
+              className={`flex flex-row cursor-pointer p-2 ${
+                categoriesBtn === category ? "bg-gray-500" : ""
+              }`}
+            >
+              <div
+                onClick={() => {
+                  handleCategories(category);
+                  setShowCategories(false);
+                }}
+                className={`flex flex-col w-full`}
+                id={category}
               >
-                <div
-                  onClick={() => {
-                    handleCategories(category);
-                    setShowCategories(false);
-                  }}
-                  className={`flex flex-col w-full`}
-                  id={category}
-                >
-                  {category}
-                </div>
-                {categoriesBtn === category ? <AiOutlineCheck /> : null}
-              </li>
-            ))
-          : null}
-      </ul>
+                {category}
+              </div>
+              {categoriesBtn === category ? <AiOutlineCheck /> : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <button
         onClick={() => {
           setShowCategories(true);

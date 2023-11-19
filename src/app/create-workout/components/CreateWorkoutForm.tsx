@@ -29,11 +29,11 @@ const CreateWorkoutForm = ({
   recentWorkouts,
 }: CreateWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
-  const [sessionNotes, setSessionNotes] = useState("");
+  const [sessionNotes, setSessionNotes] = useState<string | boolean>(false);
   const [sessionOptions, setSessionOptions] = useState(false);
   const [dateInput, setDateInput] = useState(false);
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [workoutName, setWorkoutName] = useState("");
+  const [workoutName, setWorkoutName] = useState<string | boolean>(false);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
@@ -117,6 +117,7 @@ const CreateWorkoutForm = ({
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button
+            type="button"
             className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
             onClick={removeWorkout}
           >
@@ -133,7 +134,7 @@ const CreateWorkoutForm = ({
         <div className="flex my-4 flex-col">
           <div className="flex flex-row items-center gap-2">
             {workoutName ? (
-              <div className={!workoutName.length ? "hidden" : ""}>
+              <div className={!workoutName ? "hidden" : ""}>
                 <input
                   type="text"
                   className="bg-white rounded-md w-full"

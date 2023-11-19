@@ -126,6 +126,7 @@ const WorkoutSlider = ({
             </SwiperSlide>
             <SwiperSlide>
               <button
+                tabIndex={-1}
                 type="button"
                 className={`w-full bg-red-300 text-red-800 rounded-lg px-2`}
               >
