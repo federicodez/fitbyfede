@@ -75,7 +75,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
         );
 
   return !details ? (
-    <div className="wrapper m-5 p-2 backdrop-blur-lg overflow-hidden rouned-md">
+    <div className="wrapper m-5 p-2">
       <div className="flex flex-row justify-between gap-3">
         <button
           type="button"
