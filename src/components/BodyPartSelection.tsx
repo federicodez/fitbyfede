@@ -1,16 +1,16 @@
 "use client";
 
 import { bodyParts } from "@/constants";
-import { Workout, CustomData } from "@/types";
+import { Data, Workout, CustomData } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type BodyPartSelectionProps = {
-  data: CustomData;
+  data: CustomData | Data;
   bodyPartBtn: string;
   recentWorkouts: Workout[];
   categoriesBtn: string;
   showParts: boolean;
-  setWorkouts: React.Dispatch<React.SetStateAction<CustomData>>;
+  setWorkouts: React.Dispatch<React.SetStateAction<CustomData | Data>>;
   setRecent: React.Dispatch<React.SetStateAction<Workout[]>>;
   setBodyPartBtn: React.Dispatch<React.SetStateAction<string>>;
   setShowParts: React.Dispatch<React.SetStateAction<boolean>>;

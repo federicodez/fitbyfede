@@ -189,6 +189,7 @@ const EditWorkoutForm = ({
               }
             >
               <HeaderMenu
+                sessionOptions={sessionOptions}
                 setSessionOptions={setSessionOptions}
                 setWorkoutName={setWorkoutName}
                 setDateInput={setDateInput}

@@ -6,7 +6,7 @@ import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
 import { createManyWorkouts, getSessionById } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
-import { Workout, Data, WorkoutSession } from "@/types";
+import { Workout, Data, WorkoutSession, CustomData } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
 import data from "@/constants/exerciseData.json";
@@ -41,7 +41,7 @@ const AddExercise = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [workouts, setWorkouts] = useState<Data>(data);
+  const [workouts, setWorkouts] = useState<CustomData | Data>(data);
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
@@ -316,7 +316,7 @@ const AddExercise = ({
                   Instructions
                 </h2>
                 <ol className="px-10">
-                  {instructions.map((item, itemId) => (
+                  {instructions?.map((item, itemId) => (
                     <li key={itemId} id="intructions" className="list-decimal">
                       {item}
                     </li>
@@ -326,7 +326,7 @@ const AddExercise = ({
                   Secondary Mucles
                 </h2>
                 <ol className="px-10" type="1">
-                  {secondaryMuscles.map((muscle, muscleId) => (
+                  {secondaryMuscles?.map((muscle, muscleId) => (
                     <li
                       className="list-decimal"
                       key={muscleId}

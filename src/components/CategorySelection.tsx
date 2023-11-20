@@ -1,13 +1,13 @@
 import { categories } from "@/constants";
-import { CustomData } from "@/types";
+import { Data, CustomData } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type CategorySelectionProps = {
-  data: CustomData;
+  data: CustomData | Data;
   bodyPartBtn: string;
   categoriesBtn: string;
   showCategories: boolean;
-  setWorkouts: React.Dispatch<React.SetStateAction<CustomData>>;
+  setWorkouts: React.Dispatch<React.SetStateAction<CustomData | Data>>;
   setShowCategories: React.Dispatch<React.SetStateAction<boolean>>;
   setCategoriesBtn: React.Dispatch<React.SetStateAction<string>>;
 };
