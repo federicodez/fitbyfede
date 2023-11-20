@@ -17,6 +17,10 @@ type WorkoutSliderProps = {
   session: WorkoutSession;
   setSession: React.Dispatch<React.SetStateAction<WorkoutSession>>;
   previous: Workout[] | [];
+  setOptions: string | null;
+  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
+  setIndex: number;
+  setSetIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const WorkoutSlider = ({
@@ -28,22 +32,12 @@ const WorkoutSlider = ({
   session,
   setSession,
   previous,
+  setOptions,
+  setSetOptions,
+  setIndex,
+  setSetIndex,
 }: WorkoutSliderProps) => {
-  const [setOptions, setSetOptions] = useState<string | null>(null);
-  const [setIndex, setSetIndex] = useState<number>(0);
   const router = useRouter();
-
-  const changeSet = async (id: string, e: MouseEvent) => {
-    const { target } = e;
-    if (target) {
-      const set = (target as HTMLButtonElement).value;
-      const updated = await changeWorkoutSet(id, session, setIndex, set);
-      if (updated) {
-        setSession(updated);
-        router.refresh();
-      }
-    }
-  };
 
   const handleDeleteSet = async (id: string, setId: number, swiper: any) => {
     try {
@@ -63,16 +57,7 @@ const WorkoutSlider = ({
   return (
     <ul className="flex flex-col gap-4">
       {sets?.map((set, setId) => (
-        <div key={setId} className="flex w-full">
-          <SetOptions
-            set={set}
-            id={id}
-            setId={setId}
-            setIndex={setIndex}
-            setOptions={setOptions}
-            setSetOptions={setSetOptions}
-            changeSet={changeSet}
-          />
+        <div key={setId}>
           <Swiper
             spaceBetween={50}
             slidesPerView={1}
@@ -80,7 +65,7 @@ const WorkoutSlider = ({
           >
             <SwiperSlide>
               <li className="flex flex-row justify-evenly py-2">
-                <div className="relative h-full">
+                <div className="relative">
                   <CustomButton
                     title={set}
                     containerStyles="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"

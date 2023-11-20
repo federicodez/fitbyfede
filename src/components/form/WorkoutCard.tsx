@@ -1,7 +1,7 @@
 import { WorkoutSession, Workout } from "@/types";
-import { MenuOptions, WorkoutSlider } from ".";
+import { MenuOptions, WorkoutSlider, SetOptions } from ".";
 import { SlOptions } from "react-icons/sl";
-import { ChangeEvent } from "react";
+import { ChangeEvent, MouseEvent } from "react";
 
 type WorkoutCardProps = {
   session: WorkoutSession;
@@ -17,6 +17,12 @@ type WorkoutCardProps = {
   removeExercise: (id: string) => void;
   handleNotes: (e: ChangeEvent) => void;
   addSet: (id: string, sets: string[], lbs: number[], reps: number[]) => void;
+  setOptions: string | null;
+  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
+  changeSet: (id: string, e: MouseEvent) => void;
+  setId: number;
+  setIndex: number;
+  setSetIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const WorkoutCard = ({
@@ -33,6 +39,12 @@ const WorkoutCard = ({
   removeExercise,
   handleNotes,
   addSet,
+  setId,
+  setIndex,
+  setSetIndex,
+  setOptions,
+  setSetOptions,
+  changeSet,
 }: WorkoutCardProps) =>
   session?.Workout?.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
     <div key={id} className="">
@@ -68,6 +80,16 @@ const WorkoutCard = ({
           onChange={(e) => handleNotes(e)}
         />
       </div>
+      <div className="relative">
+        <SetOptions
+          id={id}
+          setId={setId}
+          setIndex={setIndex}
+          setOptions={setOptions}
+          setSetOptions={setSetOptions}
+          changeSet={changeSet}
+        />
+      </div>
       <div className="flex justify-evenly">
         <span className="flex justify-center items-center w-full">Set</span>
         <span className="flex justify-center items-center w-full">
@@ -94,6 +116,10 @@ const WorkoutCard = ({
         session={session}
         setSession={setSession}
         previous={previous}
+        setOptions={setOptions}
+        setSetOptions={setSetOptions}
+        setIndex={setIndex}
+        setSetIndex={setSetIndex}
       />
       <div className="workout-form__btn">
         <button

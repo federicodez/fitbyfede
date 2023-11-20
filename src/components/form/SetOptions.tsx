@@ -1,7 +1,6 @@
 import { MouseEvent } from "react";
 
 type SetOptionProps = {
-  set: string;
   id: string;
   setOptions: string | null;
   setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
@@ -11,7 +10,6 @@ type SetOptionProps = {
 };
 
 const SetOptions = ({
-  set,
   id,
   setOptions,
   setSetOptions,
@@ -24,12 +22,13 @@ const SetOptions = ({
     { type: "d", label: "Drop Set" },
     { type: "f", label: "Failure" },
   ];
+  console.log("fire ", setOptions);
   return (
     <div
       onMouseLeave={() => setSetOptions(null)}
       className={
         setOptions === id && setIndex === setId
-          ? `absolute w-30 h-30 z-50 bottom-0 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
+          ? `absolute w-full h-full z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
           : "hidden"
       }
     >
