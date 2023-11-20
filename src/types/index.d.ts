@@ -61,7 +61,20 @@ export type Exercise = {
   id: string;
   name: string;
   bodyPart: string;
-  category: string;
+  equipment: string;
   userId: string;
   createdAt: Date;
 };
+
+type CustomData = {
+  id: string;
+  name: string;
+  target?: string;
+  bodyPart: string;
+  equipment: string;
+  secondaryMuscles?: string[];
+  instructions?: string[];
+  category?: string;
+  userId?: string;
+  createdAt?: Date;
+}[];

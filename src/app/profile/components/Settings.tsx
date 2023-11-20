@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { SlOptions } from "react-icons/sl";
 import DeleteAccountBtn from "./DeleteAccountBtn";
+import { signOut } from "next-auth/react";
+import { HiArrowLeftOnRectangle } from "react-icons/hi2";
 
 const Settings = () => {
   const [options, setOptions] = useState(false);
@@ -17,12 +19,24 @@ const Settings = () => {
             ? "absolute z-10 border rounded-md backdrop-blur-lg overflow-hidden px-4 py-2 cursor-pointer"
             : "hidden"
         }
-        onClick={() => {
-          setOptions(false);
-          setTryDelete(true);
-        }}
       >
-        Delete Account
+        <div
+          className="px-4 py-px mb-4 rounded-md w-fit border"
+          onClick={() => {
+            setOptions(false);
+            setTryDelete(true);
+          }}
+        >
+          Delete Account
+        </div>
+        <div
+          role="button"
+          className="flex flex-row justify-center items-center gap-2 px-4 py-px mt-4 rounded-md w-fit border"
+          onClick={() => signOut()}
+        >
+          <HiArrowLeftOnRectangle />
+          Sign Out
+        </div>
       </div>
       <div
         role="button"

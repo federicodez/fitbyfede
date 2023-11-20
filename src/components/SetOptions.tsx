@@ -1,6 +1,7 @@
 import { MouseEvent } from "react";
 
 type SetOptionProps = {
+  set: string;
   id: string;
   setOptions: string | null;
   setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
@@ -10,6 +11,7 @@ type SetOptionProps = {
 };
 
 const SetOptions = ({
+  set,
   id,
   setOptions,
   setSetOptions,
@@ -27,42 +29,23 @@ const SetOptions = ({
       onMouseLeave={() => setSetOptions(null)}
       className={
         setOptions === id && setIndex === setId
-          ? `absolute z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
+          ? `absolute w-30 h-fit z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
           : "hidden"
       }
     >
-      <option
-        className=""
-        value="w"
-        onClick={(e) => {
-          changeSet(id, e);
-          setSetOptions(null);
-        }}
-      >
-        Warm-up
-      </option>
-
-      <option
-        className=""
-        value="d"
-        onClick={(e) => {
-          changeSet(id, e);
-          setSetOptions(null);
-        }}
-      >
-        Drop Set
-      </option>
-
-      <option
-        className=""
-        value="f"
-        onClick={(e) => {
-          changeSet(id, e);
-          setSetOptions(null);
-        }}
-      >
-        Failure
-      </option>
+      {options.map((option, idx) => (
+        <option
+          key={idx}
+          className="flex w-full"
+          value={option.type}
+          onClick={(e) => {
+            changeSet(id, e);
+            setSetOptions(null);
+          }}
+        >
+          {option.label}
+        </option>
+      ))}
     </div>
   );
 };

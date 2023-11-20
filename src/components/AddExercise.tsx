@@ -4,12 +4,11 @@ import { Suspense, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
-import { createMany, getSessionById, getWorkoutsBySessionId } from "@/actions";
+import { createManyWorkouts, getSessionById } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
-import { Workout, Data, WorkoutSession } from "@/types";
+import { Workout, Data, WorkoutSession, CustomData } from "@/types";
 import LoadingModel from "@/components/models/LoadingModel";
 import Image from "next/image";
-import { bodyParts, categories } from "@/constants";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
 import { BodyPartSelection, CategorySelection, CreateExercise } from "./";
@@ -33,10 +32,8 @@ const AddExercise = ({
   const [create, setCreate] = useState(false);
 
   const [showParts, setShowParts] = useState(false);
-  const [partsActivated, setPartsActivated] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
   const [showCategories, setShowCategories] = useState(false);
-  const [categoryActivated, setCategoryActivated] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
@@ -44,7 +41,7 @@ const AddExercise = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [workoutsPerPage] = useState(50);
-  const [workouts, setWorkouts] = useState(data);
+  const [workouts, setWorkouts] = useState<CustomData | Data>(data);
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
@@ -54,7 +51,7 @@ const AddExercise = ({
 
   const handleClick = async () => {
     try {
-      await createMany(exerciseQueue, session);
+      await createManyWorkouts(exerciseQueue, session);
       const newSession = await getSessionById(session.id);
       if (newSession) {
         setSession(newSession);
@@ -151,7 +148,7 @@ const AddExercise = ({
             setWorkouts={setWorkouts}
           />
         </div>
-        {create && <CreateExercise create={create} setCreate={setCreate} />}
+        {create && <CreateExercise setCreate={setCreate} />}
         <ul className="">
           {recent.length ? (
             <h1 className="filtered-title font-bold text-center backdrop-blur-lg">
@@ -319,7 +316,7 @@ const AddExercise = ({
                   Instructions
                 </h2>
                 <ol className="px-10">
-                  {instructions.map((item, itemId) => (
+                  {instructions?.map((item, itemId) => (
                     <li key={itemId} id="intructions" className="list-decimal">
                       {item}
                     </li>
@@ -329,7 +326,7 @@ const AddExercise = ({
                   Secondary Mucles
                 </h2>
                 <ol className="px-10" type="1">
-                  {secondaryMuscles.map((muscle, muscleId) => (
+                  {secondaryMuscles?.map((muscle, muscleId) => (
                     <li
                       className="list-decimal"
                       key={muscleId}

@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, MouseEvent } from "react";
+import { useState, MouseEvent } from "react";
 import { CustomButton, SetOptions } from "@/components";
 import { WorkoutSession, Workout } from "@/types";
 import { useRouter } from "next/navigation";
-import { changeWorkoutSet, deleteSet } from "@/actions";
+import { changeWorkoutSet, deleteSet } from "@/actions/workouts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/scss";
 
@@ -63,8 +63,9 @@ const WorkoutSlider = ({
   return (
     <ul className="flex flex-col gap-4">
       {sets?.map((set, setId) => (
-        <div key={setId}>
+        <div key={setId} className="flex w-full">
           <SetOptions
+            set={set}
             id={id}
             setId={setId}
             setIndex={setIndex}
@@ -78,7 +79,7 @@ const WorkoutSlider = ({
             onSlideChange={(swiper) => handleDeleteSet(id, setId, swiper)}
           >
             <SwiperSlide>
-              <li className="flex flex-row justify-evenly gap-3 py-2">
+              <li className="flex flex-row justify-evenly py-2">
                 <div className="relative h-full">
                   <CustomButton
                     title={set}
@@ -92,7 +93,7 @@ const WorkoutSlider = ({
                 {previous?.[index]?.lbs[setId] ? (
                   <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
                 ) : (
-                  <div className="border-4 rounded-lg w-20 h-fit my-2 border-gray-300"></div>
+                  <div className="rounded-lg w-20 bg-gray-300"></div>
                 )}
                 <div className="">
                   <input
@@ -120,14 +121,13 @@ const WorkoutSlider = ({
                         : ""
                     }`}
                     className="bg-gray-300 text-black rounded-lg w-20"
-                    aria-required
-                    required
                   />
                 </div>
               </li>
             </SwiperSlide>
             <SwiperSlide>
               <button
+                tabIndex={-1}
                 type="button"
                 className={`w-full bg-red-300 text-red-800 rounded-lg px-2`}
               >

@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
-import { getMostRecentWorkouts } from "@/actions";
+import { getMostRecentWorkouts, getCreatedExercises } from "@/actions/workouts";
+import data from "@/constants/exerciseData.json";
 import Navbar from "@/components/navbar/Navbar";
 const SearchBar = dynamic(() => import("./components/SearchBar"), {
   loading: () => <p className="animate-bounce">Loading...</p>,
@@ -7,12 +8,19 @@ const SearchBar = dynamic(() => import("./components/SearchBar"), {
 
 const SearchWorkout = async () => {
   try {
-    const recentWorkouts = (await getMostRecentWorkouts()) || [];
-    return (
+    let workouts;
+    const recentWorkouts = await getMostRecentWorkouts();
+    const createdExercises = await getCreatedExercises();
+
+    if (createdExercises) {
+      workouts = [...data, ...createdExercises];
+    }
+
+    return recentWorkouts && workouts ? (
       <Navbar>
-        <SearchBar recentWorkouts={recentWorkouts} />
+        <SearchBar data={workouts} recentWorkouts={recentWorkouts} />
       </Navbar>
-    );
+    ) : null;
   } catch (err) {
     console.log("search error ", err);
   }

@@ -1,3 +1,4 @@
+import AddExercise from "./AddExercise";
 import Avatar from "./Avatar";
 import BodyPartSelection from "./BodyPartSelection";
 import Button from "./Button";
@@ -8,9 +9,10 @@ import EmptyState from "./EmptyState";
 import RemoveBtn from "./RemoveBtn";
 import ReplaceBtn from "./ReplaceBtn";
 import SetOptions from "./SetOptions";
-import ShowMore from "./ShowMore";
+import StartTimer from "./Timer";
 
 export {
+  AddExercise,
   Avatar,
   BodyPartSelection,
   Button,
@@ -21,5 +23,5 @@ export {
   RemoveBtn,
   ReplaceBtn,
   SetOptions,
-  ShowMore,
+  StartTimer,
 };

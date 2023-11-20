@@ -1,5 +1,5 @@
 import React from "react";
-import { Data } from "@/types";
+import { CustomData } from "@/types";
 
 type PaginationProps = {
   currentPage: number;
@@ -9,12 +9,12 @@ type PaginationProps = {
 };
 
 export const paginate = (
-  workouts: Data,
+  workouts: CustomData,
   currentPage: number,
   workoutsPerPage: number,
 ) => {
   const startIndex = (currentPage - 1) * workoutsPerPage;
-  return workouts.slice(startIndex, startIndex + workoutsPerPage);
+  return workouts?.slice(startIndex, startIndex + workoutsPerPage);
 };
 
 export const Pagination = ({

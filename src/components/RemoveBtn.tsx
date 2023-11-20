@@ -2,7 +2,7 @@
 
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
-import { deleteSession } from "@/actions";
+import { deleteSession } from "@/actions/workouts";
 
 type RemoveProps = {
   id: string;

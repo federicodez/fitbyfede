@@ -76,7 +76,7 @@ model Exercise {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   bodyPart  String
-  category  String
+  equipment String
   createdAt DateTime @default(now())
   userId    String   @db.ObjectId
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

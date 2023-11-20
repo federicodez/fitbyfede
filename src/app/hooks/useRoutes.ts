@@ -1,7 +1,5 @@
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { HiArrowLeftOnRectangle } from "react-icons/hi2";
-import { signOut } from "next-auth/react";
 import { FaUserLarge } from "react-icons/fa6";
 import { GiMeal, GiWeightLiftingUp, GiStrongMan } from "react-icons/gi";
 
@@ -27,12 +25,6 @@ const useRoutes = () => {
         href: "/exercises",
         icon: GiStrongMan,
         active: pathname == "/exercises",
-      },
-      {
-        label: "Logout",
-        onClick: () => signOut(),
-        href: "#",
-        icon: HiArrowLeftOnRectangle,
       },
     ],
     [pathname],
