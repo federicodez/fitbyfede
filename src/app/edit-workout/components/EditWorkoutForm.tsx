@@ -154,10 +154,11 @@ const EditWorkoutForm = ({
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button
+            type="button"
             className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
             onClick={() => router.push("/workouts")}
           >
-            <HiX role="presentation" />
+            <HiX role="none" />
           </button>
           <h1>Edit Workout</h1>
           <button

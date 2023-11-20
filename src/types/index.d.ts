@@ -69,7 +69,7 @@ export type Exercise = {
 type CustomData = {
   id: string;
   name: string;
-  target: string;
+  target?: string;
   bodyPart: string;
   equipment: string;
   secondaryMuscles?: string[];

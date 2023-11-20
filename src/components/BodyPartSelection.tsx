@@ -71,7 +71,7 @@ const BodyPartSelection = ({
       {showParts ? (
         <ul
           onMouseLeave={() => setShowParts(false)}
-          className="absolute w-full h-60 z-10 bg-gray-800 text-white rounded-md left-0 overflow-auto"
+          className="absolute w-full h-96 z-10 bg-gray-800 text-white rounded-md left-0 overflow-auto"
         >
           {bodyParts.map((part, idx) => (
             <li
@@ -81,6 +81,7 @@ const BodyPartSelection = ({
               }`}
             >
               <div
+                role="button"
                 onClick={() => {
                   handleParts(part);
                   setShowParts(false);
@@ -90,15 +91,14 @@ const BodyPartSelection = ({
               >
                 {part}
               </div>
-              {bodyPartBtn === part ? <AiOutlineCheck /> : null}
+              {bodyPartBtn === part ? <AiOutlineCheck role="none" /> : null}
             </li>
           ))}
         </ul>
       ) : null}
       <button
-        onClick={() => {
-          setShowParts(true);
-        }}
+        type="button"
+        onClick={() => setShowParts(true)}
         className={`w-full rounded-md py-1.5 px-5 text-black ${
           bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
         }`}

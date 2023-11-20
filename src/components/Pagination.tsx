@@ -1,5 +1,5 @@
 import React from "react";
-import { Data } from "@/types";
+import { CustomData } from "@/types";
 
 type PaginationProps = {
   currentPage: number;
@@ -8,21 +8,8 @@ type PaginationProps = {
   onPageChange: (page: number) => void;
 };
 
-type WorkoutData = {
-  id: string;
-  name: string;
-  target: string;
-  bodyPart: string;
-  equipment: string;
-  secondaryMuscles?: string[];
-  instructions?: string[];
-  category?: string;
-  userId?: string;
-  createdAt?: Date;
-}[];
-
 export const paginate = (
-  workouts: WorkoutData,
+  workouts: CustomData,
   currentPage: number,
   workoutsPerPage: number,
 ) => {

@@ -29,11 +29,11 @@ const CreateWorkoutForm = ({
   recentWorkouts,
 }: CreateWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
-  const [sessionNotes, setSessionNotes] = useState<string | boolean>(false);
+  const [sessionNotes, setSessionNotes] = useState("");
   const [sessionOptions, setSessionOptions] = useState(false);
   const [dateInput, setDateInput] = useState(false);
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [workoutName, setWorkoutName] = useState<string | boolean>(false);
+  const [workoutName, setWorkoutName] = useState("");
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
@@ -118,12 +118,12 @@ const CreateWorkoutForm = ({
         <div className="flex flex-row justify-between">
           <button
             type="button"
-            className="text-[#c1121f] px-4 py-0 rounded-md bg-red-300"
+            className="text-[#c1121f] px-6 rounded-md bg-red-300"
             onClick={removeWorkout}
           >
-            <HiX role="presentation" />
+            <HiX role="none" />
           </button>
-          <h1>Create Workout</h1>
+          <h1 className="font-semibold text-xl">Create Workout</h1>
           <button
             type="submit"
             className="bg-blue-300 text-blue-950 rounded-md px-2"
@@ -137,32 +137,24 @@ const CreateWorkoutForm = ({
               <div className={!workoutName ? "hidden" : ""}>
                 <input
                   type="text"
-                  className="bg-white rounded-md w-full"
+                  className="bg-white text-black rounded-md w-full"
                   onChange={(e) => setWorkoutName(e.target.value)}
                 />
               </div>
             ) : (
-              <strong role="button" onClick={() => setWorkoutName(" ")}>
+              <div
+                role="button"
+                onClick={() => setWorkoutName(" ")}
+                className=""
+              >
                 {session?.name}
-              </strong>
+              </div>
             )}
-            <div
-              className={
-                sessionOptions
-                  ? "absolute w-fit z-10 bg-[#8ebbff] text-[#2f3651] rounded-lg p-2 cursor-pointer"
-                  : "hidden"
-              }
-            >
-              <HeaderMenu
-                setSessionOptions={setSessionOptions}
-                setWorkoutName={setWorkoutName}
-                setDateInput={setDateInput}
-              />
-            </div>
-            <SlOptions
-              role="button"
-              onClick={() => setSessionOptions(true)}
-              className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+            <HeaderMenu
+              sessionOptions={sessionOptions}
+              setSessionOptions={setSessionOptions}
+              setWorkoutName={setWorkoutName}
+              setDateInput={setDateInput}
             />
           </div>
           <div>

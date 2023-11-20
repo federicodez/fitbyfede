@@ -1,5 +1,5 @@
 import { categories } from "@/constants";
-import { Data, CustomData } from "@/types";
+import { CustomData } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type CategorySelectionProps = {
@@ -57,7 +57,7 @@ const CategorySelection = ({
       {showCategories ? (
         <ul
           onMouseLeave={() => setShowCategories(false)}
-          className="absolute w-full h-60 z-10 bg-gray-800 text-white rounded-md right-0 overflow-auto"
+          className="absolute w-full h-96 z-10 bg-gray-800 text-white rounded-md right-0 overflow-auto"
         >
           {categories.map((category, idx) => (
             <li
@@ -67,6 +67,7 @@ const CategorySelection = ({
               }`}
             >
               <div
+                role="button"
                 onClick={() => {
                   handleCategories(category);
                   setShowCategories(false);
@@ -76,15 +77,16 @@ const CategorySelection = ({
               >
                 {category}
               </div>
-              {categoriesBtn === category ? <AiOutlineCheck /> : null}
+              {categoriesBtn === category ? (
+                <AiOutlineCheck role="none" />
+              ) : null}
             </li>
           ))}
         </ul>
       ) : null}
       <button
-        onClick={() => {
-          setShowCategories(true);
-        }}
+        type="button"
+        onClick={() => setShowCategories(true)}
         className={`w-full rounded-md py-1.5 px-5 text-black ${
           categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
         }`}

@@ -79,9 +79,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
       <div className="flex flex-row justify-between gap-3">
         <button
           type="button"
-          onClick={() => {
-            setCreate(true);
-          }}
+          onClick={() => setCreate(true)}
           className="text-white p-color w-full py-1.5 rounded-md cursor-pointer"
         >
           New
@@ -91,7 +89,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
           className="flex justify-center items-center text-3xl text-[#c1121f] w-full rounded-md bg-[#2f3651]"
         >
           <Link rel="noopener" href="/workouts">
-            <HiX role="presentation" />
+            <HiX role="none" />
           </Link>
         </button>
         <button
@@ -136,14 +134,13 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
       {create && <CreateExercise setCreate={setCreate} />}
       <ul>
         {recent.length ? (
-          <h1 className="font-bold text-center">RECENT</h1>
+          <h1 className="line-design font-bold text-center">RECENT</h1>
         ) : null}
 
         <Suspense fallback={<LoadingModel />}>
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">
               <div
-                role="button"
                 className="grid grid-cols-4 items-center rounded-md bg-[#2f3651] shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]"
                 onClick={() => addToExercises(name)}
               >
@@ -170,16 +167,16 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
                   } justify-self-end rounded-md text-black w-fit p-1 mr-5`}
                 >
                   {exerciseQueue.includes(name) ? (
-                    <AiOutlineCheck role="presentation" />
+                    <AiOutlineCheck role="none" />
                   ) : (
-                    <AiOutlineQuestion role="presentation" />
+                    <AiOutlineQuestion role="none" />
                   )}
                 </div>
               </div>
             </li>
           ))}
         </Suspense>
-        <h1 className="font-bold text-center">EXERCISES</h1>
+        <h1 className="line-design font-bold text-center">EXERCISES</h1>
         <ul>
           <Suspense fallback={<LoadingModel />}>
             {filteredExercises?.map(({ bodyPart, id, name }) => (
@@ -215,9 +212,9 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
                     } justify-self-end text-black rounded-md w-fit p-1 mr-5`}
                   >
                     {exerciseQueue.includes(name) ? (
-                      <AiOutlineCheck role="presentation" />
+                      <AiOutlineCheck role="none" />
                     ) : (
-                      <AiOutlineQuestion role="presentation" />
+                      <AiOutlineQuestion role="none" />
                     )}
                   </div>
                 </div>
@@ -225,14 +222,16 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
             ))}
           </Suspense>
         </ul>
-        <div className="mt-10 mb-20 pb-20">
-          <Pagination
-            currentPage={currentPage}
-            workoutsPerPage={workoutsPerPage}
-            workouts={workouts.length}
-            onPageChange={onPageChange}
-          />
-        </div>
+        <Suspense fallback={<LoadingModel />}>
+          <div className="mt-10 mb-20 pb-20">
+            <Pagination
+              currentPage={currentPage}
+              workoutsPerPage={workoutsPerPage}
+              workouts={workouts.length}
+              onPageChange={onPageChange}
+            />
+          </div>
+        </Suspense>
       </ul>
     </div>
   ) : (
@@ -249,10 +248,11 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
                 }
               >
                 <button
+                  type="button"
                   className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
                   onClick={() => setDetails(false)}
                 >
-                  <HiX role="presentation" />
+                  <HiX role="none" />
                 </button>
                 <h2 className="text-center m-2 font-bold" id="name">
                   {name}
@@ -283,10 +283,11 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
                   }
                 >
                   <button
+                    type="button"
                     className="flex justify-center items-center w-10 h-5 rounded-lg bg-gray-50"
                     onClick={() => setDetails(false)}
                   >
-                    <HiX role="presentation" />
+                    <HiX role="none" />
                   </button>
                   <h2 className="text-center m-2 font-bold" id="name">
                     {name}

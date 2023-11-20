@@ -43,25 +43,26 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
       -translate-x-1/2 
       rounded-lg 
       bg-[#8ebbff] 
-      w-[450px] 
+      w-96
       h-fit
       md:w-[850px] 
       md:top-1/2
       md:left-2/3
       md:-translate-x-3/4
       md:-translate-y-1/2
-      shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]
     `}
     >
       <div className="flex flex-row justify-evenly">
         <button
+          type="button"
           onClick={() => setCreate(false)}
           className="text-[#c1121f] px-4 py-0 rounded-md bg-[#2f3651]"
         >
-          <HiX />
+          <HiX role="none" />
         </button>
-        <h3 className="text-xl">Create New Exercise</h3>
+        <h1 className="text-xl font-semibold">Create New Exercise</h1>
         <button
+          type="button"
           className="text-[#8ebbff] bg-[#2f3651] px-6 py-0 rounded-md"
           onClick={submitExercise}
         >
@@ -73,13 +74,13 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
         type="text"
         name="exercise"
         placeholder="Add Name"
-        className="w-full bg-white my-5 rounded-lg text-black"
+        className="w-full bg-white text-black rounded-md my-5 py-1.5 pl-4"
       />
 
       <div className="grid grid-cols-2 justify-center items-center gap-3 my-2 overflow-auto">
         {showParts ? (
           <ul className="absolute top-0 bg-gray-800 w-[225px] md:w-[425px] h-full z-10 text-white rounded-lg left-0 overflow-auto">
-            {bodyParts.map((part, idx) => (
+            {bodyParts.slice(1).map((part, idx) => (
               <li
                 key={idx}
                 className={` flex flex-row cursor-pointer p-2 ${
@@ -87,6 +88,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
                 }`}
               >
                 <div
+                  role="button"
                   onClick={() => {
                     setPartSelected(part);
                     setShowParts(false);
@@ -96,7 +98,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
                 >
                   {part}
                 </div>
-                {partSelected === part ? <AiOutlineCheck /> : null}
+                {partSelected === part ? <AiOutlineCheck role="none" /> : null}
               </li>
             ))}
           </ul>
@@ -105,7 +107,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
           onClick={() => {
             setShowParts(true);
           }}
-          className={`w-full rounded-lg px-5 text-black ${
+          className={`w-full rounded-md py-1.5 text-black ${
             partSelected !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
           }`}
         >
@@ -114,7 +116,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
 
         {showCategories ? (
           <ul className="absolute top-0 bg-gray-800 w-fit h-full z-10 text-white rounded-lg right-0 overflow-auto">
-            {categories.map((category, idx) => (
+            {categories.slice(1).map((category, idx) => (
               <li
                 key={idx}
                 className={`flex flex-row cursor-pointer p-2 ${
@@ -122,6 +124,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
                 }`}
               >
                 <div
+                  role="button"
                   onClick={() => {
                     setCategorySelected(category);
                     setShowCategories(false);
@@ -131,7 +134,9 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
                 >
                   {category}
                 </div>
-                {categorySelected === category ? <AiOutlineCheck /> : null}
+                {categorySelected === category ? (
+                  <AiOutlineCheck role="none" />
+                ) : null}
               </li>
             ))}
           </ul>
@@ -140,7 +145,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
           onClick={() => {
             setShowCategories(true);
           }}
-          className={`w-full rounded-lg px-5 text-black ${
+          className={`w-full rounded-md py-1.5 text-black ${
             categorySelected !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
           }`}
         >

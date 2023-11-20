@@ -63,8 +63,9 @@ const WorkoutSlider = ({
   return (
     <ul className="flex flex-col gap-4">
       {sets?.map((set, setId) => (
-        <div key={setId}>
+        <div key={setId} className="flex w-full">
           <SetOptions
+            set={set}
             id={id}
             setId={setId}
             setIndex={setIndex}
