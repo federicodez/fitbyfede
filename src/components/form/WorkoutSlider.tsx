@@ -36,6 +36,7 @@ const WorkoutSlider = ({
   setSetOptions,
 }: WorkoutSliderProps) => {
   const [setIndex, setSetIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   const changeSet = async (id: string, option: string) => {
@@ -80,15 +81,20 @@ const WorkoutSlider = ({
         )}
       </div>
       {sets?.map((set, setIdx) => (
-        <div key={setIdx} className="relative">
-          <SetOptions
-            workoutId={workoutId}
-            setIdx={setIdx}
-            setIndex={setIndex}
-            setOptions={setOptions}
-            setSetOptions={setSetOptions}
-            changeSet={changeSet}
-          />
+        <div key={setIdx} className="relative modal-root">
+          {isModalOpen && (
+            <SetOptions
+              workoutId={workoutId}
+              setIdx={setIdx}
+              setIndex={setIndex}
+              setOptions={setOptions}
+              setSetOptions={setSetOptions}
+              changeSet={changeSet}
+              onClose={() => setIsModalOpen(false)}
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          )}
           <Swiper
             spaceBetween={50}
             slidesPerView={1}
@@ -102,6 +108,7 @@ const WorkoutSlider = ({
                   type="button"
                   className="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"
                   onClick={() => {
+                    setIsModalOpen(true);
                     setSetOptions(workoutId);
                     setSetIndex(setIdx);
                   }}
@@ -109,7 +116,7 @@ const WorkoutSlider = ({
                   {set}
                 </button>
                 {previous?.[index]?.lbs[setIdx] ? (
-                  <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
+                  <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setIdx]} x ${previous[index].reps[setIdx]}`}</div>
                 ) : (
                   <div className="rounded-lg w-20 h-7 bg-gray-300"></div>
                 )}
