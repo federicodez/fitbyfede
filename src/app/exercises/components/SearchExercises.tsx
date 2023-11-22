@@ -67,7 +67,7 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
       <form rel="noopener" className="searchbar-form my-2">
         <input
           onChange={(e) => setQuery(e.target.value)}
-          type="text"
+          type="search"
           name="query"
           placeholder="Search"
           className="w-full bg-white text-black rounded-md py-1.5 pl-4"

@@ -13,6 +13,8 @@ type WorkoutCardProps = {
   setReplace: React.Dispatch<React.SetStateAction<string | boolean>>;
   openMenu: string | boolean;
   setOpenMenu: React.Dispatch<React.SetStateAction<string | boolean>>;
+  setOptions: string | null;
+  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
   setAddExercise: React.Dispatch<React.SetStateAction<boolean>>;
   removeExercise: (id: string) => void;
   handleNotes: (e: ChangeEvent) => void;
@@ -29,6 +31,8 @@ const WorkoutCard = ({
   setReplace,
   openMenu,
   setOpenMenu,
+  setOptions,
+  setSetOptions,
   setAddExercise,
   removeExercise,
   handleNotes,
@@ -68,25 +72,8 @@ const WorkoutCard = ({
           onChange={(e) => handleNotes(e)}
         />
       </div>
-      <div className="flex justify-evenly">
-        <span className="flex justify-center items-center w-full">Set</span>
-        <span className="flex justify-center items-center w-full">
-          Previous
-        </span>
-        {bodyPart === "cardio" ? (
-          <span className="flex justify-center items-center w-full">mile</span>
-        ) : (
-          <span className="flex justify-center items-center w-full">lbs</span>
-        )}
-        {bodyPart === "cardio" ? (
-          <span className="flex justify-center items-center w-full">Time</span>
-        ) : (
-          <span className="flex justify-center items-center w-full">Reps</span>
-        )}
-      </div>
-
       <WorkoutSlider
-        id={id}
+        workoutId={id}
         index={index}
         sets={sets}
         lbs={lbs}
@@ -94,6 +81,9 @@ const WorkoutCard = ({
         session={session}
         setSession={setSession}
         previous={previous}
+        bodyPart={bodyPart}
+        setOptions={setOptions}
+        setSetOptions={setSetOptions}
       />
       <div className="workout-form__btn">
         <button

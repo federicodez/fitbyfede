@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, Suspense, ChangeEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  ChangeEvent,
+  MouseEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise } from "@/components";
@@ -40,6 +47,7 @@ const EditWorkoutForm = ({
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
+  const [setOptions, setSetOptions] = useState<string | null>(null);
   const router = useRouter();
 
   const hours = Math.floor(session?.time / 360000);
@@ -234,6 +242,8 @@ const EditWorkoutForm = ({
             setReplace={setReplace}
             openMenu={openMenu}
             setOpenMenu={setOpenMenu}
+            setOptions={setOptions}
+            setSetOptions={setSetOptions}
             setAddExercise={setAddExercise}
             removeExercise={removeExercise}
             handleNotes={handleNotes}
