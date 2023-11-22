@@ -1,7 +1,7 @@
 import { WorkoutSession, Workout } from "@/types";
-import { MenuOptions, WorkoutSlider, SetOptions } from ".";
+import { MenuOptions, WorkoutSlider } from ".";
 import { SlOptions } from "react-icons/sl";
-import { ChangeEvent, MouseEvent, Ref } from "react";
+import { ChangeEvent } from "react";
 
 type WorkoutCardProps = {
   session: WorkoutSession;
@@ -72,7 +72,6 @@ const WorkoutCard = ({
           onChange={(e) => handleNotes(e)}
         />
       </div>
-
       <WorkoutSlider
         workoutId={id}
         index={index}

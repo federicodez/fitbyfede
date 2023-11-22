@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Ref } from "react";
+import { useState } from "react";
 import { WorkoutSession, Workout } from "@/types";
 import { useRouter } from "next/navigation";
 import { changeWorkoutSet, deleteSet } from "@/actions/workouts";
@@ -90,7 +90,6 @@ const WorkoutSlider = ({
               setOptions={setOptions}
               setSetOptions={setSetOptions}
               changeSet={changeSet}
-              onClose={() => setIsModalOpen(false)}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
             />

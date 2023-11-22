@@ -8,7 +8,6 @@ type SetOptionProps = {
   changeSet: (id: string, option: string) => void;
   setIdx: number;
   setIndex: number;
-  onClose: () => void;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -20,7 +19,6 @@ const SetOptions = ({
   changeSet,
   setIdx,
   setIndex,
-  onClose,
   isModalOpen,
   setIsModalOpen,
 }: SetOptionProps) => {
