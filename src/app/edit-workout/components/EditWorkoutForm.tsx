@@ -7,7 +7,6 @@ import { AddExercise } from "@/components";
 import { HeaderMenu, WorkoutCard } from "@/components/form";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
-  changeWorkoutSet,
   updateWorkout,
   updateWorkoutSession,
   updateManyWorkouts,
@@ -41,9 +40,6 @@ const EditWorkoutForm = ({
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
-  const [setId, setSetId] = useState(0);
-  const [setIndex, setSetIndex] = useState(0);
-  const [setOptions, setSetOptions] = useState<string | null>(null);
   const router = useRouter();
 
   const hours = Math.floor(session?.time / 360000);
@@ -123,18 +119,6 @@ const EditWorkoutForm = ({
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const changeSet = async (id: string, e: MouseEvent) => {
-    const { target } = e;
-    if (target) {
-      const set = (target as HTMLButtonElement).value;
-      const updated = await changeWorkoutSet(id, session, setIndex, set);
-      if (updated) {
-        setSession(updated);
-        router.refresh();
-      }
     }
   };
 
@@ -254,11 +238,6 @@ const EditWorkoutForm = ({
             removeExercise={removeExercise}
             handleNotes={handleNotes}
             addSet={addSet}
-            setId={setId}
-            setIndex={setIndex}
-            changeSet={changeSet}
-            setOptions={setOptions}
-            setSetOptions={setSetOptions}
           />
         </Suspense>
         <div className="workout-form__btn">

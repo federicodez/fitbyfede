@@ -1,20 +1,20 @@
-import { MouseEvent } from "react";
-
 type SetOptionProps = {
-  id: string;
-  setOptions: string | null;
-  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
-  changeSet: (id: string, e: MouseEvent) => void;
-  setId: number;
+  workoutId: string;
+  setOptions: boolean;
+  setSetOptions: React.Dispatch<React.SetStateAction<boolean>>;
+  changeSet: (id: string, option: string) => void;
+  setId: string;
+  setIdx: number;
   setIndex: number;
 };
 
 const SetOptions = ({
-  id,
+  workoutId,
   setOptions,
   setSetOptions,
   changeSet,
   setId,
+  setIdx,
   setIndex,
 }: SetOptionProps) => {
   const options = [
@@ -22,28 +22,26 @@ const SetOptions = ({
     { type: "d", label: "Drop Set" },
     { type: "f", label: "Failure" },
   ];
-  console.log("fire ", setOptions);
   return (
     <div
-      onMouseLeave={() => setSetOptions(null)}
       className={
-        setOptions === id && setIndex === setId
-          ? `absolute w-full h-full z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
+        setId === workoutId && setIndex === setIdx
+          ? `absolute w-fit top-0 left-0 z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
           : "hidden"
       }
     >
       {options.map((option, idx) => (
-        <option
+        <div
           key={idx}
-          className="flex w-full"
-          value={option.type}
-          onClick={(e) => {
-            changeSet(id, e);
-            setSetOptions(null);
+          className=""
+          id={option.type}
+          onClick={() => {
+            changeSet(workoutId, option.type);
+            setSetOptions(!setOptions);
           }}
         >
           {option.label}
-        </option>
+        </div>
       ))}
     </div>
   );

@@ -17,12 +17,6 @@ type WorkoutCardProps = {
   removeExercise: (id: string) => void;
   handleNotes: (e: ChangeEvent) => void;
   addSet: (id: string, sets: string[], lbs: number[], reps: number[]) => void;
-  setOptions: string | null;
-  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
-  changeSet: (id: string, e: MouseEvent) => void;
-  setId: number;
-  setIndex: number;
-  setSetIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const WorkoutCard = ({
@@ -39,12 +33,6 @@ const WorkoutCard = ({
   removeExercise,
   handleNotes,
   addSet,
-  setId,
-  setIndex,
-  setSetIndex,
-  setOptions,
-  setSetOptions,
-  changeSet,
 }: WorkoutCardProps) =>
   session?.Workout?.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
     <div key={id} className="">
@@ -80,35 +68,9 @@ const WorkoutCard = ({
           onChange={(e) => handleNotes(e)}
         />
       </div>
-      <div className="relative">
-        <SetOptions
-          id={id}
-          setId={setId}
-          setIndex={setIndex}
-          setOptions={setOptions}
-          setSetOptions={setSetOptions}
-          changeSet={changeSet}
-        />
-      </div>
-      <div className="flex justify-evenly">
-        <span className="flex justify-center items-center w-full">Set</span>
-        <span className="flex justify-center items-center w-full">
-          Previous
-        </span>
-        {bodyPart === "cardio" ? (
-          <span className="flex justify-center items-center w-full">mile</span>
-        ) : (
-          <span className="flex justify-center items-center w-full">lbs</span>
-        )}
-        {bodyPart === "cardio" ? (
-          <span className="flex justify-center items-center w-full">Time</span>
-        ) : (
-          <span className="flex justify-center items-center w-full">Reps</span>
-        )}
-      </div>
 
       <WorkoutSlider
-        id={id}
+        workoutId={id}
         index={index}
         sets={sets}
         lbs={lbs}
@@ -116,10 +78,7 @@ const WorkoutCard = ({
         session={session}
         setSession={setSession}
         previous={previous}
-        setOptions={setOptions}
-        setSetOptions={setSetOptions}
-        setIndex={setIndex}
-        setSetIndex={setSetIndex}
+        bodyPart={bodyPart}
       />
       <div className="workout-form__btn">
         <button

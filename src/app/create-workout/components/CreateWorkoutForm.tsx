@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, ChangeEvent } from "react";
+import { useState, Suspense, ChangeEvent, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise, StartTimer } from "@/components";
@@ -12,6 +12,7 @@ import {
   deleteSession,
   deleteWorkout,
   updateWorkoutSession,
+  changeWorkoutSet,
 } from "@/actions/workouts";
 import { SlOptions } from "react-icons/sl";
 import { HiX } from "react-icons/hi";
@@ -37,6 +38,9 @@ const CreateWorkoutForm = ({
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
+  const [setOptions, setSetOptions] = useState<string | null>(null);
+  const [setId, setSetId] = useState(0);
+  const [setIndex, setSetIndex] = useState(0);
   const router = useRouter();
   const { time } = useTimerContext();
 
@@ -82,6 +86,18 @@ const CreateWorkoutForm = ({
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const changeSet = async (id: string, e: MouseEvent) => {
+    const { target } = e;
+    if (target) {
+      const set = (target as HTMLButtonElement).value;
+      const updated = await changeWorkoutSet(id, session, setIndex, set);
+      if (updated) {
+        setSession(updated);
+        router.refresh();
+      }
     }
   };
 
@@ -182,6 +198,12 @@ const CreateWorkoutForm = ({
             removeExercise={removeExercise}
             handleNotes={handleNotes}
             addSet={addSet}
+            changeSet={changeSet}
+            setOptions={setOptions}
+            setSetOptions={setSetOptions}
+            setId={setId}
+            setIndex={setIndex}
+            setSetIndex={setSetIndex}
           />
         </Suspense>
         <div className="workout-form__btn">

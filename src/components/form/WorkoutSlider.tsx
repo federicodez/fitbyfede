@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, MouseEvent } from "react";
-import { CustomButton, SetOptions } from "@/components";
 import { WorkoutSession, Workout } from "@/types";
 import { useRouter } from "next/navigation";
 import { changeWorkoutSet, deleteSet } from "@/actions/workouts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/scss";
+import { SetOptions } from ".";
 
 type WorkoutSliderProps = {
-  id: string;
+  workoutId: string;
   index: number;
   sets: string[];
   lbs: number[];
@@ -17,14 +17,11 @@ type WorkoutSliderProps = {
   session: WorkoutSession;
   setSession: React.Dispatch<React.SetStateAction<WorkoutSession>>;
   previous: Workout[] | [];
-  setOptions: string | null;
-  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
-  setIndex: number;
-  setSetIndex: React.Dispatch<React.SetStateAction<number>>;
+  bodyPart: string;
 };
 
 const WorkoutSlider = ({
-  id,
+  workoutId,
   index,
   sets,
   lbs,
@@ -32,12 +29,20 @@ const WorkoutSlider = ({
   session,
   setSession,
   previous,
-  setOptions,
-  setSetOptions,
-  setIndex,
-  setSetIndex,
+  bodyPart,
 }: WorkoutSliderProps) => {
+  const [setId, setSetId] = useState("");
+  const [setIndex, setSetIndex] = useState(0);
+  const [setOptions, setSetOptions] = useState(false);
   const router = useRouter();
+
+  const changeSet = async (id: string, option: string) => {
+    const updated = await changeWorkoutSet(id, session, setIndex, option);
+    if (updated) {
+      setSession(updated);
+      router.refresh();
+    }
+  };
 
   const handleDeleteSet = async (id: string, setId: number, swiper: any) => {
     try {
@@ -55,40 +60,70 @@ const WorkoutSlider = ({
   };
 
   return (
-    <ul className="flex flex-col gap-4">
-      {sets?.map((set, setId) => (
-        <div key={setId}>
+    <ul className="flex flex-col">
+      <div className="flex justify-evenly">
+        <span className="flex justify-center items-center w-full">Set</span>
+        <span className="flex justify-center items-center w-full">
+          Previous
+        </span>
+        {bodyPart === "cardio" ? (
+          <span className="flex justify-center items-center w-full">mile</span>
+        ) : (
+          <span className="flex justify-center items-center w-full">lbs</span>
+        )}
+        {bodyPart === "cardio" ? (
+          <span className="flex justify-center items-center w-full">Time</span>
+        ) : (
+          <span className="flex justify-center items-center w-full">Reps</span>
+        )}
+      </div>
+      {sets?.map((set, setIdx) => (
+        <div key={setIdx} className="relative">
+          <SetOptions
+            workoutId={workoutId}
+            setId={setId}
+            setIdx={setIdx}
+            setIndex={setIndex}
+            setOptions={setOptions}
+            setSetOptions={setSetOptions}
+            changeSet={changeSet}
+          />
           <Swiper
             spaceBetween={50}
             slidesPerView={1}
-            onSlideChange={(swiper) => handleDeleteSet(id, setId, swiper)}
+            onSlideChange={(swiper) =>
+              handleDeleteSet(workoutId, setIdx, swiper)
+            }
           >
             <SwiperSlide>
-              <li className="flex flex-row justify-evenly py-2">
-                <div className="relative">
-                  <CustomButton
-                    title={set}
-                    containerStyles="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"
-                    handleClick={() => {
-                      setSetOptions(id);
-                      setSetIndex(setId);
-                    }}
-                  />
-                </div>
-                {previous?.[index]?.lbs[setId] ? (
+              <li className="flex flex-row justify-evenly py-4">
+                <button
+                  type="button"
+                  className="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"
+                  onClick={() => {
+                    setSetId(workoutId);
+                    setSetOptions(!setOptions);
+                    setSetIndex(setIdx);
+                  }}
+                >
+                  {set}
+                </button>
+                {previous?.[index]?.lbs[setIdx] ? (
                   <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setId]} x ${previous[index].reps[setId]}`}</div>
                 ) : (
-                  <div className="rounded-lg w-20 bg-gray-300"></div>
+                  <div className="rounded-lg w-20 h-7 bg-gray-300"></div>
                 )}
                 <div className="">
                   <input
                     type="number"
+                    pattern="/d*"
+                    inputMode="decimal"
                     name="lbs"
                     id="lbs"
-                    defaultValue={`${lbs[setId] ? lbs[setId] : ""}`}
+                    defaultValue={`${lbs[setIdx] ? lbs[setIdx] : ""}`}
                     placeholder={`${
-                      previous?.[index]?.lbs[setId]
-                        ? previous?.[index]?.lbs[setId]
+                      previous?.[index]?.lbs[setIdx]
+                        ? previous?.[index]?.lbs[setIdx]
                         : ""
                     }`}
                     className="bg-gray-300 text-black rounded-lg w-20"
@@ -97,12 +132,14 @@ const WorkoutSlider = ({
                 <div className="">
                   <input
                     type="number"
+                    pattern="[0-9]*"
+                    inputMode="decimal"
                     name="reps"
                     id="reps"
-                    defaultValue={`${reps[setId] ? reps[setId] : ""}`}
+                    defaultValue={`${reps[setIdx] ? reps[setIdx] : ""}`}
                     placeholder={`${
-                      previous?.[index]?.reps[setId]
-                        ? previous?.[index]?.reps[setId]
+                      previous?.[index]?.reps[setIdx]
+                        ? previous?.[index]?.reps[setIdx]
                         : ""
                     }`}
                     className="bg-gray-300 text-black rounded-lg w-20"
