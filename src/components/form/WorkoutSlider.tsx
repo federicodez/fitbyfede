@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, Ref } from "react";
 import { WorkoutSession, Workout } from "@/types";
 import { useRouter } from "next/navigation";
 import { changeWorkoutSet, deleteSet } from "@/actions/workouts";
@@ -16,6 +16,8 @@ type WorkoutSliderProps = {
   reps: number[];
   session: WorkoutSession;
   setSession: React.Dispatch<React.SetStateAction<WorkoutSession>>;
+  setOptions: string | null;
+  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
   previous: Workout[] | [];
   bodyPart: string;
 };
@@ -30,10 +32,10 @@ const WorkoutSlider = ({
   setSession,
   previous,
   bodyPart,
+  setOptions,
+  setSetOptions,
 }: WorkoutSliderProps) => {
-  const [setId, setSetId] = useState("");
   const [setIndex, setSetIndex] = useState(0);
-  const [setOptions, setSetOptions] = useState(false);
   const router = useRouter();
 
   const changeSet = async (id: string, option: string) => {
@@ -81,7 +83,6 @@ const WorkoutSlider = ({
         <div key={setIdx} className="relative">
           <SetOptions
             workoutId={workoutId}
-            setId={setId}
             setIdx={setIdx}
             setIndex={setIndex}
             setOptions={setOptions}
@@ -101,8 +102,7 @@ const WorkoutSlider = ({
                   type="button"
                   className="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"
                   onClick={() => {
-                    setSetId(workoutId);
-                    setSetOptions(!setOptions);
+                    setSetOptions(workoutId);
                     setSetIndex(setIdx);
                   }}
                 >

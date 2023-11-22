@@ -1,6 +1,14 @@
 "use client";
 
-import { useState, Suspense, ChangeEvent, MouseEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  ChangeEvent,
+  MouseEvent,
+} from "react";
+import { useOnClickOutside } from "usehooks-ts";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise } from "@/components";
@@ -40,11 +48,22 @@ const EditWorkoutForm = ({
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
+  const [setOptions, setSetOptions] = useState<string | null>(null);
   const router = useRouter();
+  const setRef = useRef<HTMLDivElement>(null);
+  let open: (e: MouseEvent) => void;
 
   const hours = Math.floor(session?.time / 360000);
   const minutes = Math.floor((session?.time % 360000) / 6000);
   const seconds = Math.floor((session?.time % 6000) / 100);
+
+  useEffect(() => {
+    open = (e: MouseEvent) => {
+      if (!setRef?.current?.contains(e.target as HTMLDivElement)) {
+        setSetOptions(null);
+      }
+    };
+  });
 
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
@@ -150,7 +169,11 @@ const EditWorkoutForm = ({
   };
 
   return !addExercise ? (
-    <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+    <div
+      onClick={(e) => open(e)}
+      ref={setRef}
+      className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]"
+    >
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button
@@ -234,6 +257,8 @@ const EditWorkoutForm = ({
             setReplace={setReplace}
             openMenu={openMenu}
             setOpenMenu={setOpenMenu}
+            setOptions={setOptions}
+            setSetOptions={setSetOptions}
             setAddExercise={setAddExercise}
             removeExercise={removeExercise}
             handleNotes={handleNotes}

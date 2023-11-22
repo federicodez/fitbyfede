@@ -1,9 +1,8 @@
 type SetOptionProps = {
   workoutId: string;
-  setOptions: boolean;
-  setSetOptions: React.Dispatch<React.SetStateAction<boolean>>;
+  setOptions: string | null;
+  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
   changeSet: (id: string, option: string) => void;
-  setId: string;
   setIdx: number;
   setIndex: number;
 };
@@ -13,7 +12,6 @@ const SetOptions = ({
   setOptions,
   setSetOptions,
   changeSet,
-  setId,
   setIdx,
   setIndex,
 }: SetOptionProps) => {
@@ -25,7 +23,7 @@ const SetOptions = ({
   return (
     <div
       className={
-        setId === workoutId && setIndex === setIdx
+        setOptions === workoutId && setIndex === setIdx
           ? `absolute w-fit top-0 left-0 z-10 bg-gray-800 text-white rounded-lg cursor-pointer p-2 md:ml-20`
           : "hidden"
       }
@@ -37,7 +35,7 @@ const SetOptions = ({
           id={option.type}
           onClick={() => {
             changeSet(workoutId, option.type);
-            setSetOptions(!setOptions);
+            setSetOptions(null);
           }}
         >
           {option.label}

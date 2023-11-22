@@ -1,7 +1,7 @@
 import { WorkoutSession, Workout } from "@/types";
 import { MenuOptions, WorkoutSlider, SetOptions } from ".";
 import { SlOptions } from "react-icons/sl";
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent, MouseEvent, Ref } from "react";
 
 type WorkoutCardProps = {
   session: WorkoutSession;
@@ -13,6 +13,8 @@ type WorkoutCardProps = {
   setReplace: React.Dispatch<React.SetStateAction<string | boolean>>;
   openMenu: string | boolean;
   setOpenMenu: React.Dispatch<React.SetStateAction<string | boolean>>;
+  setOptions: string | null;
+  setSetOptions: React.Dispatch<React.SetStateAction<string | null>>;
   setAddExercise: React.Dispatch<React.SetStateAction<boolean>>;
   removeExercise: (id: string) => void;
   handleNotes: (e: ChangeEvent) => void;
@@ -29,6 +31,8 @@ const WorkoutCard = ({
   setReplace,
   openMenu,
   setOpenMenu,
+  setOptions,
+  setSetOptions,
   setAddExercise,
   removeExercise,
   handleNotes,
@@ -79,6 +83,8 @@ const WorkoutCard = ({
         setSession={setSession}
         previous={previous}
         bodyPart={bodyPart}
+        setOptions={setOptions}
+        setSetOptions={setSetOptions}
       />
       <div className="workout-form__btn">
         <button
