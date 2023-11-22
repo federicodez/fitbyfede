@@ -194,16 +194,12 @@ const CreateWorkoutForm = ({
             setReplace={setReplace}
             openMenu={openMenu}
             setOpenMenu={setOpenMenu}
+            setOptions={setOptions}
+            setSetOptions={setSetOptions}
             setAddExercise={setAddExercise}
             removeExercise={removeExercise}
             handleNotes={handleNotes}
             addSet={addSet}
-            changeSet={changeSet}
-            setOptions={setOptions}
-            setSetOptions={setSetOptions}
-            setId={setId}
-            setIndex={setIndex}
-            setSetIndex={setSetIndex}
           />
         </Suspense>
         <div className="workout-form__btn">
