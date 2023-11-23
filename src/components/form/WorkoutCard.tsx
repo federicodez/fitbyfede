@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { WorkoutSession, Workout } from "@/types";
 import { MenuOptions, WorkoutSlider } from ".";
 import { SlOptions } from "react-icons/sl";
@@ -37,63 +38,77 @@ const WorkoutCard = ({
   removeExercise,
   handleNotes,
   addSet,
-}: WorkoutCardProps) =>
-  session?.Workout?.map(({ id, name, sets, lbs, reps, bodyPart }, index) => (
-    <div key={id} className="">
-      <div className="flex flex-row justify-between items-center my-4">
-        <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
+}: WorkoutCardProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  return session?.Workout?.map(
+    ({ id, name, sets, lbs, reps, bodyPart }, index) => (
+      <div key={id} className="">
+        <div className="flex flex-row justify-between items-center my-4">
+          <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
 
-        <div className="relative">
-          <MenuOptions
-            id={id}
-            noteIds={noteIds}
-            setNoteIds={setNoteIds}
-            replace={replace}
-            openMenu={openMenu}
-            setOpenMenu={setOpenMenu}
-            setReplace={setReplace}
-            setAddExercise={setAddExercise}
-            removeExercise={removeExercise}
-          />
-          <div role="button" onClick={() => setOpenMenu(id)}>
-            <SlOptions
-              role="presentation"
-              className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
-            />
+          <div className="relative">
+            {isMenuOpen && (
+              <MenuOptions
+                id={id}
+                noteIds={noteIds}
+                setNoteIds={setNoteIds}
+                replace={replace}
+                openMenu={openMenu}
+                setOpenMenu={setOpenMenu}
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+                setReplace={setReplace}
+                setAddExercise={setAddExercise}
+                removeExercise={removeExercise}
+              />
+            )}
+            <div
+              role="button"
+              onClick={() => {
+                setIsMenuOpen(!isMenuOpen);
+                setOpenMenu(id);
+              }}
+            >
+              <SlOptions
+                role="none"
+                className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className={noteIds.includes(id) ? "" : "hidden"}>
-        <input
-          type="text"
-          name={id}
-          className="bg-white rounded-md w-full"
-          onChange={(e) => handleNotes(e)}
+        <div className={noteIds.includes(id) ? "" : "hidden"}>
+          <input
+            type="text"
+            name={id}
+            className="bg-white rounded-md w-full"
+            onChange={(e) => handleNotes(e)}
+          />
+        </div>
+        <WorkoutSlider
+          workoutId={id}
+          index={index}
+          sets={sets}
+          lbs={lbs}
+          reps={reps}
+          session={session}
+          setSession={setSession}
+          previous={previous}
+          bodyPart={bodyPart}
+          setOptions={setOptions}
+          setSetOptions={setSetOptions}
         />
+        <div className="workout-form__btn">
+          <button
+            type="button"
+            onClick={() => addSet(id, sets, lbs, reps)}
+            className="mx-10 rounded-full bg-gray-300 text-black"
+          >
+            Add Set
+          </button>
+        </div>
       </div>
-      <WorkoutSlider
-        workoutId={id}
-        index={index}
-        sets={sets}
-        lbs={lbs}
-        reps={reps}
-        session={session}
-        setSession={setSession}
-        previous={previous}
-        bodyPart={bodyPart}
-        setOptions={setOptions}
-        setSetOptions={setSetOptions}
-      />
-      <div className="workout-form__btn">
-        <button
-          type="button"
-          onClick={() => addSet(id, sets, lbs, reps)}
-          className="mx-10 rounded-full bg-gray-300 text-black"
-        >
-          Add Set
-        </button>
-      </div>
-    </div>
-  ));
+    ),
+  );
+};
 export default WorkoutCard;

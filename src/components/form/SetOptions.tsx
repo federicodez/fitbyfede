@@ -1,5 +1,4 @@
-import { useEffect, useRef, RefObject, MouseEvent, TouchEvent } from "react";
-import ReactDOM from "react-dom";
+import { useEffect, useRef } from "react";
 
 type SetOptionProps = {
   workoutId: string;
@@ -26,7 +25,7 @@ const SetOptions = ({
 
   useEffect(() => {
     if (!isModalOpen) return;
-    const checkIfClickedOutside = (e: any) => {
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
       if (
         menuRef?.current &&
         !menuRef?.current?.contains(e.target as HTMLElement)

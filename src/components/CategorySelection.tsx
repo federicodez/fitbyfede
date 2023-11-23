@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import { categories } from "@/constants";
 import { Data, CustomData } from "@/types";
 import { AiOutlineCheck } from "react-icons/ai";
@@ -6,9 +9,7 @@ type CategorySelectionProps = {
   data: CustomData | Data;
   bodyPartBtn: string;
   categoriesBtn: string;
-  showCategories: boolean;
   setWorkouts: React.Dispatch<React.SetStateAction<CustomData | Data>>;
-  setShowCategories: React.Dispatch<React.SetStateAction<boolean>>;
   setCategoriesBtn: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -16,11 +17,28 @@ const CategorySelection = ({
   data,
   bodyPartBtn,
   categoriesBtn,
-  showCategories,
   setWorkouts,
-  setShowCategories,
   setCategoriesBtn,
 }: CategorySelectionProps) => {
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [showCategories, setShowCategories] = useState(false);
+
+  useEffect(() => {
+    if (!showCategories) return;
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
+      if (
+        menuRef?.current &&
+        !menuRef?.current?.contains(e.target as HTMLElement)
+      ) {
+        setShowCategories(false);
+      }
+    };
+    document.addEventListener("click", checkIfClickedOutside);
+    return () => {
+      document.removeEventListener("click", checkIfClickedOutside);
+    };
+  }, [menuRef]);
+
   const handleCategories = async (query: string) => {
     let categories;
     try {
@@ -53,12 +71,9 @@ const CategorySelection = ({
   };
 
   return (
-    <div className="relative w-full">
-      {showCategories ? (
-        <ul
-          onMouseLeave={() => setShowCategories(false)}
-          className="absolute w-full h-96 z-10 bg-gray-800 text-white rounded-md right-0 overflow-auto"
-        >
+    <div ref={menuRef} className="relative w-full">
+      {showCategories && (
+        <ul className="absolute w-full h-96 z-10 bg-gray-800 text-white rounded-md right-0 overflow-auto">
           {categories.map((category, idx) => (
             <li
               key={idx}
@@ -70,22 +85,19 @@ const CategorySelection = ({
                 role="button"
                 onClick={() => {
                   handleCategories(category);
-                  setShowCategories(false);
+                  setShowCategories(!showCategories);
                 }}
                 className={`flex flex-col w-full`}
                 id={category}
               >
                 {category}
               </div>
-              {categoriesBtn === category ? (
-                <AiOutlineCheck role="none" />
-              ) : null}
+              {categoriesBtn === category && <AiOutlineCheck role="none" />}
             </li>
           ))}
         </ul>
-      ) : null}
+      )}
       <button
-        type="button"
         onClick={() => setShowCategories(true)}
         className={`w-full rounded-md py-1.5 px-5 text-black ${
           categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"

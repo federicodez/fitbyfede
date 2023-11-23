@@ -15,6 +15,8 @@ type WorkoutListProps = {
 
 const WorkoutList = ({ sessions }: WorkoutListProps) => {
   const [showOptions, setShowOptions] = useState<string | boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [showWorkoutDetails, setShowWorkoutDetails] = useState<
     string | boolean
   >(false);
@@ -50,10 +52,14 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                 showWorkoutDetails === session.id ? "relative w-full" : "hidden"
               }
             >
-              <Detailed
-                session={session}
-                setShowWorkoutDetails={setShowWorkoutDetails}
-              />
+              {isDetailsOpen && (
+                <Detailed
+                  session={session}
+                  setShowWorkoutDetails={setShowWorkoutDetails}
+                  isDetailsOpen={isDetailsOpen}
+                  setIsDetailsOpen={setIsDetailsOpen}
+                />
+              )}
             </div>
             <div className="wrapper my-2 p-2 rounded-lg border-[#8ebbff] border-4 p-color">
               <div className="flex justify-between">
@@ -63,21 +69,33 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                     showOptions === session.id ? "absolute w-full" : "hidden"
                   }
                 >
-                  <MenuOptions
-                    session={session}
-                    setShowOptions={setShowOptions}
-                  />
+                  {isModalOpen && (
+                    <MenuOptions
+                      session={session}
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                    />
+                  )}
                 </div>
-                <div role="button" onClick={() => setShowOptions(session.id)}>
+                <div
+                  role="button"
+                  onClick={() => {
+                    setIsModalOpen(!isModalOpen);
+                    setShowOptions(session.id);
+                  }}
+                >
                   <SlOptions
-                    role="presentation"
-                    className="text-[#8ebbff] text-xl mr-2"
+                    role="none"
+                    className="w-8 bg-[#8ebbff] text-[#2f3651] text-xl rounded-md mr-2"
                   />
                 </div>
               </div>
               <div
                 role="button"
-                onClick={() => setShowWorkoutDetails(session.id)}
+                onClick={() => {
+                  setIsDetailsOpen(!isDetailsOpen);
+                  setShowWorkoutDetails(session.id);
+                }}
               >
                 <Sessions session={session} />
               </div>

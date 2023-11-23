@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useRef,
-  Suspense,
-  ChangeEvent,
-  MouseEvent,
-} from "react";
+import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise } from "@/components";
@@ -40,7 +33,6 @@ const EditWorkoutForm = ({
   const date = initialSession;
   const [notes, setNotes] = useState<string>("");
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [sessionOptions, setSessionOptions] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [dateInput, setDateInput] = useState(false);
   const [addExercise, setAddExercise] = useState(false);
@@ -48,6 +40,8 @@ const EditWorkoutForm = ({
   const [replace, setReplace] = useState<string | boolean>(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [setOptions, setSetOptions] = useState<string | null>(null);
+  const [isHeaderOpen, setIsHeaderOpen] = useState(false);
+
   const router = useRouter();
 
   const hours = Math.floor(session?.time / 360000);
@@ -158,7 +152,7 @@ const EditWorkoutForm = ({
   };
 
   return !addExercise ? (
-    <div className="m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
+    <div className="cursor-pointer m-5 p-2 p-color rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button
@@ -168,7 +162,7 @@ const EditWorkoutForm = ({
           >
             <HiX role="none" />
           </button>
-          <h1>Edit Workout</h1>
+          <h1 className="text-xl font-semibold">Edit Workout</h1>
           <button
             type="submit"
             className="bg-blue-300 text-blue-950 rounded-md px-2"
@@ -182,32 +176,29 @@ const EditWorkoutForm = ({
               <div className={!workoutName.length ? "hidden" : ""}>
                 <input
                   type="text"
-                  className="bg-white rounded-md w-full"
+                  className="text-black bg-white rounded-md w-full"
                   onChange={(e) => setWorkoutName(e.target.value)}
                 />
               </div>
             ) : (
-              <strong>{session?.name}</strong>
+              <div className="">{session?.name}</div>
             )}
-            <div
-              className={
-                sessionOptions
-                  ? "absolute w-fit z-10 bg-[#8ebbff] text-[#2f3651] rounded-lg p-2 cursor-pointer"
-                  : "hidden"
-              }
-            >
-              <HeaderMenu
-                sessionOptions={sessionOptions}
-                setSessionOptions={setSessionOptions}
-                setWorkoutName={setWorkoutName}
-                setDateInput={setDateInput}
+            <div className="relative w-fit">
+              {isHeaderOpen && (
+                <HeaderMenu
+                  setWorkoutName={setWorkoutName}
+                  dateInput={dateInput}
+                  setDateInput={setDateInput}
+                  isHeaderOpen={isHeaderOpen}
+                  setIsHeaderOpen={setIsHeaderOpen}
+                />
+              )}
+              <SlOptions
+                role="button"
+                onClick={() => setIsHeaderOpen(!isHeaderOpen)}
+                className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
               />
             </div>
-            <SlOptions
-              role="button"
-              onClick={() => setSessionOptions(true)}
-              className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
-            />
           </div>
           {dateInput ? (
             <input
@@ -221,7 +212,7 @@ const EditWorkoutForm = ({
               <div className="flex flex-col gap-2">
                 <div>{moment(date?.createdAt).calendar()}</div>
                 <div className="flex flex-row items-center">
-                  <BiTimer className="flex w-fit rounded-md px-1" />
+                  <BiTimer role="none" className="flex w-fit rounded-md px-1" />
                   {hours ? `${hours}:` : ""}
                   {minutes.toString().padStart(2)}:
                   {seconds.toString().padStart(2, "0")}

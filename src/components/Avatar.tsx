@@ -7,6 +7,7 @@ const Avatar = () => {
   const { data: session } = useSession();
   return (
     <div className="avatar">
+      <h1 className="text-center font-bold">Profile</h1>
       <Image
         className="profile-image"
         src={session?.user?.image || "/placeholder.jpg"}

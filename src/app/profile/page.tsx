@@ -17,7 +17,6 @@ const Profile = async () => {
         <section className="wrapper pb-20 sm:pb-5">
           <div className="rounded-lg my-5 p-4 border p-color">
             <Settings />
-            <h1 className="text-center font-bold">Profile</h1>
             <Avatar />
           </div>
           {workouts && <PieChart workouts={workouts} />}
