@@ -115,20 +115,20 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
           bodyPartBtn={bodyPartBtn}
           recentWorkouts={recentWorkouts}
           categoriesBtn={categoriesBtn}
-          showParts={showParts}
           setRecent={setRecent}
           setWorkouts={setWorkouts}
           setBodyPartBtn={setBodyPartBtn}
+          showParts={showParts}
           setShowParts={setShowParts}
         />
         <CategorySelection
           data={data}
           bodyPartBtn={bodyPartBtn}
           categoriesBtn={categoriesBtn}
-          showCategories={showCategories}
-          setShowCategories={setShowCategories}
           setCategoriesBtn={setCategoriesBtn}
           setWorkouts={setWorkouts}
+          showCategories={showCategories}
+          setShowCategories={setShowCategories}
         />
       </div>
       {create && <CreateExercise setCreate={setCreate} />}

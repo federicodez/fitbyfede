@@ -12,7 +12,6 @@ import {
   deleteSession,
   deleteWorkout,
   updateWorkoutSession,
-  changeWorkoutSet,
 } from "@/actions/workouts";
 import { SlOptions } from "react-icons/sl";
 import { HiX } from "react-icons/hi";
@@ -31,7 +30,6 @@ const CreateWorkoutForm = ({
 }: CreateWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [sessionNotes, setSessionNotes] = useState("");
-  const [sessionOptions, setSessionOptions] = useState(false);
   const [dateInput, setDateInput] = useState(false);
   const [noteIds, setNoteIds] = useState<string[]>([]);
   const [workoutName, setWorkoutName] = useState("");
@@ -39,8 +37,7 @@ const CreateWorkoutForm = ({
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
   const [setOptions, setSetOptions] = useState<string | null>(null);
-  const [setId, setSetId] = useState(0);
-  const [setIndex, setSetIndex] = useState(0);
+  const [isHeaderOpen, setIsHeaderOpen] = useState(false);
   const router = useRouter();
   const { time } = useTimerContext();
 
@@ -86,18 +83,6 @@ const CreateWorkoutForm = ({
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const changeSet = async (id: string, e: MouseEvent) => {
-    const { target } = e;
-    if (target) {
-      const set = (target as HTMLButtonElement).value;
-      const updated = await changeWorkoutSet(id, session, setIndex, set);
-      if (updated) {
-        setSession(updated);
-        router.refresh();
-      }
     }
   };
 
@@ -166,11 +151,20 @@ const CreateWorkoutForm = ({
                 {session?.name}
               </div>
             )}
-            <HeaderMenu
-              sessionOptions={sessionOptions}
-              setSessionOptions={setSessionOptions}
-              setWorkoutName={setWorkoutName}
-              setDateInput={setDateInput}
+
+            {isHeaderOpen && (
+              <HeaderMenu
+                setWorkoutName={setWorkoutName}
+                dateInput={dateInput}
+                setDateInput={setDateInput}
+                isHeaderOpen={isHeaderOpen}
+                setIsHeaderOpen={setIsHeaderOpen}
+              />
+            )}
+            <SlOptions
+              role="button"
+              onClick={() => setIsHeaderOpen(!isHeaderOpen)}
+              className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
             />
           </div>
           <div>
