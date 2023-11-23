@@ -11,8 +11,6 @@ type CategorySelectionProps = {
   categoriesBtn: string;
   setWorkouts: React.Dispatch<React.SetStateAction<CustomData | Data>>;
   setCategoriesBtn: React.Dispatch<React.SetStateAction<string>>;
-  showCategories: boolean;
-  setShowCategories: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CategorySelection = ({
@@ -21,14 +19,13 @@ const CategorySelection = ({
   categoriesBtn,
   setWorkouts,
   setCategoriesBtn,
-  showCategories,
-  setShowCategories,
 }: CategorySelectionProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const [showCategories, setShowCategories] = useState(false);
 
   useEffect(() => {
     if (!showCategories) return;
-    const checkIfClickedOutside = (e: any) => {
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
       if (
         menuRef?.current &&
         !menuRef?.current?.contains(e.target as HTMLElement)

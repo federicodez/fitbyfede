@@ -27,9 +27,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
   const [details, setDetails] = useState<string | boolean>(false);
   const [create, setCreate] = useState(false);
 
-  const [showParts, setShowParts] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
-  const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [exerciseQueue, setExerciseQueue] = useState<string[]>([]);
@@ -118,8 +116,6 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
           setRecent={setRecent}
           setWorkouts={setWorkouts}
           setBodyPartBtn={setBodyPartBtn}
-          showParts={showParts}
-          setShowParts={setShowParts}
         />
         <CategorySelection
           data={data}
@@ -127,8 +123,6 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
           categoriesBtn={categoriesBtn}
           setCategoriesBtn={setCategoriesBtn}
           setWorkouts={setWorkouts}
-          showCategories={showCategories}
-          setShowCategories={setShowCategories}
         />
       </div>
       {create && <CreateExercise setCreate={setCreate} />}

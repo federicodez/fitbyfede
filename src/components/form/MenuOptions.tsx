@@ -37,7 +37,7 @@ const MenuOptions = ({
 
   useEffect(() => {
     if (!isMenuOpen) return;
-    const checkIfClickedOutside = (e: any) => {
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
       if (
         menuRef?.current &&
         !menuRef?.current?.contains(e.target as HTMLElement)

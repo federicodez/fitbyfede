@@ -70,7 +70,7 @@ const WorkoutCard = ({
               }}
             >
               <SlOptions
-                role="presentation"
+                role="none"
                 className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
               />
             </div>

@@ -13,8 +13,6 @@ type BodyPartSelectionProps = {
   setWorkouts: React.Dispatch<React.SetStateAction<CustomData | Data>>;
   setRecent: React.Dispatch<React.SetStateAction<Workout[]>>;
   setBodyPartBtn: React.Dispatch<React.SetStateAction<string>>;
-  showParts: boolean;
-  setShowParts: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BodyPartSelection = ({
@@ -25,14 +23,13 @@ const BodyPartSelection = ({
   setRecent,
   setWorkouts,
   setBodyPartBtn,
-  showParts,
-  setShowParts,
 }: BodyPartSelectionProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const [showParts, setShowParts] = useState(false);
 
   useEffect(() => {
     if (!showParts) return;
-    const checkIfClickedOutside = (e: any) => {
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
       if (
         menuRef?.current &&
         !menuRef?.current?.contains(e.target as HTMLElement)

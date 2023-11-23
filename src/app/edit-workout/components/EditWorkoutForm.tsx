@@ -181,9 +181,9 @@ const EditWorkoutForm = ({
                 />
               </div>
             ) : (
-              <strong>{session?.name}</strong>
+              <div className="">{session?.name}</div>
             )}
-            <div className="relative w-full">
+            <div className="relative w-fit">
               {isHeaderOpen && (
                 <HeaderMenu
                   setWorkoutName={setWorkoutName}

@@ -13,7 +13,7 @@ const Settings = () => {
 
   useEffect(() => {
     if (!isSettingsOpen) return;
-    const checkIfClickedOutside = (e: any) => {
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
       if (
         settingsRef?.current &&
         !settingsRef?.current?.contains(e.target as HTMLElement)
@@ -28,13 +28,15 @@ const Settings = () => {
   }, [settingsRef]);
 
   return (
-    <div ref={settingsRef}>
+    <div>
       {isSettingsOpen && (
         <div
+          ref={settingsRef}
           role="button"
           className="absolute z-10 border rounded-md backdrop-blur-lg overflow-hidden px-4 py-2 cursor-pointer"
         >
           <div
+            role="button"
             className="px-4 py-px mb-4 rounded-md w-fit border"
             onClick={() => {
               setIsSettingsOpen(!isSettingsOpen);
@@ -46,20 +48,22 @@ const Settings = () => {
           <div
             role="button"
             className="flex flex-row justify-center items-center gap-2 px-4 py-px mt-4 rounded-md w-fit border"
-            onClick={() => signOut()}
+            onClick={() => {
+              setIsSettingsOpen(!isSettingsOpen);
+              signOut();
+            }}
           >
             <HiArrowLeftOnRectangle role="none" />
             Sign Out
           </div>
         </div>
       )}
-      <div
-        role="button"
-        className="px-4 py-px bg-[#8ebbff] rounded-md w-fit border"
+      <button
+        className="px-4 py-px bg-[#8ebbff] text-black rounded-md w-fit border"
         onClick={() => setIsSettingsOpen(true)}
       >
-        <SlOptions role="none" className="text-black" />
-      </div>
+        <SlOptions role="none" />
+      </button>
       {tryDelete && (
         <DeleteAccountBtn tryDelete={tryDelete} setTryDelete={setTryDelete} />
       )}

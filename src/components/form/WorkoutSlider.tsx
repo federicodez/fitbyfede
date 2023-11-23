@@ -121,7 +121,7 @@ const WorkoutSlider = ({
                 )}
                 <div className="">
                   <input
-                    tabIndex={1}
+                    tabIndex={0}
                     type="number"
                     pattern="/d*"
                     inputMode="decimal"

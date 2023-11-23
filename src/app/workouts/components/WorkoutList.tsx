@@ -72,7 +72,6 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                   {isModalOpen && (
                     <MenuOptions
                       session={session}
-                      setShowOptions={setShowOptions}
                       isModalOpen={isModalOpen}
                       setIsModalOpen={setIsModalOpen}
                     />
@@ -86,8 +85,8 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                   }}
                 >
                   <SlOptions
-                    role="presentation"
-                    className="text-[#8ebbff] text-xl mr-2"
+                    role="none"
+                    className="w-8 bg-[#8ebbff] text-[#2f3651] text-xl rounded-md mr-2"
                   />
                 </div>
               </div>

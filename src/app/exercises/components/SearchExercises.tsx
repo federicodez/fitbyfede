@@ -79,18 +79,14 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
           bodyPartBtn={bodyPartBtn}
           recentWorkouts={recentWorkouts}
           categoriesBtn={categoriesBtn}
-          showParts={showParts}
           setRecent={setRecent}
           setWorkouts={setWorkouts}
           setBodyPartBtn={setBodyPartBtn}
-          setShowParts={setShowParts}
         />
         <CategorySelection
           data={data}
           bodyPartBtn={bodyPartBtn}
           categoriesBtn={categoriesBtn}
-          showCategories={showCategories}
-          setShowCategories={setShowCategories}
           setCategoriesBtn={setCategoriesBtn}
           setWorkouts={setWorkouts}
         />

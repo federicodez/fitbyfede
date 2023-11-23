@@ -1,19 +1,19 @@
+"use client";
+
 import { RemoveBtn } from "@/components";
 import Link from "next/link";
 import { WorkoutSession } from "@/types";
-import { HiPencilAlt, HiX } from "react-icons/hi";
+import { HiPencilAlt } from "react-icons/hi";
 import React, { useRef, useEffect } from "react";
 
 type MenuOptionsProps = {
   session: WorkoutSession;
-  setShowOptions: React.Dispatch<React.SetStateAction<string | boolean>>;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const MenuOptions = ({
   session,
-  setShowOptions,
   isModalOpen,
   setIsModalOpen,
 }: MenuOptionsProps) => {
@@ -21,7 +21,7 @@ const MenuOptions = ({
 
   useEffect(() => {
     if (!isModalOpen) return;
-    const checkIfClickedOutside = (e: any) => {
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
       if (
         menuRef?.current &&
         !menuRef?.current?.contains(e.target as HTMLElement)
