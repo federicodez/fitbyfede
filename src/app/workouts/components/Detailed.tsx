@@ -6,13 +6,39 @@ import { HiX } from "react-icons/hi";
 import { IoIosTimer } from "react-icons/io";
 import { FaWeightHanging } from "react-icons/fa";
 import { WorkoutSession } from "@/types";
+import React, { useRef, useEffect } from "react";
 
 type DetailedProps = {
   session: WorkoutSession;
   setShowWorkoutDetails: React.Dispatch<React.SetStateAction<string | boolean>>;
+  isDetailsOpen: boolean;
+  setIsDetailsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
+const Detailed = ({
+  session,
+  setShowWorkoutDetails,
+  isDetailsOpen,
+  setIsDetailsOpen,
+}: DetailedProps) => {
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!isDetailsOpen) return;
+    const checkIfClickedOutside = (e: any) => {
+      if (
+        menuRef?.current &&
+        !menuRef?.current?.contains(e.target as HTMLElement)
+      ) {
+        setIsDetailsOpen(false);
+      }
+    };
+    document.addEventListener("click", checkIfClickedOutside);
+    return () => {
+      document.removeEventListener("click", checkIfClickedOutside);
+    };
+  }, [menuRef]);
+
   const hours = Math.floor(session.time / 360000);
   const minutes = Math.floor((session.time % 360000) / 6000);
   const seconds = Math.floor((session.time % 6000) / 100);
@@ -29,6 +55,7 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
 
   return (
     <div
+      ref={menuRef}
       className={`
       fixed 
       text-black
@@ -47,7 +74,11 @@ const Detailed = ({ session, setShowWorkoutDetails }: DetailedProps) => {
       shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0.3em_0.3em_1em_rgba(0,0,0,0.3)]
     `}
     >
-      <div className="flex flex-row justify-between m-2">
+      <div
+        role="button"
+        onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+        className="flex flex-row justify-between m-2"
+      >
         <button
           className="bg-[#2f3651] px-2 py-1 rounded-md"
           onClick={() => setShowWorkoutDetails(false)}

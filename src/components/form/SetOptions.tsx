@@ -1,5 +1,4 @@
-import { useEffect, useRef, RefObject, MouseEvent, TouchEvent } from "react";
-import ReactDOM from "react-dom";
+import { useEffect, useRef } from "react";
 
 type SetOptionProps = {
   workoutId: string;
