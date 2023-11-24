@@ -37,7 +37,7 @@ const CategorySelection = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, showCategories, setShowCategories]);
 
   const handleCategories = async (query: string) => {
     let categories;

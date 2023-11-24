@@ -29,10 +29,6 @@
   box-sizing: border-box;
 }
 
-html {
-  color-scheme: dark light;
-}
-
 body {
   color: white;
   font-family: system-ui;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect, useRef } from "react";
 import { HiX } from "react-icons/hi";
 import { bodyParts, categories } from "@/constants";
 import { addExercise } from "@/actions/workouts";
@@ -12,10 +12,28 @@ type CreateExerciseProps = {
 
 const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
   const [exercise, setExercise] = useState("");
+  const [showOptions, setShowOptions] = useState(false);
   const [showParts, setShowParts] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [partSelected, setPartSelected] = useState("Any Body Part");
   const [categorySelected, setCategorySelected] = useState("Any Category");
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!showOptions) return;
+    const checkIfClickedOutside = (e: MouseEvent | TouchEvent) => {
+      if (
+        menuRef?.current &&
+        !menuRef?.current?.contains(e.target as HTMLElement)
+      ) {
+        setShowOptions(false);
+      }
+    };
+    document.addEventListener("click", checkIfClickedOutside);
+    return () => {
+      document.removeEventListener("click", checkIfClickedOutside);
+    };
+  }, [menuRef, showOptions, setShowOptions]);
 
   const submitExercise = async () => {
     try {
@@ -52,7 +70,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
       md:-translate-y-1/2
     `}
     >
-      <div className="flex flex-row justify-evenly">
+      <div ref={menuRef} className="flex flex-row justify-evenly">
         <button
           type="button"
           onClick={() => setCreate(false)}
@@ -78,7 +96,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
       />
 
       <div className="grid grid-cols-2 justify-center items-center gap-3 my-2 overflow-auto">
-        {showParts ? (
+        {showParts && showOptions && (
           <ul className="absolute top-0 bg-gray-800 w-[225px] md:w-[425px] h-full z-10 text-white rounded-lg left-0 overflow-auto">
             {bodyParts.slice(1).map((part, idx) => (
               <li
@@ -92,6 +110,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
                   onClick={() => {
                     setPartSelected(part);
                     setShowParts(false);
+                    setShowOptions(!showOptions);
                   }}
                   className={`flex flex-col w-full`}
                   id={part}
@@ -102,10 +121,12 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
               </li>
             ))}
           </ul>
-        ) : null}
+        )}
         <button
           onClick={() => {
             setShowParts(true);
+            setShowCategories(false);
+            setShowOptions(true);
           }}
           className={`w-full rounded-md py-1.5 text-black ${
             partSelected !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
@@ -114,7 +135,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
           {partSelected}
         </button>
 
-        {showCategories ? (
+        {showCategories && showOptions && (
           <ul className="absolute top-0 bg-gray-800 w-fit h-full z-10 text-white rounded-lg right-0 overflow-auto">
             {categories.slice(1).map((category, idx) => (
               <li
@@ -128,6 +149,7 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
                   onClick={() => {
                     setCategorySelected(category);
                     setShowCategories(false);
+                    setShowOptions(!showOptions);
                   }}
                   className={`flex flex-col w-full`}
                   id={category}
@@ -140,10 +162,12 @@ const CreateExercise = ({ setCreate }: CreateExerciseProps) => {
               </li>
             ))}
           </ul>
-        ) : null}
+        )}
         <button
           onClick={() => {
             setShowCategories(true);
+            setShowParts(false);
+            setShowOptions(true);
           }}
           className={`w-full rounded-md py-1.5 text-black ${
             categorySelected !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
