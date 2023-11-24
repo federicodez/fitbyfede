@@ -10,12 +10,14 @@ type MenuOptionsProps = {
   session: WorkoutSession;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  showOptions: string | boolean;
 };
 
 const MenuOptions = ({
   session,
   isModalOpen,
   setIsModalOpen,
+  showOptions,
 }: MenuOptionsProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,29 +35,31 @@ const MenuOptions = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, setIsModalOpen, isModalOpen]);
 
   return (
-    <div
-      ref={menuRef}
-      className="absolute z-10 flex flex-row w-fit bg-[#8ebbff] rounded-md p-2 cursor-pointer right-20"
-    >
+    showOptions === session.id && (
       <div
-        role="button"
-        onClick={() => setIsModalOpen(!isModalOpen)}
-        className="flex flex-col w-full gap-3 ml-5"
+        ref={menuRef}
+        className="absolute z-10 flex flex-row w-fit bg-[#8ebbff] rounded-md right-10 md:right-40 md:mr-40 cursor-pointer border"
       >
-        <Link
-          rel="noopener"
-          href={`/edit-workout/${session.id}`}
-          className="flex flex-row"
+        <div
+          role="button"
+          onClick={() => setIsModalOpen(!isModalOpen)}
+          className="flex flex-col w-full gap-3 ml-5"
         >
-          <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
-          <span className="text-lg px-1 text-[#2f3651]">Edit Workout</span>
-        </Link>
-        <RemoveBtn id={session.id} />
+          <Link
+            rel="noopener"
+            href={`/edit-workout/${session.id}`}
+            className="flex flex-row"
+          >
+            <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
+            <span className="text-lg px-1 text-[#2f3651]">Edit Workout</span>
+          </Link>
+          <RemoveBtn id={session.id} />
+        </div>
       </div>
-    </div>
+    )
   );
 };
 

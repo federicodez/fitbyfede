@@ -61,34 +61,26 @@ const WorkoutList = ({ sessions }: WorkoutListProps) => {
                 />
               )}
             </div>
-            <div className="wrapper my-2 p-2 rounded-lg border-[#8ebbff] border-4 p-color">
+            <div className="wrapper my-2 p-2 rounded-lg border-[#8ebbff] border p-color">
               <div className="flex justify-between">
                 {moment(session.createdAt).format("dddd, MMM Do")}
-                <div
-                  className={
-                    showOptions === session.id ? "absolute w-full" : "hidden"
-                  }
+                <button
+                  className="px-4 bg-[#8ebbff] text-[#2f3651] text-xl rounded-md mr-px"
+                  onClick={() => {
+                    setIsModalOpen(!isModalOpen);
+                    setShowOptions(session.id);
+                  }}
                 >
                   {isModalOpen && (
                     <MenuOptions
                       session={session}
                       isModalOpen={isModalOpen}
                       setIsModalOpen={setIsModalOpen}
+                      showOptions={showOptions}
                     />
                   )}
-                </div>
-                <div
-                  role="button"
-                  onClick={() => {
-                    setIsModalOpen(!isModalOpen);
-                    setShowOptions(session.id);
-                  }}
-                >
-                  <SlOptions
-                    role="none"
-                    className="w-8 bg-[#8ebbff] text-[#2f3651] text-xl rounded-md mr-2"
-                  />
-                </div>
+                  <SlOptions role="none" />
+                </button>
               </div>
               <div
                 role="button"
