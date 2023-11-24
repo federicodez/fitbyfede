@@ -209,7 +209,7 @@ const EditWorkoutForm = ({
             />
           ) : (
             <div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 left-0">
                 <div>{moment(date?.createdAt).calendar()}</div>
                 <div className="flex flex-row items-center">
                   <BiTimer role="none" className="flex w-fit rounded-md px-1" />

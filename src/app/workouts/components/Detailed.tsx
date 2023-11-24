@@ -37,7 +37,7 @@ const Detailed = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, isDetailsOpen, setIsDetailsOpen]);
 
   const hours = Math.floor(session.time / 360000);
   const minutes = Math.floor((session.time % 360000) / 6000);

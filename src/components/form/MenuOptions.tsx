@@ -49,7 +49,7 @@ const MenuOptions = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, isMenuOpen, setIsMenuOpen]);
 
   const handleNotes = (id: string) => {
     if (noteIds.includes(id)) {

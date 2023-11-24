@@ -32,7 +32,7 @@ const HeaderMenu = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, isHeaderOpen, setIsHeaderOpen]);
 
   return (
     <div

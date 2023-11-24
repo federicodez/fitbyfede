@@ -25,7 +25,7 @@ const Settings = () => {
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [settingsRef]);
+  }, [settingsRef, isSettingsOpen, setIsSettingsOpen]);
 
   return (
     <div>

@@ -41,7 +41,7 @@ const BodyPartSelection = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, showParts, setShowParts]);
 
   const handleParts = async (query: string) => {
     let filtered;

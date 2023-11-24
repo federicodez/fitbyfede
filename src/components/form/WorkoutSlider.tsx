@@ -64,8 +64,10 @@ const WorkoutSlider = ({
 
   return (
     <ul className="flex flex-col">
-      <div className="flex justify-evenly">
-        <span className="flex justify-center items-center w-full">Set</span>
+      <div className="flex justify-evenly mx-8 md:mx-20">
+        <span className="flex justify-center items-center w-full md:pl-6">
+          Set
+        </span>
         <span className="flex justify-center items-center w-full">
           Previous
         </span>
@@ -77,7 +79,9 @@ const WorkoutSlider = ({
         {bodyPart === "cardio" ? (
           <span className="flex justify-center items-center w-full">Time</span>
         ) : (
-          <span className="flex justify-center items-center w-full">Reps</span>
+          <span className="flex justify-center items-center w-full md:pr-7">
+            Reps
+          </span>
         )}
       </div>
       {sets?.map((set, setIdx) => (
@@ -105,7 +109,7 @@ const WorkoutSlider = ({
               <li className="flex flex-row justify-evenly py-4">
                 <button
                   type="button"
-                  className="bg-gray-300 text-black rounded-lg w-20 pl-[0.5]"
+                  className="bg-gray-300 text-black rounded-lg w-10 md:w-20 pl-[0.5]"
                   onClick={() => {
                     setIsModalOpen(true);
                     setSetOptions(workoutId);
@@ -117,13 +121,13 @@ const WorkoutSlider = ({
                 {previous?.[index]?.lbs[setIdx] ? (
                   <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setIdx]} x ${previous[index].reps[setIdx]}`}</div>
                 ) : (
-                  <div className="rounded-lg w-20 h-7 bg-gray-300"></div>
+                  <div className="rounded-lg w-10 md:w-20 h-7 bg-gray-300"></div>
                 )}
                 <div className="">
                   <input
                     tabIndex={0}
                     type="number"
-                    pattern="/d*"
+                    pattern="[0-9]*"
                     inputMode="decimal"
                     name="lbs"
                     id="lbs"
@@ -133,7 +137,7 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.lbs[setIdx]
                         : ""
                     }`}
-                    className="bg-gray-300 text-black rounded-lg w-20"
+                    className="bg-gray-300 text-black rounded-lg w-10 md:w-20"
                   />
                 </div>
                 <div className="">
@@ -149,7 +153,7 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.reps[setIdx]
                         : ""
                     }`}
-                    className="bg-gray-300 text-black rounded-lg w-20"
+                    className="bg-gray-300 text-black rounded-lg w-10 md:w-20"
                   />
                 </div>
               </li>
