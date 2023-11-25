@@ -34,7 +34,8 @@ const EditWorkoutForm = ({
   const [notes, setNotes] = useState<string>("");
   const [noteIds, setNoteIds] = useState<string[]>([]);
   const [workoutName, setWorkoutName] = useState("");
-  const [dateInput, setDateInput] = useState(false);
+  const [dateInput, setDateInput] = useState("");
+  const [isDateOpen, setIsDateOpen] = useState(false);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
@@ -187,8 +188,8 @@ const EditWorkoutForm = ({
               {isHeaderOpen && (
                 <HeaderMenu
                   setWorkoutName={setWorkoutName}
-                  dateInput={dateInput}
-                  setDateInput={setDateInput}
+                  isDateOpen={isDateOpen}
+                  setIsDateOpen={setIsDateOpen}
                   isHeaderOpen={isHeaderOpen}
                   setIsHeaderOpen={setIsHeaderOpen}
                 />
@@ -205,7 +206,6 @@ const EditWorkoutForm = ({
               name="date"
               type="datetime-local"
               className="rounded-md text-white"
-              onMouseLeave={() => setDateInput(false)}
             />
           ) : (
             <div>

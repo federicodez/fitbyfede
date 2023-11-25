@@ -3,18 +3,20 @@ import { AiFillEdit } from "react-icons/ai";
 
 type HeaderMenuProps = {
   setWorkoutName: React.Dispatch<React.SetStateAction<string>>;
-  dateInput: boolean;
-  setDateInput: React.Dispatch<React.SetStateAction<boolean>>;
+  setSessionNotes: React.Dispatch<React.SetStateAction<string>>;
   isHeaderOpen: boolean;
   setIsHeaderOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isDateOpen: boolean;
+  setIsDateOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const HeaderMenu = ({
   setWorkoutName,
-  dateInput,
-  setDateInput,
+  setSessionNotes,
   isHeaderOpen,
   setIsHeaderOpen,
+  isDateOpen,
+  setIsDateOpen,
 }: HeaderMenuProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,13 +60,26 @@ const HeaderMenu = ({
           className="flex flex-row items-center gap-2 m-1"
           onClick={() => {
             setIsHeaderOpen(!isHeaderOpen);
-            setDateInput(!dateInput);
+            setIsDateOpen(true);
           }}
         >
           <AiFillEdit role="none" className="" />
           <span>Edit</span>
           <span>Workout</span>
           <span>Date</span>
+        </div>
+        <div
+          role="button"
+          className="flex flex-row items-center gap-2 m-1"
+          onClick={() => {
+            setIsHeaderOpen(!isHeaderOpen);
+            setSessionNotes(" ");
+          }}
+        >
+          <AiFillEdit role="none" className="" />
+          <span>Add</span>
+          <span>Workout</span>
+          <span>Notes</span>
         </div>
       </div>
     </div>

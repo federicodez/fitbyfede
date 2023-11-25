@@ -1,11 +1,18 @@
 "use client";
 
-import { useState, Suspense, ChangeEvent, MouseEvent } from "react";
+import {
+  useRef,
+  useEffect,
+  useState,
+  Suspense,
+  ChangeEvent,
+  MouseEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise, StartTimer } from "@/components";
 import LoadingModel from "@/components/models/LoadingModel";
-import { HeaderMenu, WorkoutCard } from "@/components/form";
+import { HeaderMenu, WorkoutCard, WorkoutDate } from "@/components/form";
 import {
   updateWorkout,
   updateManyWorkouts,
@@ -30,7 +37,9 @@ const CreateWorkoutForm = ({
 }: CreateWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [sessionNotes, setSessionNotes] = useState("");
-  const [dateInput, setDateInput] = useState(false);
+  const [notes, setNotes] = useState<string>("");
+  const [dateInput, setDateInput] = useState("");
+  const [isDateOpen, setIsDateOpen] = useState(false);
   const [noteIds, setNoteIds] = useState<string[]>([]);
   const [workoutName, setWorkoutName] = useState("");
   const [addExercise, setAddExercise] = useState(false);
@@ -155,8 +164,9 @@ const CreateWorkoutForm = ({
             {isHeaderOpen && (
               <HeaderMenu
                 setWorkoutName={setWorkoutName}
-                dateInput={dateInput}
-                setDateInput={setDateInput}
+                setSessionNotes={setSessionNotes}
+                isDateOpen={isDateOpen}
+                setIsDateOpen={setIsDateOpen}
                 isHeaderOpen={isHeaderOpen}
                 setIsHeaderOpen={setIsHeaderOpen}
               />
@@ -172,10 +182,26 @@ const CreateWorkoutForm = ({
               <div className="relative left-0">
                 <StartTimer />
               </div>
-              <div>{session?.notes || <p className="opacity-25">Notes</p>}</div>
+              {sessionNotes ? (
+                <input
+                  type="text"
+                  className="bg-white text-black rounded-md w-full"
+                  onChange={(e) => setWorkoutName(e.target.value)}
+                />
+              ) : (
+                <div>
+                  {session?.notes || <p className="opacity-25">Notes</p>}
+                </div>
+              )}
             </div>
           </div>
         </div>
+        <WorkoutDate
+          dateInput={dateInput}
+          setDateInput={setDateInput}
+          isDateOpen={isDateOpen}
+          setIsDateOpen={setIsDateOpen}
+        />
 
         <Suspense fallback={<LoadingModel />}>
           <WorkoutCard
