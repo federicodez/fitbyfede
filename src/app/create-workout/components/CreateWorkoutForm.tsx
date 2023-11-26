@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useRef,
-  useEffect,
-  useState,
-  Suspense,
-  ChangeEvent,
-  MouseEvent,
-} from "react";
+import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise, StartTimer } from "@/components";
@@ -186,7 +179,7 @@ const CreateWorkoutForm = ({
                 <input
                   type="text"
                   className="bg-white text-black rounded-md w-full"
-                  onChange={(e) => setWorkoutName(e.target.value)}
+                  onChange={(e) => setSessionNotes(e.target.value)}
                 />
               ) : (
                 <div>
