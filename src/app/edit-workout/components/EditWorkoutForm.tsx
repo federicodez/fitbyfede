@@ -10,6 +10,7 @@ import {
   WorkoutCard,
   WorkoutDate,
   WorkoutName,
+  Timer,
 } from "@/components/form";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
@@ -23,7 +24,6 @@ import {
 import { HiX } from "react-icons/hi";
 import { SlOptions } from "react-icons/sl";
 import moment from "moment";
-import { BiTimer } from "react-icons/bi";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
@@ -51,12 +51,9 @@ const EditWorkoutForm = ({
   const [isHeaderOpen, setIsHeaderOpen] = useState(false);
   const [isWorkoutNameOpen, setIsWorkoutNameOpen] = useState(false);
   const [isDateOpen, setIsDateOpen] = useState(false);
+  const [isSessionNotesOpen, setIsSessionNotesOpen] = useState(false);
 
   const router = useRouter();
-
-  const hours = Math.floor(session?.time / 360000);
-  const minutes = Math.floor((session?.time % 360000) / 6000);
-  const seconds = Math.floor((session?.time % 6000) / 100);
 
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
@@ -193,11 +190,15 @@ const EditWorkoutForm = ({
               {isHeaderOpen && (
                 <HeaderMenu
                   setWorkoutName={setWorkoutName}
+                  isWorkoutNameOpen={isWorkoutNameOpen}
+                  setIsWorkoutNameOpen={setIsWorkoutNameOpen}
                   isDateOpen={isDateOpen}
                   setIsDateOpen={setIsDateOpen}
                   isHeaderOpen={isHeaderOpen}
                   setIsHeaderOpen={setIsHeaderOpen}
                   setSessionNotes={setSessionNotes}
+                  isSessionNotesOpen={isSessionNotesOpen}
+                  setIsSessionNotesOpen={setIsSessionNotesOpen}
                 />
               )}
               <SlOptions
@@ -214,17 +215,14 @@ const EditWorkoutForm = ({
             isDateOpen={isDateOpen}
             setIsDateOpen={setIsDateOpen}
           />
-          <div>
-            <div className="flex flex-col gap-2 left-0">
-              <div className="flex flex-row items-center">
-                <BiTimer role="none" className="flex w-fit rounded-md px-1" />
-                {hours ? `${hours}:` : ""}
-                {minutes.toString().padStart(2)}:
-                {seconds.toString().padStart(2, "0")}
-              </div>
-              <div></div>
-            </div>
-          </div>
+          <Timer session={session} />
+          <SessionNotes
+            session={session}
+            sessionNotes={sessionNotes}
+            setSessionNotes={setSessionNotes}
+            isSessionNotesOpen={isSessionNotesOpen}
+            setIsSessionNotesOpen={setIsWorkoutNameOpen}
+          />
         </div>
         <Suspense fallback={<LoadingModel />}>
           <WorkoutCard

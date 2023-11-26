@@ -3,6 +3,10 @@ import { AiFillEdit } from "react-icons/ai";
 
 type HeaderMenuProps = {
   setWorkoutName: React.Dispatch<React.SetStateAction<string>>;
+  isWorkoutNameOpen: boolean;
+  setIsWorkoutNameOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSessionNotesOpen: boolean;
+  setIsSessionNotesOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSessionNotes: React.Dispatch<React.SetStateAction<string>>;
   isHeaderOpen: boolean;
   setIsHeaderOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,7 +16,11 @@ type HeaderMenuProps = {
 
 const HeaderMenu = ({
   setWorkoutName,
+  isWorkoutNameOpen,
+  setIsWorkoutNameOpen,
   setSessionNotes,
+  isSessionNotesOpen,
+  setIsSessionNotesOpen,
   isHeaderOpen,
   setIsHeaderOpen,
   isDateOpen,
@@ -45,7 +53,7 @@ const HeaderMenu = ({
         <div
           role="button"
           onClick={() => {
-            setWorkoutName(" ");
+            setIsWorkoutNameOpen(!isWorkoutNameOpen);
             setIsHeaderOpen(!isHeaderOpen);
           }}
           className="flex flex-row w-full items-center gap-2 m-1"
@@ -73,7 +81,7 @@ const HeaderMenu = ({
           className="flex flex-row items-center gap-2 m-1"
           onClick={() => {
             setIsHeaderOpen(!isHeaderOpen);
-            setSessionNotes(" ");
+            setIsSessionNotesOpen(!isSessionNotesOpen);
           }}
         >
           <AiFillEdit role="none" className="" />

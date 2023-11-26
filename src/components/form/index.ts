@@ -6,6 +6,7 @@ import WorkoutCard from "./WorkoutCard";
 import WorkoutDate from "./WorkoutDate";
 import WorkoutName from "./WorkoutName";
 import WorkoutSlider from "./WorkoutSlider";
+import Timer from "./Timer";
 
 export {
   HeaderMenu,
@@ -16,4 +17,5 @@ export {
   WorkoutDate,
   WorkoutName,
   WorkoutSlider,
+  Timer,
 };

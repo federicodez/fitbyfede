@@ -33,24 +33,20 @@ const WorkoutName = ({
       document.removeEventListener("click", checkIfClickedOutside);
     };
   }, [nameRef, isWorkoutNameOpen, setIsWorkoutNameOpen]);
-  return (
-    <>
-      {isWorkoutNameOpen ? (
-        <div ref={nameRef}>
-          <input
-            value={workoutName}
-            type="text"
-            placeholder={session?.name}
-            className="text-black bg-white rounded-md w-full"
-            onChange={(e) => setWorkoutName(e.target.value)}
-          />
-        </div>
-      ) : (
-        <div role="button" onClick={() => setIsWorkoutNameOpen(true)}>
-          {workoutName ? workoutName : session?.name}
-        </div>
-      )}
-    </>
+  return isWorkoutNameOpen ? (
+    <div ref={nameRef}>
+      <input
+        value={workoutName}
+        type="text"
+        placeholder={session?.name}
+        className="text-black bg-white rounded-md w-full"
+        onChange={(e) => setWorkoutName(e.target.value)}
+      />
+    </div>
+  ) : (
+    <div role="button" onClick={() => setIsWorkoutNameOpen(true)}>
+      {workoutName ? workoutName : session?.name}
+    </div>
   );
 };
 
