@@ -1,9 +1,10 @@
 import { WorkoutSession } from "@/types";
 import moment from "moment";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { updateSessionDate } from "@/actions/workouts";
 
 type WorkoutDateProps = {
-  date: WorkoutSession;
+  session: WorkoutSession;
   dateInput: string;
   setDateInput: React.Dispatch<React.SetStateAction<string>>;
   isDateOpen: boolean;
@@ -11,7 +12,7 @@ type WorkoutDateProps = {
 };
 
 const WorkoutDate = ({
-  date,
+  session,
   dateInput,
   setDateInput,
   isDateOpen,
@@ -35,15 +36,16 @@ const WorkoutDate = ({
     };
   }, [dateRef, isDateOpen, setIsDateOpen]);
 
-  const handleDate = (value: string) => {
-    const date = moment(new Date(value)).format("YYYY-MM-DD");
+  const handleDate = async (value: string) => {
+    const date = moment(value).format("YYYY-MM-DD");
+    await updateSessionDate(session.id, date);
     setDateInput(date);
   };
 
   return isDateOpen ? (
     <div ref={dateRef}>
       <input
-        type="datetime-local"
+        type="date"
         value={dateInput}
         className="rounded-md text-black"
         onChange={(e) => handleDate(e.target.value)}
@@ -51,7 +53,7 @@ const WorkoutDate = ({
     </div>
   ) : (
     <div onClick={() => setIsDateOpen(true)}>
-      {dateInput ? dateInput : moment(date.createdAt).calendar()}
+      {dateInput ? dateInput : moment(session.createdAt).calendar()}
     </div>
   );
 };

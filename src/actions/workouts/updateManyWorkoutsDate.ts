@@ -6,6 +6,8 @@ import { updateWorkoutWithDate } from ".";
 export const updateManyWorkoutsDate = async (
   session: WorkoutSession,
   date: string,
+  dataLbs: number[],
+  dataReps: number[],
 ) => {
   try {
     session.Workout.map(async ({ id, sets, lbs, reps }) => {

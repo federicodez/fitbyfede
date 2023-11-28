@@ -1,22 +1,13 @@
 "use server";
 import prisma from "@/db";
 
-export const updateWorkoutWithDate = async (
-  id: string,
-  sets: string[],
-  lbs: number[],
-  reps: number[],
-  date: string,
-) => {
+export const updateWorkoutWithDate = async (id: string, date: string) => {
   try {
-    const updated = await prisma.workout.update({
+    const updated = await prisma.workoutSession.update({
       where: {
         id,
       },
       data: {
-        sets,
-        lbs,
-        reps,
         createdAt: new Date(date),
       },
     });
