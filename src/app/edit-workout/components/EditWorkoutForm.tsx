@@ -10,14 +10,12 @@ import {
   WorkoutCard,
   WorkoutDate,
   WorkoutName,
-  Timer,
 } from "@/components/form";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
   updateWorkout,
   updateWorkoutSession,
   updateManyWorkouts,
-  updateManyWorkoutsDate,
   deleteSession,
   deleteWorkout,
 } from "@/actions/workouts";
@@ -34,11 +32,12 @@ const EditWorkoutForm = ({
   initialSession,
   recentWorkouts,
 }: EditWorkoutFormProps) => {
-  const date = initialSession;
   const [sessionNotes, setSessionNotes] = useState<string>("");
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [workoutName, setWorkoutName] = useState("");
-  const [dateInput, setDateInput] = useState("");
+  const [workoutName, setWorkoutName] = useState(initialSession.name);
+  const [dateInput, setDateInput] = useState<Date | null>(
+    initialSession?.createdAt,
+  );
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
@@ -56,8 +55,12 @@ const EditWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     try {
-      const name = workoutName ?? session.name;
-      await updateWorkoutSession(session.id, name, sessionNotes, session.time);
+      await updateWorkoutSession(
+        session.id,
+        workoutName,
+        sessionNotes,
+        session.time,
+      );
       await updateManyWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
@@ -70,8 +73,12 @@ const EditWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     try {
-      const name = workoutName ?? session.name;
-      await updateWorkoutSession(session.id, name, sessionNotes, session.time);
+      await updateWorkoutSession(
+        session.id,
+        workoutName,
+        sessionNotes,
+        session.time,
+      );
       await updateManyWorkouts(session, dataLbs, dataReps);
       router.push("/workouts");
     } catch (error) {

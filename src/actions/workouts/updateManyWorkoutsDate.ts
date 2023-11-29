@@ -6,12 +6,10 @@ import { updateWorkoutWithDate } from ".";
 export const updateManyWorkoutsDate = async (
   session: WorkoutSession,
   date: string,
-  dataLbs: number[],
-  dataReps: number[],
 ) => {
   try {
-    session.Workout.map(async ({ id, sets, lbs, reps }) => {
-      await updateWorkoutWithDate(id, sets, lbs, reps, date);
+    session.Workout.map(async ({ id }) => {
+      await updateWorkoutWithDate(id, date);
     });
     await prisma.workoutSession.update({
       where: { id: session.id },

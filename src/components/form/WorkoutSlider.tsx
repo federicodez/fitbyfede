@@ -121,7 +121,7 @@ const WorkoutSlider = ({
                 {previous?.[index]?.lbs[setIdx] ? (
                   <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setIdx]} x ${previous[index].reps[setIdx]}`}</div>
                 ) : (
-                  <div className="rounded-lg w-10 md:w-20 h-7 bg-gray-300"></div>
+                  <div className="rounded-lg w-12 md:w-20 h-7 bg-gray-300"></div>
                 )}
                 <div className="">
                   <input
@@ -137,7 +137,7 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.lbs[setIdx]
                         : ""
                     }`}
-                    className="bg-gray-300 text-black rounded-lg w-10 md:w-20"
+                    className="bg-gray-300 text-black rounded-lg w-14 md:w-20"
                   />
                 </div>
                 <div className="">
@@ -153,7 +153,8 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.reps[setIdx]
                         : ""
                     }`}
-                    className="bg-gray-300 text-black rounded-lg w-10 md:w-20"
+                    className="bg-gray-300 text-black rounded-lg w-14 md:w-20"
+                    required
                   />
                 </div>
               </li>

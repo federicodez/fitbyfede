@@ -3,7 +3,7 @@ import prisma from "@/db";
 
 export const updateSessionDate = async (id: string, date: string) => {
   try {
-    await prisma.workoutSession.update({
+    const updated = await prisma.workoutSession.update({
       where: {
         id,
       },
@@ -11,6 +11,7 @@ export const updateSessionDate = async (id: string, date: string) => {
         createdAt: new Date(date),
       },
     });
+    return updated;
   } catch (error) {
     console.log("Error updating session date: ", error);
   }

@@ -37,7 +37,7 @@ const SetOptions = ({
     return () => {
       document.removeEventListener("click", checkIfClickedOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, isModalOpen, setIsModalOpen]);
 
   const options = [
     { type: "w", label: "Warm-up" },

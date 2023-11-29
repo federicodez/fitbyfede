@@ -35,10 +35,11 @@ const CreateWorkoutForm = ({
 }: CreateWorkoutFormProps) => {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [sessionNotes, setSessionNotes] = useState("");
-  const [notes, setNotes] = useState<string>("");
-  const [dateInput, setDateInput] = useState("");
+  const [dateInput, setDateInput] = useState<Date | null>(
+    initialSession?.createdAt,
+  );
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [workoutName, setWorkoutName] = useState("");
+  const [workoutName, setWorkoutName] = useState(initialSession.name);
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
@@ -56,8 +57,7 @@ const CreateWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     try {
-      const name = workoutName ?? session.name;
-      await updateWorkoutSession(session.id, name, sessionNotes, time);
+      await updateWorkoutSession(session.id, workoutName, sessionNotes, time);
       await updateManyWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
@@ -70,8 +70,7 @@ const CreateWorkoutForm = ({
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     try {
-      const name = workoutName ?? session.name;
-      await updateWorkoutSession(session.id, name, sessionNotes, time);
+      await updateWorkoutSession(session.id, workoutName, sessionNotes, time);
       await updateManyWorkouts(session, dataLbs, dataReps);
       router.push("/workouts");
     } catch (error) {

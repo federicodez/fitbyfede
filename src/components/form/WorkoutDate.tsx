@@ -5,8 +5,8 @@ import { updateSessionDate } from "@/actions/workouts";
 
 type WorkoutDateProps = {
   session: WorkoutSession;
-  dateInput: string;
-  setDateInput: React.Dispatch<React.SetStateAction<string>>;
+  dateInput: Date | null;
+  setDateInput: React.Dispatch<React.SetStateAction<Date | null>>;
   isDateOpen: boolean;
   setIsDateOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -36,24 +36,28 @@ const WorkoutDate = ({
     };
   }, [dateRef, isDateOpen, setIsDateOpen]);
 
-  const handleDate = async (value: string) => {
-    const date = moment(value).format("YYYY-MM-DD");
-    await updateSessionDate(session.id, date);
-    setDateInput(date);
+  const handleDateChange = async (value: string) => {
+    const updated = await updateSessionDate(session.id, value);
+    if (updated) {
+      setDateInput(updated?.createdAt);
+      setIsDateOpen(false);
+    }
   };
 
   return isDateOpen ? (
     <div ref={dateRef}>
       <input
-        type="date"
-        value={dateInput}
-        className="rounded-md text-black"
-        onChange={(e) => handleDate(e.target.value)}
+        value={`${dateInput}`}
+        type="datetime-local"
+        className="text-black rounded-md"
+        onChange={(e) => handleDateChange(e.target.value)}
       />
     </div>
   ) : (
     <div onClick={() => setIsDateOpen(true)}>
-      {dateInput ? dateInput : moment(session.createdAt).calendar()}
+      {dateInput
+        ? moment(dateInput).calendar()
+        : moment(session?.createdAt).calendar()}
     </div>
   );
 };

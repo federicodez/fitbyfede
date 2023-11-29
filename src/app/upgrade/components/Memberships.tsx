@@ -1,12 +1,8 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-
 const Memberships = () => {
-  const { data: session } = useSession();
-
   return (
-    <div className="h-screen p-5 p-color">
+    <div className="h-screen p-5">
       <h1 className="text-2xl font-semibold w-full text-center mb-4 text-[#8ebbff]">
         Upgrade
       </h1>

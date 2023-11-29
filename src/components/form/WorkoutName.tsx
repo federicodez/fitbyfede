@@ -1,5 +1,5 @@
 import { WorkoutSession } from "@/types";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 type WorkoutNameProps = {
   session: WorkoutSession;
@@ -45,7 +45,7 @@ const WorkoutName = ({
     </div>
   ) : (
     <div role="button" onClick={() => setIsWorkoutNameOpen(true)}>
-      {workoutName ? workoutName : session?.name}
+      {workoutName}
     </div>
   );
 };
