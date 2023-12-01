@@ -1,15 +1,19 @@
 import { getSessions } from "@/actions/workouts";
 import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
+import { getCurrentUser } from "@/actions/users";
 
 export const dynamic = "force-dynamic";
 
 const Workouts = async () => {
   try {
+    const currentUser = await getCurrentUser();
     const sessions = await getSessions();
 
-    if (sessions) {
-      return <WorkoutList sessions={sessions} />;
+    if (sessions && currentUser) {
+      return (
+        <WorkoutList currentUser={currentUser} initialSessions={sessions} />
+      );
     } else {
       return <EmptyState />;
     }

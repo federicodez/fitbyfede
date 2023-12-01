@@ -27,12 +27,6 @@ const useRoutes = () => {
         icon: GiStrongMan,
         active: pathname == "/exercises",
       },
-      {
-        label: "Upgrade",
-        href: "/upgrade",
-        icon: FaCrown,
-        active: pathname === "/upgrade",
-      },
     ],
     [pathname],
   );

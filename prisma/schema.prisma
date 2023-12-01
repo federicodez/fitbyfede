@@ -27,13 +27,14 @@ model Account {
 
 model User {
   id               String           @id @default(auto()) @map("_id") @db.ObjectId
-  name             String?
+  name             String
   email            String           @unique
-  emailVerified    DateTime?
+  emailVerified    Boolean          @default(false)
   image            String?
   hashedPassword   String?
   resetToken       String?
   resetTokenExpiry Int?
+  subscription     Boolean          @default(false)
   accounts         Account[]
   workouts         Workout[]
   WorkoutSession   WorkoutSession[]
