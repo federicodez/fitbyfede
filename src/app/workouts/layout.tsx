@@ -1,4 +1,6 @@
 import Navbar from "@/components/navbar/Navbar";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 export default async function WorkoutLayout({
   children,
@@ -7,7 +9,9 @@ export default async function WorkoutLayout({
 }) {
   return (
     <Navbar>
-      <div className="h-full">{children}</div>
+      <Suspense fallback={<Loading />}>
+        <div className="h-full">{children}</div>
+      </Suspense>
     </Navbar>
   );
 }

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { FaUserLarge } from "react-icons/fa6";
 import { GiMeal, GiWeightLiftingUp, GiStrongMan } from "react-icons/gi";
+import { FaCrown } from "react-icons/fa";
 
 const useRoutes = () => {
   const pathname = usePathname();

@@ -1,25 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sessions from "./Sessions";
 import Detailed from "./Detailed";
 import MenuOptions from "./MenuOptions";
 import Link from "next/link";
 import moment from "moment";
-import { WorkoutSession } from "@/types";
+import { WorkoutSession, CurrentUser } from "@/types";
 import { SlOptions } from "react-icons/sl";
 
 type WorkoutListProps = {
-  sessions: WorkoutSession[];
+  initialSessions: WorkoutSession[];
+  currentUser: CurrentUser;
 };
 
-const WorkoutList = ({ sessions }: WorkoutListProps) => {
+const WorkoutList = ({ initialSessions, currentUser }: WorkoutListProps) => {
+  const [sessions, setSessions] = useState(initialSessions);
   const [showOptions, setShowOptions] = useState<string | boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [showWorkoutDetails, setShowWorkoutDetails] = useState<
     string | boolean
   >(false);
+
+  useEffect(() => {
+    setSessions((prev) =>
+      !currentUser?.subscription ? prev.slice(-50) : prev,
+    );
+  }, [currentUser?.subscription]);
 
   return (
     <section>

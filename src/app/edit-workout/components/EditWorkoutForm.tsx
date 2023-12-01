@@ -4,20 +4,22 @@ import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise } from "@/components";
-import { HeaderMenu, WorkoutCard } from "@/components/form";
+import {
+  HeaderMenu,
+  SessionNotes,
+  WorkoutCard,
+  WorkoutDate,
+  WorkoutName,
+} from "@/components/form";
 import LoadingModel from "@/components/models/LoadingModel";
 import {
   updateWorkout,
   updateWorkoutSession,
   updateManyWorkouts,
-  updateManyWorkoutsDate,
   deleteSession,
   deleteWorkout,
 } from "@/actions/workouts";
 import { HiX } from "react-icons/hi";
-import { SlOptions } from "react-icons/sl";
-import moment from "moment";
-import { BiTimer } from "react-icons/bi";
 
 type EditWorkoutFormProps = {
   previous: Workout[] | [];
@@ -30,44 +32,35 @@ const EditWorkoutForm = ({
   initialSession,
   recentWorkouts,
 }: EditWorkoutFormProps) => {
-  const date = initialSession;
-  const [notes, setNotes] = useState<string>("");
+  const [sessionNotes, setSessionNotes] = useState<string>("");
   const [noteIds, setNoteIds] = useState<string[]>([]);
-  const [workoutName, setWorkoutName] = useState("");
-  const [dateInput, setDateInput] = useState(false);
+  const [workoutName, setWorkoutName] = useState(initialSession.name);
+  const [dateInput, setDateInput] = useState<Date | null>(
+    initialSession?.createdAt,
+  );
   const [addExercise, setAddExercise] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | boolean>(false);
   const [replace, setReplace] = useState<string | boolean>(false);
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [setOptions, setSetOptions] = useState<string | null>(null);
   const [isHeaderOpen, setIsHeaderOpen] = useState(false);
+  const [isWorkoutNameOpen, setIsWorkoutNameOpen] = useState(false);
+  const [isDateOpen, setIsDateOpen] = useState(false);
+  const [isSessionNotesOpen, setIsSessionNotesOpen] = useState(false);
 
   const router = useRouter();
-
-  const hours = Math.floor(session?.time / 360000);
-  const minutes = Math.floor((session?.time % 360000) / 6000);
-  const seconds = Math.floor((session?.time % 6000) / 100);
 
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
 
     try {
-      if (workoutName) {
-        await updateWorkoutSession(
-          session.id,
-          workoutName,
-          notes,
-          session.time,
-        );
-      } else {
-        await updateWorkoutSession(
-          session.id,
-          session?.name,
-          notes,
-          session.time,
-        );
-      }
+      await updateWorkoutSession(
+        session.id,
+        workoutName,
+        sessionNotes,
+        session.time,
+      );
       await updateManyWorkouts(session, dataLbs, dataReps);
       router.refresh();
     } catch (error) {
@@ -78,29 +71,15 @@ const EditWorkoutForm = ({
   const handleSubmit = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
-    const date = data.get("date")?.valueOf();
 
     try {
-      if (workoutName) {
-        await updateWorkoutSession(
-          session?.id,
-          workoutName,
-          notes,
-          session?.time,
-        );
-      } else {
-        await updateWorkoutSession(
-          session?.id,
-          session?.name,
-          notes,
-          session?.time,
-        );
-      }
-      if (!date && date !== undefined) {
-        await updateManyWorkoutsDate(session, date);
-      } else {
-        await updateManyWorkouts(session, dataLbs, dataReps);
-      }
+      await updateWorkoutSession(
+        session.id,
+        workoutName,
+        sessionNotes,
+        session.time,
+      );
+      await updateManyWorkouts(session, dataLbs, dataReps);
       router.push("/workouts");
     } catch (error) {
       console.log(error);
@@ -170,57 +149,44 @@ const EditWorkoutForm = ({
             Save
           </button>
         </div>
-        <div className="flex my-4 flex-col">
-          <div className="flex flex-row items-center gap-2">
-            {workoutName ? (
-              <div className={!workoutName.length ? "hidden" : ""}>
-                <input
-                  type="text"
-                  className="text-black bg-white rounded-md w-full"
-                  onChange={(e) => setWorkoutName(e.target.value)}
-                />
-              </div>
-            ) : (
-              <div className="">{session?.name}</div>
-            )}
+        <div className="flex my-4 flex-col w-fit">
+          <div className="flex flex-row items-center gap-4">
+            <WorkoutName
+              session={session}
+              workoutName={workoutName}
+              setWorkoutName={setWorkoutName}
+              isWorkoutNameOpen={isWorkoutNameOpen}
+              setIsWorkoutNameOpen={setIsWorkoutNameOpen}
+            />
             <div className="relative w-fit">
-              {isHeaderOpen && (
-                <HeaderMenu
-                  setWorkoutName={setWorkoutName}
-                  dateInput={dateInput}
-                  setDateInput={setDateInput}
-                  isHeaderOpen={isHeaderOpen}
-                  setIsHeaderOpen={setIsHeaderOpen}
-                />
-              )}
-              <SlOptions
-                role="button"
-                onClick={() => setIsHeaderOpen(!isHeaderOpen)}
-                className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+              <HeaderMenu
+                setWorkoutName={setWorkoutName}
+                isWorkoutNameOpen={isWorkoutNameOpen}
+                setIsWorkoutNameOpen={setIsWorkoutNameOpen}
+                isDateOpen={isDateOpen}
+                setIsDateOpen={setIsDateOpen}
+                isHeaderOpen={isHeaderOpen}
+                setIsHeaderOpen={setIsHeaderOpen}
+                setSessionNotes={setSessionNotes}
+                isSessionNotesOpen={isSessionNotesOpen}
+                setIsSessionNotesOpen={setIsSessionNotesOpen}
               />
             </div>
           </div>
-          {dateInput ? (
-            <input
-              name="date"
-              type="datetime-local"
-              className="rounded-md text-white"
-              onMouseLeave={() => setDateInput(false)}
-            />
-          ) : (
-            <div>
-              <div className="flex flex-col gap-2 left-0">
-                <div>{moment(date?.createdAt).calendar()}</div>
-                <div className="flex flex-row items-center">
-                  <BiTimer role="none" className="flex w-fit rounded-md px-1" />
-                  {hours ? `${hours}:` : ""}
-                  {minutes.toString().padStart(2)}:
-                  {seconds.toString().padStart(2, "0")}
-                </div>
-                <div>{session?.notes}</div>
-              </div>
-            </div>
-          )}
+          <WorkoutDate
+            session={session}
+            dateInput={dateInput}
+            setDateInput={setDateInput}
+            isDateOpen={isDateOpen}
+            setIsDateOpen={setIsDateOpen}
+          />
+          <SessionNotes
+            session={session}
+            sessionNotes={sessionNotes}
+            setSessionNotes={setSessionNotes}
+            isSessionNotesOpen={isSessionNotesOpen}
+            setIsSessionNotesOpen={setIsSessionNotesOpen}
+          />
         </div>
         <Suspense fallback={<LoadingModel />}>
           <WorkoutCard

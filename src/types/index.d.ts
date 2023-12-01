@@ -12,10 +12,11 @@ export type CurrentUser = {
   name: string;
   email: string;
   hashedPassword: string | null;
-  emailVerified?: string | null;
+  emailVerified: boolean;
   resetToken?: string | null;
   resetTokeExpiry?: number | null;
   image: string | null;
+  subscription: boolean;
 };
 
 export type Workout = {

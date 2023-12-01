@@ -8,8 +8,8 @@ export const updateManyWorkoutsDate = async (
   date: string,
 ) => {
   try {
-    session.Workout.map(async ({ id, sets, lbs, reps }) => {
-      await updateWorkoutWithDate(id, sets, lbs, reps, date);
+    session.Workout.map(async ({ id }) => {
+      await updateWorkoutWithDate(id, date);
     });
     await prisma.workoutSession.update({
       where: { id: session.id },

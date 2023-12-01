@@ -15,6 +15,7 @@ import { getSessions } from "./getSessions";
 import { getWorkouts } from "./getWorkouts";
 import { getWorkoutsBySessionId } from "./getWorkoutsBySessionId";
 import { updateManyWorkouts } from "./updateManyWorkouts";
+import { updateSessionDate } from "./updateSessionDate";
 import { updateWorkout } from "./updateWorkout";
 import { updateManyWorkoutsDate } from "./updateManyWorkoutsDate";
 import { updateWorkoutSession } from "./updateWorkoutSession";
@@ -38,6 +39,7 @@ export {
   getWorkouts,
   getWorkoutsBySessionId,
   updateManyWorkouts,
+  updateSessionDate,
   updateWorkout,
   updateManyWorkoutsDate,
   updateWorkoutSession,

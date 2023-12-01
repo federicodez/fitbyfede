@@ -1,4 +1,6 @@
-import { type Workout } from "@/types";
+"use client";
+
+import { Workout } from "@/types";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,15 +28,7 @@ type LineChartProps = {
   workouts: Workout[];
 };
 
-const LineChart = async ({ workouts }: LineChartProps) => {
-  const heaviest = workouts[0].lbs.reduce((acc, curr) => {
-    if (acc < curr) {
-      acc = curr;
-    }
-    return acc;
-  }, 0);
-  // console.log({ heaviest });
-
+const LineChart = ({ workouts }: LineChartProps) => {
   const labels = workouts.map(({ createdAt }) =>
     moment(createdAt).format("dddd, MMM Do"),
   );

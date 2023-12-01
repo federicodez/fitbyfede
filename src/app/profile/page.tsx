@@ -1,13 +1,9 @@
-import dynamic from "next/dynamic";
 import { getWorkouts } from "@/actions/workouts";
 import Navbar from "@/components/navbar/Navbar";
-import Settings from "./components/Settings";
-const Avatar = dynamic(() => import("@/components/Avatar"), {
-  loading: () => <p className="animate-bounce">Loading...</p>,
-});
-const PieChart = dynamic(() => import("./components/PieChart"), {
-  loading: () => <p className="animate-bounce">Loading...</p>,
-});
+import { PieChart, Settings } from "./components";
+import { Avatar } from "@/components";
+import { Suspense } from "react";
+import LoadingModel from "@/components/models/LoadingModel";
 
 const Profile = async () => {
   try {
@@ -16,8 +12,12 @@ const Profile = async () => {
       <Navbar>
         <section className="wrapper pb-20 sm:pb-5">
           <div className="rounded-lg my-5 p-4 border p-color">
-            <Settings />
-            <Avatar />
+            <Suspense fallback={<LoadingModel />}>
+              <Settings />
+            </Suspense>
+            <Suspense fallback={<LoadingModel />}>
+              <Avatar />
+            </Suspense>
           </div>
           {workouts && <PieChart workouts={workouts} />}
         </section>

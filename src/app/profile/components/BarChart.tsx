@@ -1,4 +1,6 @@
-import { type Workout } from "@/types";
+"use client";
+
+import { Workout } from "@/types";
 import {
   Chart as ChartJS,
   BarElement,
@@ -23,7 +25,7 @@ type BarChartProps = {
   workouts: Workout[];
 };
 
-const BarChart = async ({ workouts }: BarChartProps) => {
+const BarChart = ({ workouts }: BarChartProps) => {
   const labels = workouts.map((workout) => workout.name);
   const data = {
     labels,

@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/db";
 
-export const updateWorkoutWithDate = async (id: string, date: string) => {
+export const updateSessionDate = async (id: string, date: string) => {
   try {
     const updated = await prisma.workoutSession.update({
       where: {
@@ -13,6 +13,6 @@ export const updateWorkoutWithDate = async (id: string, date: string) => {
     });
     return updated;
   } catch (error) {
-    console.log("Error updating workout date: ", error);
+    console.log("Error updating session date: ", error);
   }
 };
