@@ -39,14 +39,13 @@ const WorkoutList = ({ initialSessions, currentUser }: WorkoutListProps) => {
           flex 
           justify-center 
           items-center 
-          border-2 
           font-bold 
           rounded-full
           w-80
           mx-auto
           my-5
           bg-[#8ebbff]
-          text-[#495057]
+          text-[#2f3651]
           sm:mx-auto
         `}
       >
@@ -73,7 +72,7 @@ const WorkoutList = ({ initialSessions, currentUser }: WorkoutListProps) => {
               <div className="flex justify-between">
                 {moment(session.createdAt).format("dddd, MMM Do")}
                 <button
-                  className="px-4 bg-[#8ebbff] text-[#2f3651] text-xl rounded-md mr-px"
+                  className="px-3 bg-[#8ebbff] text-[#2f3651] rounded-md mr-px"
                   onClick={() => {
                     setIsModalOpen(!isModalOpen);
                     setShowOptions(session.id);

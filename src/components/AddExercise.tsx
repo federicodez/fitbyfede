@@ -1,13 +1,13 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useMemo } from "react";
 import { HiX } from "react-icons/hi";
 import { AiOutlineCheck, AiOutlineQuestion } from "react-icons/ai";
 import Link from "next/link";
 import { createManyWorkouts, getSessionById } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
 import { Workout, Data, WorkoutSession, CustomData } from "@/types";
-import LoadingModel from "@/components/models/LoadingModel";
+import LoadingModal from "@/components/modals/LoadingModal";
 import Image from "next/image";
 import data from "@/constants/exerciseData.json";
 import { Pagination, paginate } from "@/components/Pagination";
@@ -43,10 +43,6 @@ const AddExercise = ({
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
-  const onPageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const handleClick = async () => {
     try {
       await createManyWorkouts(exerciseQueue, session);
@@ -71,8 +67,8 @@ const AddExercise = ({
     setExerciseQueue([...exerciseQueue]);
   };
 
-  const filteredExercises =
-    query === ""
+  const filteredExercises = useMemo(() => {
+    return query === ""
       ? paginatedWorkouts
       : paginatedWorkouts?.filter(({ name }) =>
           name
@@ -80,9 +76,10 @@ const AddExercise = ({
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, "")),
         );
+  }, [query, paginatedWorkouts]);
 
   return !details ? (
-    <Suspense fallback={<LoadingModel />}>
+    <Suspense fallback={<LoadingModal />}>
       <div className="wrapper container">
         <div className="flex flex-row justify-between my-8">
           <button
@@ -232,14 +229,16 @@ const AddExercise = ({
               </li>
             ))}
           </ul>
-          <div className="mt-10 mb-20 pb-20">
-            <Pagination
-              currentPage={currentPage}
-              workoutsPerPage={workoutsPerPage}
-              workouts={workouts.length}
-              onPageChange={onPageChange}
-            />
-          </div>
+          <Suspense fallback={<LoadingModal />}>
+            <div className="mt-10 mb-20 pb-10 md:mb-10 md:pb-0">
+              <Pagination
+                currentPage={currentPage}
+                workoutsPerPage={workoutsPerPage}
+                workouts={workouts.length}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
+          </Suspense>
         </ul>
       </div>
     </Suspense>

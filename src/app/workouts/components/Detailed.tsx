@@ -6,7 +6,7 @@ import { HiX } from "react-icons/hi";
 import { IoIosTimer } from "react-icons/io";
 import { FaWeightHanging } from "react-icons/fa";
 import { WorkoutSession } from "@/types";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 
 type DetailedProps = {
   session: WorkoutSession;
@@ -43,15 +43,17 @@ const Detailed = ({
   const minutes = Math.floor((session.time % 360000) / 6000);
   const seconds = Math.floor((session.time % 6000) / 100);
 
-  const sum = session.Workout?.map(({ lbs, reps }) => {
-    const lb = lbs.reduce((acc, curr) => {
-      return acc + curr;
-    }, 0);
-    const rep = reps.reduce((acc, curr) => {
-      return acc + curr;
-    }, 0);
-    return lb * rep;
-  });
+  const sum = useMemo(() => {
+    session.Workout?.map(({ lbs, reps }) => {
+      const lb = lbs.reduce((acc, curr) => {
+        return acc + curr;
+      }, 0);
+      const rep = reps.reduce((acc, curr) => {
+        return acc + curr;
+      }, 0);
+      return lb * rep;
+    });
+  }, [session.Workout]);
 
   return (
     <div
@@ -65,7 +67,7 @@ const Detailed = ({
       -translate-x-1/2 
       rounded-lg 
       bg-[#8ebbff] 
-      w-96 
+      w-96
       md:w-[850px] 
       md:top-1/2
       md:left-2/3
@@ -83,30 +85,32 @@ const Detailed = ({
           className="bg-[#2f3651] px-2 py-1 rounded-md"
           onClick={() => setShowWorkoutDetails(false)}
         >
-          <HiX role="presentation" />
+          <HiX role="none" />
         </button>
-        {session?.name}
+        <div className="text-xl font-semibold">{session?.name}</div>
         <Link
           rel="noopener"
           href={`/edit-workout/${session.id}`}
           className="flex flex-row"
         >
-          <span className="text-2xl text-[#2f3651]">Edit</span>
+          <div className="rounded-md bg-[#2f3651] px-2 text-[#8ebbff]">
+            Edit
+          </div>
         </Link>
       </div>
       <div className="flex flex-col">
-        <span>{moment(session.createdAt).format("llll")}</span>
+        <div>{moment(session.createdAt).format("llll")}</div>
         <div className="flex flex-row justify-evenly">
-          <span className="flex flex-row gap-2 justify-center items-center">
-            <IoIosTimer className="w-fit" role="presentation" />
+          <div className="flex flex-row gap-2 justify-center items-center">
+            <IoIosTimer role="none" />
             {hours ? `${hours}:` : ""}
             {minutes.toString().padStart(2)}:
             {seconds.toString().padStart(2, "0")}
-          </span>
-          <span className="flex flex-row gap-2 justify-center items-center">
-            <FaWeightHanging role="presentation" />
+          </div>
+          <div className="flex flex-row gap-2 justify-center items-center">
+            <FaWeightHanging role="none" />
             {sum?.[0]}
-          </span>
+          </div>
         </div>
       </div>
       <div className="flex flex-col my-4 ">
@@ -115,7 +119,7 @@ const Detailed = ({
             <div className="flex flex-row justify-evenly my-2">
               <div className="flex flex-col">
                 <strong>{name}</strong>
-                <span>{notes}</span>
+                <div>{notes}</div>
               </div>
               <strong>1RM</strong>
             </div>

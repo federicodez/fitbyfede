@@ -81,7 +81,7 @@ const WorkoutCard = ({
           <input
             type="text"
             name={id}
-            className="bg-white rounded-md w-full"
+            className="bg-white text-black rounded-md w-full"
             onChange={(e) => handleNotes(e)}
           />
         </div>
@@ -98,7 +98,7 @@ const WorkoutCard = ({
           setOptions={setOptions}
           setSetOptions={setSetOptions}
         />
-        <div className="workout-form__btn">
+        <div className="flex flex-col my-4">
           <button
             type="button"
             onClick={() => addSet(id, sets, lbs, reps)}

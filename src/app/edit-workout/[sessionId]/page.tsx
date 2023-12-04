@@ -5,8 +5,9 @@ import {
   getWorkoutsBySessionId,
 } from "@/actions/workouts";
 import dynamic from "next/dynamic";
+import LoadingModal from "@/components/modals/LoadingModal";
 const EditWorkoutForm = dynamic(() => import("../components/EditWorkoutForm"), {
-  loading: () => <p className="animate-bounce">Loading...</p>,
+  loading: () => <LoadingModal />,
 });
 
 const EditWorkout = async ({ params }: { params: { sessionId: string } }) => {

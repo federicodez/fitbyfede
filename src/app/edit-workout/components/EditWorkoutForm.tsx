@@ -11,7 +11,7 @@ import {
   WorkoutDate,
   WorkoutName,
 } from "@/components/form";
-import LoadingModel from "@/components/models/LoadingModel";
+import LoadingModal from "@/components/modals/LoadingModal";
 import {
   updateWorkout,
   updateWorkoutSession,
@@ -131,7 +131,7 @@ const EditWorkoutForm = ({
   };
 
   return !addExercise ? (
-    <div className="h-screen cursor-pointer p-4 p-color">
+    <div className="h-screen cursor-pointer rounded-lg m-2 p-4 p-color">
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button
@@ -146,7 +146,7 @@ const EditWorkoutForm = ({
             type="submit"
             className="bg-blue-300 text-blue-950 rounded-md px-2"
           >
-            Save
+            Done
           </button>
         </div>
         <div className="flex my-4 flex-col w-fit">
@@ -188,7 +188,7 @@ const EditWorkoutForm = ({
             setIsSessionNotesOpen={setIsSessionNotesOpen}
           />
         </div>
-        <Suspense fallback={<LoadingModel />}>
+        <Suspense fallback={<LoadingModal />}>
           <WorkoutCard
             session={session}
             setSession={setSession}
@@ -207,7 +207,7 @@ const EditWorkoutForm = ({
             addSet={addSet}
           />
         </Suspense>
-        <div className="workout-form__btn">
+        <div className="flex flex-col gap-5 my-4">
           <button
             type="submit"
             className="rounded-md bg-blue-300 text-blue-900"

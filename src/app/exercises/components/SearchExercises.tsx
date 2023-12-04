@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useMemo } from "react";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 import Image from "next/image";
 import { Workout, CustomData } from "@/types";
 import { Pagination, paginate } from "@/components/Pagination";
-import LoadingModel from "@/components/models/LoadingModel";
+import LoadingModal from "@/components/modals/LoadingModal";
 import { AiOutlineQuestion } from "react-icons/ai";
 import { BodyPartSelection, CategorySelection } from "@/components";
 import { CreateExercise } from "@/components";
@@ -21,9 +21,7 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
   const [query, setQuery] = useState("");
   const [details, setDetails] = useState<string | boolean>(false);
 
-  const [showParts, setShowParts] = useState(false);
   const [bodyPartBtn, setBodyPartBtn] = useState("Any Body Part");
-  const [showCategories, setShowCategories] = useState(false);
   const [categoriesBtn, setCategoriesBtn] = useState("Any Category");
 
   const [recent, setRecent] = useState(recentWorkouts);
@@ -33,10 +31,8 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
 
-  const onPageChange = (page: number) => setCurrentPage(page);
-
-  const filteredExercises =
-    query === ""
+  const filteredExercises = useMemo(() => {
+    return query === ""
       ? paginatedWorkouts
       : paginatedWorkouts.filter(({ name }) =>
           name
@@ -44,6 +40,7 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, "")),
         );
+  }, [query, paginatedWorkouts]);
 
   return !details ? (
     <div className="wrapper m-5 p-2">
@@ -98,7 +95,7 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
             RECENT
           </h1>
         ) : null}
-        <Suspense fallback={<LoadingModel />}>
+        <Suspense fallback={<LoadingModal />}>
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">
               <div className="grid grid-cols-4 items-center rounded-md bg-[#2f3651] shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
@@ -132,7 +129,7 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
           EXERCISES
         </h1>
         <ul className="">
-          <Suspense fallback={<LoadingModel />}>
+          <Suspense fallback={<LoadingModal />}>
             {filteredExercises?.map(({ bodyPart, id, name }) => (
               <li key={id} className="my-4">
                 <div className="grid grid-cols-4 items-center bg-[#2f3651] rounded-md shadow-[inset_0_-3em_3em_rgba(0,0,0,0.1),0_0_0_2px_rgb(255,255,255),0.3em_0.3em_1em_rgba(0,0,0,0.3)]">
@@ -165,13 +162,13 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
             ))}
           </Suspense>
         </ul>
-        <Suspense fallback={<LoadingModel />}>
-          <div className="mt-10 mb-20 pb-20">
+        <Suspense fallback={<LoadingModal />}>
+          <div className="mt-10 mb-20 pb-10 md:mb-10 md:pb-0">
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
               workouts={workouts.length}
-              onPageChange={onPageChange}
+              setCurrentPage={setCurrentPage}
             />
           </div>
         </Suspense>

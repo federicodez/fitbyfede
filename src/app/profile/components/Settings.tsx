@@ -8,7 +8,6 @@ import { HiArrowLeftOnRectangle } from "react-icons/hi2";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { AiOutlineQuestion } from "react-icons/ai";
 
 const Settings = () => {
   const settingsRef = useRef<HTMLDivElement | null>(null);
@@ -106,7 +105,7 @@ const Settings = () => {
         </div>
       )}
       <button
-        className="px-4 py-px text-black rounded-md w-fit border bg-[#2f3651]"
+        className="px-4 py-px text-black rounded-md w-fit border bg-[#8ebbff]"
         onClick={() => setIsSettingsOpen(true)}
       >
         <SlOptions role="none" />

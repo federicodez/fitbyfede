@@ -2,8 +2,9 @@ import dynamic from "next/dynamic";
 import { getMostRecentWorkouts, getCreatedExercises } from "@/actions/workouts";
 import data from "@/constants/exerciseData.json";
 import Navbar from "@/components/navbar/Navbar";
+import LoadingModal from "@/components/modals/LoadingModal";
 const SearchBar = dynamic(() => import("./components/SearchBar"), {
-  loading: () => <p className="animate-bounce">Loading...</p>,
+  loading: () => <LoadingModal />,
 });
 
 const SearchWorkout = async () => {
