@@ -18,6 +18,7 @@ const PieChart = ({ workouts }: PieChartProps) => {
     tally[curr.name] = (tally[curr.name] || 0) + 1;
     return tally;
   }, {} as Tally);
+
   const labelData = Object.keys(tally);
   const setData = Object.values(tally);
   const data = {
@@ -48,7 +49,11 @@ const PieChart = ({ workouts }: PieChartProps) => {
   };
 
   return (
-    <Pie className="border rounded-lg p-color p-4 my-5" id="pie" data={data} />
+    <Pie
+      className="border border-[#8ebbff] rounded-md p-color p-4 my-5"
+      id="pie"
+      data={data}
+    />
   );
 };
 

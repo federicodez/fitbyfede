@@ -20,11 +20,12 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
         lg:inset-y-0 
         lg:left-0 
         lg:z-40 
-        lg:w-20 
+        lg:w-30 
         xl:px-6
         lg:overflow-y-auto 
-        bg-[#24293e]
-        lg:border-r-[1px]
+        bg-[#2f3651]
+        lg:border-r-2
+        lg:border-[#8ebbff]
         lg:pb-4
         lg:flex
         lg:flex-col

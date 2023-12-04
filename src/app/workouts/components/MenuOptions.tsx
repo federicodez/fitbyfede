@@ -41,12 +41,12 @@ const MenuOptions = ({
     showOptions === session.id && (
       <div
         ref={menuRef}
-        className="absolute z-10 flex flex-row w-fit bg-[#8ebbff] rounded-md right-10 md:right-40 md:mr-40 cursor-pointer border"
+        className="absolute z-10 w-fit bg-[#8ebbff] rounded-md right-10 md:right-40 md:mr-40 cursor-pointer border"
       >
         <div
           role="button"
           onClick={() => setIsModalOpen(!isModalOpen)}
-          className="flex flex-col w-full gap-3 ml-5"
+          className="flex flex-col w-full gap-3 m-2"
         >
           <Link
             rel="noopener"

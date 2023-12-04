@@ -4,10 +4,11 @@ import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
 import { AddExercise, StartTimer } from "@/components";
-import LoadingModel from "@/components/models/LoadingModel";
+import LoadingModal from "@/components/modals/LoadingModal";
 import {
   HeaderMenu,
   SessionNotes,
+  RestTimer,
   WorkoutCard,
   WorkoutDate,
   WorkoutName,
@@ -21,6 +22,7 @@ import {
 } from "@/actions/workouts";
 import { HiX } from "react-icons/hi";
 import { useTimerContext } from "@/context/TimerContext";
+import { BiTimer } from "react-icons/bi";
 
 type CreateWorkoutFormProps = {
   previous: Workout[] | [];
@@ -123,7 +125,7 @@ const CreateWorkoutForm = ({
   };
 
   return !addExercise ? (
-    <div className="h-screen cursor-pointer p-4 p-color">
+    <div className="h-screen cursor-pointer rounded-lg m-2 p-4 p-color">
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button
@@ -182,7 +184,7 @@ const CreateWorkoutForm = ({
           />
         </div>
 
-        <Suspense fallback={<LoadingModel />}>
+        <Suspense fallback={<LoadingModal />}>
           <WorkoutCard
             session={session}
             setSession={setSession}
@@ -201,7 +203,7 @@ const CreateWorkoutForm = ({
             addSet={addSet}
           />
         </Suspense>
-        <div className="workout-form__btn">
+        <div className="flex flex-col gap-5 my-4">
           <button
             type="submit"
             className="rounded-md bg-blue-300 text-blue-900"

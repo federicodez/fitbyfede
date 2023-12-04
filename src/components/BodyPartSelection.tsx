@@ -99,7 +99,7 @@ const BodyPartSelection = ({
                   handleParts(part);
                   setShowParts(!showParts);
                 }}
-                className={`flex flex-col w-full`}
+                className="flex flex-col w-full"
                 id={part}
               >
                 {part}
@@ -109,14 +109,15 @@ const BodyPartSelection = ({
           ))}
         </ul>
       )}
-      <button
+      <div
+        role="button"
         onClick={() => setShowParts(true)}
-        className={`w-full rounded-md py-1.5 px-5 text-black ${
+        className={`w-full rounded-md py-1.5 px-5 text-black text-center ${
           bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
         }`}
       >
         {bodyPartBtn}
-      </button>
+      </div>
     </div>
   );
 };

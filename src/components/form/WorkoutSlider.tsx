@@ -53,6 +53,7 @@ const WorkoutSlider = ({
       const { sets, lbs, reps } = workout[0];
       const updated = await deleteSet(id, sets, lbs, reps, setId);
       if (updated) {
+        navigator.vibrate(200);
         setSession(updated);
         swiper.slideTo(0);
         router.refresh();
@@ -119,7 +120,7 @@ const WorkoutSlider = ({
                   {set}
                 </button>
                 {previous?.[index]?.lbs[setIdx] ? (
-                  <div className="bg-gray-300 rounded-lg w-fit px-2">{`${previous[index].lbs[setIdx]} x ${previous[index].reps[setIdx]}`}</div>
+                  <div className="bg-gray-300 text-black rounded-lg w-fit px-2">{`${previous[index].lbs[setIdx]} x ${previous[index].reps[setIdx]}`}</div>
                 ) : (
                   <div className="rounded-lg w-12 md:w-20 h-7 bg-gray-300"></div>
                 )}
@@ -137,7 +138,7 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.lbs[setIdx]
                         : ""
                     }`}
-                    className="bg-gray-300 text-black rounded-lg w-14 md:w-20"
+                    className="pl-2 bg-gray-300 text-black rounded-lg w-14 md:w-20"
                   />
                 </div>
                 <div className="">
@@ -153,7 +154,7 @@ const WorkoutSlider = ({
                         ? previous?.[index]?.reps[setIdx]
                         : ""
                     }`}
-                    className="bg-gray-300 text-black rounded-lg w-14 md:w-20"
+                    className="pl-4 bg-gray-300 text-black rounded-lg w-14 md:w-20"
                     required
                   />
                 </div>

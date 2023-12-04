@@ -99,7 +99,7 @@ const CategorySelection = ({
       )}
       <button
         onClick={() => setShowCategories(true)}
-        className={`w-full rounded-md py-1.5 px-5 text-black ${
+        className={`w-full rounded-md py-1.5 px-5 text-black text-center ${
           categoriesBtn !== "Any Category" ? "bg-blue-300" : "bg-gray-50"
         }`}
       >

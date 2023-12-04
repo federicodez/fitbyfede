@@ -5,10 +5,11 @@ import {
   getPreviousWorkout,
 } from "@/actions/workouts";
 import dynamic from "next/dynamic";
+import LoadingModal from "@/components/modals/LoadingModal";
 const CreateWorkoutForm = dynamic(
   () => import("../components/CreateWorkoutForm"),
   {
-    loading: () => <p className="animate-bounce">Loading...</p>,
+    loading: () => <LoadingModal />,
   },
 );
 

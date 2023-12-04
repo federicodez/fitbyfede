@@ -21,7 +21,6 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         // check to see if email and password is valid
-        // console.log("credentials: ", credentials);
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Invalid Credentials");
         }
@@ -59,6 +58,7 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 30,
   },
   debug: process.env.NODE_ENV === "development",
 };

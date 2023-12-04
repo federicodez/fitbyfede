@@ -7,7 +7,7 @@ import Link from "next/link";
 import { createManyWorkouts } from "@/actions/workouts";
 import { useRouter } from "next/navigation";
 import { Workout, CustomData } from "@/types";
-import LoadingModel from "@/components/models/LoadingModel";
+import LoadingModal from "@/components/modals/LoadingModal";
 import {
   BodyPartSelection,
   CategorySelection,
@@ -38,8 +38,6 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
   const [workouts, setWorkouts] = useState(data);
 
   const paginatedWorkouts = paginate(workouts, currentPage, workoutsPerPage);
-
-  const onPageChange = (page: number) => setCurrentPage(page);
 
   const handleClick = async () => {
     try {
@@ -131,7 +129,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
           <h1 className="line-design font-bold text-center">RECENT</h1>
         ) : null}
 
-        <Suspense fallback={<LoadingModel />}>
+        <Suspense fallback={<LoadingModal />}>
           {recent.map(({ bodyPart, gifId, id, name }) => (
             <li key={id} className="my-4">
               <div
@@ -172,7 +170,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
         </Suspense>
         <h1 className="line-design font-bold text-center">EXERCISES</h1>
         <ul>
-          <Suspense fallback={<LoadingModel />}>
+          <Suspense fallback={<LoadingModal />}>
             {filteredExercises?.map(({ bodyPart, id, name }) => (
               <li key={id} className="my-4">
                 <div
@@ -187,7 +185,6 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
                     height={100}
                     width={100}
                     alt="exercise"
-                    unoptimized
                     priority
                   />
                   <div className="col-span-2 flex flex-col items-center mx-2">
@@ -216,13 +213,13 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
             ))}
           </Suspense>
         </ul>
-        <Suspense fallback={<LoadingModel />}>
-          <div className="mt-10 mb-20 pb-20">
+        <Suspense fallback={<LoadingModal />}>
+          <div className="mt-10 mb-20 pb-10 md:mb-10 md:pb-0">
             <Pagination
               currentPage={currentPage}
               workoutsPerPage={workoutsPerPage}
               workouts={workouts.length}
-              onPageChange={onPageChange}
+              setCurrentPage={setCurrentPage}
             />
           </div>
         </Suspense>
@@ -231,7 +228,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
   ) : (
     <div className="wrapper py-3">
       <ul>
-        <Suspense fallback={<LoadingModel />}>
+        <Suspense fallback={<LoadingModal />}>
           {recent?.map(({ gifId, id, name }) => (
             <li key={id} className="p-color">
               <div
@@ -265,7 +262,7 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
         </Suspense>
       </ul>
       <ul className="pb-20">
-        <Suspense fallback={<LoadingModel />}>
+        <Suspense fallback={<LoadingModal />}>
           {filteredExercises?.map(
             ({ id, name, secondaryMuscles, instructions }) => (
               <li key={id} className="p-color">
