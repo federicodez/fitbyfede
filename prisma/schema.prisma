@@ -37,8 +37,25 @@ model User {
   subscription     Boolean          @default(false)
   accounts         Account[]
   workouts         Workout[]
-  WorkoutSession   WorkoutSession[]
+  workoutSessions  WorkoutSession[]
   exercises        Exercise[]
+  measurements     Measurements[]
+}
+
+model Measurements {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  age       Int
+  height    Int
+  weight    Int[]
+  upperArm  Int[]
+  lowerArm  Int[]
+  upperLeg  Int[]
+  lowerLeg  Int[]
+  chest     Int[]
+  abdominal Int[]
+  createdAt DateTime @default(now())
+  userId    String   @db.ObjectId
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Workout {

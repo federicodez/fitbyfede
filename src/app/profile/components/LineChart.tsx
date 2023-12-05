@@ -77,7 +77,14 @@ const LineChart = ({ workouts }: LineChartProps) => {
     },
   };
 
-  return <Line className="chart" id="line" data={data} options={options} />;
+  return (
+    <Line
+      className="border border-[#8ebbff] rounded-md bg-[#24293e] p-4 my-5"
+      id="line"
+      data={data}
+      options={options}
+    />
+  );
 };
 
 export default LineChart;

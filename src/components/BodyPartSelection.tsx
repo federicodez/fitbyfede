@@ -112,7 +112,7 @@ const BodyPartSelection = ({
       <div
         role="button"
         onClick={() => setShowParts(true)}
-        className={`w-full rounded-md py-1.5 px-5 text-black text-center ${
+        className={`w-full text-base rounded-md py-1.5 px-5 text-black text-center ${
           bodyPartBtn !== "Any Body Part" ? "bg-blue-300" : "bg-gray-50"
         }`}
       >

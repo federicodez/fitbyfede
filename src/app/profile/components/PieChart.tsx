@@ -50,7 +50,7 @@ const PieChart = ({ workouts }: PieChartProps) => {
 
   return (
     <Pie
-      className="border border-[#8ebbff] rounded-md p-color p-4 my-5"
+      className="border border-[#8ebbff] rounded-md bg-[#24293e] p-4 my-5"
       id="pie"
       data={data}
     />

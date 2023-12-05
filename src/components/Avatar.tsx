@@ -12,7 +12,7 @@ const Avatar = () => {
         <div className="absolute w-60">
           <Settings />
         </div>
-        <h1 className="text-center text-[#8ebbff] font-semibold">
+        <h1 className="text-center text-xl text-[#8ebbff] font-semibold">
           {session?.user?.name}
         </h1>
       </div>
