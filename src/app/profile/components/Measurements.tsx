@@ -1,9 +1,14 @@
 "use client";
 import { useState } from "react";
-import { createMeasurement } from "@/actions/measurements/createMeasurements";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import type { Measurement } from "@/types";
+import { createMeasurement } from "@/actions/measurements";
 
-const Measurements = () => {
+type MeasurementsProps = {
+  measurements: Measurement[];
+};
+
+const Measurements = ({ measurements }: MeasurementsProps) => {
   const [editing, setEditing] = useState(false);
 
   const {
@@ -14,7 +19,7 @@ const Measurements = () => {
     defaultValues: {
       age: 0,
       weight: 0,
-      height: 0,
+      height: "",
       upperArm: 0,
       lowerArm: 0,
       upperLeg: 0,
@@ -24,10 +29,37 @@ const Measurements = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const {
+      age,
+      height,
+      weight,
+      upperArm,
+      lowerArm,
+      upperLeg,
+      lowerLeg,
+      chest,
+      abdominal,
+    } = data;
+    try {
+      const measurement = await createMeasurement(
+        Number(age),
+        height,
+        Number(weight),
+        Number(upperArm),
+        Number(lowerArm),
+        Number(upperLeg),
+        Number(lowerLeg),
+        Number(chest),
+        Number(abdominal),
+      );
+      console.log("measurement: ", measurement);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  return (
+
+  return !measurements.length ? (
     <div className=" bg-[#24293e] rounded-md border-2 border-[#8ebbff]">
       <h1 className="text-center mt-4 text-[#8ebbff] text-xl font-semibold">
         Measurements
@@ -55,9 +87,7 @@ const Measurements = () => {
             </label>
             <input
               {...register("height")}
-              type="number"
-              pattern="[0-9]*"
-              inputMode="decimal"
+              type="string"
               name="height"
               id="height"
               className="mx-auto pl-2 bg-gray-300 text-black rounded-lg w-14 md:w-20"
@@ -167,7 +197,7 @@ const Measurements = () => {
         <input type="submit" className="mx-auto w-full mb-4 text-[#8ebbff]" />
       </form>
     </div>
-  );
+  ) : null;
 };
 
 export default Measurements;

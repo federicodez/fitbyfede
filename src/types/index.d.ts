@@ -83,14 +83,14 @@ type CustomData = {
 type Measurement = {
   id: string;
   age: number;
-  height: number;
-  weight: number[];
-  upperArm: number[];
-  lowerArm: number[];
-  upperLeg: number[];
-  lowerLeg: number[];
-  chest: number[];
-  abdominal: number[];
+  height: string;
+  weight: number;
+  upperArm: number;
+  lowerArm: number;
+  upperLeg: number;
+  lowerLeg: number;
+  chest: number;
+  abdominal: number;
   createdAt: Date;
   userId: string;
 };

@@ -44,15 +44,15 @@ model User {
 
 model Measurements {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  age       Int
-  height    Int
-  weight    Int[]
-  upperArm  Int[]
-  lowerArm  Int[]
-  upperLeg  Int[]
-  lowerLeg  Int[]
-  chest     Int[]
-  abdominal Int[]
+  age       Int      @default(0)
+  height    String
+  weight    Int      @default(0)
+  upperArm  Int      @default(0)
+  lowerArm  Int      @default(0)
+  upperLeg  Int      @default(0)
+  lowerLeg  Int      @default(0)
+  chest     Int      @default(0)
+  abdominal Int      @default(0)
   createdAt DateTime @default(now())
   userId    String   @db.ObjectId
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

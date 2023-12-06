@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #2f3651;
+  --bg-primary: #24293e;
+  --clr-secondary: #2f3651;
   --clr-red-900: hsla(360, 100%, 17%, 1);
   --clr-blue-500: hsla(227, 47%, 23%, 1);
   --clr-blue-900: hsla(227, 100%, 17%, 1);

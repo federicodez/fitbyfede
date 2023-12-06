@@ -2,7 +2,17 @@
 import prisma from "@/db";
 import { getCurrentUser } from "../users/getCurrentUser";
 
-export const createMeasurement = async () => {
+export const createMeasurement = async (
+  age: number,
+  height: string,
+  weight: number,
+  upperArm: number,
+  lowerArm: number,
+  upperLeg: number,
+  lowerLeg: number,
+  chest: number,
+  abdominal: number,
+) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -12,15 +22,15 @@ export const createMeasurement = async () => {
 
     const measurement = await prisma.measurements.create({
       data: {
-        age: 0,
-        height: 0,
-        weight: [0],
-        upperArm: [0],
-        lowerArm: [0],
-        upperLeg: [0],
-        lowerLeg: [0],
-        chest: [0],
-        abdominal: [0],
+        age,
+        height,
+        weight,
+        upperArm,
+        lowerArm,
+        upperLeg,
+        lowerLeg,
+        chest,
+        abdominal,
         userId: currentUser.id,
       },
     });
