@@ -47,7 +47,7 @@ export const Pagination = ({
   };
 
   return (
-    <ul className="flex flex-1 flex-wrap justify-center items-center gap-5">
+    <ul className="flex flex-row justify-center items-center gap-5">
       {startIndex > 1 ? (
         <button
           type="button"

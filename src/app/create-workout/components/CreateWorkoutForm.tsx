@@ -125,7 +125,7 @@ const CreateWorkoutForm = ({
   };
 
   return !addExercise ? (
-    <div className="h-screen cursor-pointer rounded-lg m-2 p-4 p-color">
+    <div className="h-full cursor-pointer rounded-lg m-2 p-4 p-color">
       <form rel="noopener" action={handleSubmit}>
         <div className="flex flex-row justify-between">
           <button

@@ -6,6 +6,10 @@ import CategorySelection from "./CategorySelection";
 import CreateExercise from "./CreateExercise";
 import CustomButton from "./CustomButton";
 import EmptyState from "./EmptyState";
+import FilteredDetails from "./FilteredDetails";
+import FilteredList from "./FilteredList";
+import RecentDetails from "./RecentDetails";
+import RecentList from "./RecentList";
 import RemoveBtn from "./RemoveBtn";
 import ReplaceBtn from "./ReplaceBtn";
 import StartTimer from "./Timer";
@@ -19,6 +23,10 @@ export {
   CreateExercise,
   CustomButton,
   EmptyState,
+  FilteredDetails,
+  FilteredList,
+  RecentDetails,
+  RecentList,
   RemoveBtn,
   ReplaceBtn,
   StartTimer,
