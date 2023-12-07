@@ -2,7 +2,7 @@
 import prisma from "@/db";
 import { getCurrentUser } from "../users/getCurrentUser";
 
-export const getMeasurements = async () => {
+export const getPrevMeasurment = async () => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -14,12 +14,10 @@ export const getMeasurements = async () => {
       where: { userId: currentUser.id },
     });
 
-    if (!measurements) {
-      return null;
-    }
+    measurements.pop();
 
-    return measurements;
+    return measurements[measurements.length - 1];
   } catch (error) {
-    console.log("Failed to retrieve measurements ", error);
+    console.log("Error loading previous workouts ", error);
   }
 };

@@ -39,13 +39,10 @@ const SearchExercises = ({ data, recentWorkouts }: SearchExercisesProps) => {
   const filteredExercises = useMemo(() => {
     return query === ""
       ? paginatedWorkouts
-      : paginatedWorkouts.filter(({ name }) =>
-          name
-            .toLowerCase()
-            .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, "")),
+      : data.filter(({ name }) =>
+          name.toLowerCase().includes(query.toLowerCase()),
         );
-  }, [query, paginatedWorkouts]);
+  }, [query, data, paginatedWorkouts]);
 
   return !details ? (
     <div className="wrapper m-5 p-2">

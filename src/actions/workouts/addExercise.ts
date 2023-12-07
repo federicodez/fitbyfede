@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/db";
 import { getCurrentUser } from "../users/getCurrentUser";
+import { revalidatePath } from "next/cache";
 
 export const addExercise = async (
   name: string,
@@ -22,6 +23,7 @@ export const addExercise = async (
         userId: currentUser.id,
       },
     });
+    revalidatePath("/search-workout");
     return exercise;
   } catch (error) {
     console.log("Error adding exercise ", error);

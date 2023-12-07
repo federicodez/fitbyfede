@@ -65,25 +65,23 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
   const filteredExercises = useMemo(() => {
     return query === ""
       ? paginatedWorkouts
-      : paginatedWorkouts.filter(({ name }) =>
-          name
-            .toLowerCase()
-            .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, "")),
+      : data.filter(({ name }) =>
+          name.toLowerCase().includes(query.toLowerCase()),
         );
-  }, [query, paginatedWorkouts]);
+  }, [query, data, paginatedWorkouts]);
 
   return !details ? (
     <div className="wrapper m-5 p-2">
+      {create ? <CreateExercise setCreate={setCreate} /> : null}
       <div className="backdrop-blur-lg rounded-md overflow-hidden">
-        <div className="flex flex-row justify-between gap-3">
-          <button
-            type="button"
+        <div className="flex flex-row justify-between gap-3 mb-5">
+          <div
+            role="button"
             onClick={() => setCreate(true)}
-            className="text-white bg-[#24293e] w-full py-1.5 rounded-md cursor-pointer"
+            className="text-white text-center bg-[#24293e] w-full py-1.5 rounded-md cursor-pointer"
           >
             New
-          </button>
+          </div>
           <button
             type="button"
             className="flex justify-center items-center text-3xl text-[#c1121f] w-full rounded-md bg-[#24293e]"
@@ -127,7 +125,6 @@ const SearchBar = ({ data, recentWorkouts }: SearchBarProps) => {
             setWorkouts={setWorkouts}
           />
         </div>
-        {create ? <CreateExercise setCreate={setCreate} /> : null}
         {recent.length ? (
           <h1 className="line-design font-bold text-center">RECENT</h1>
         ) : null}

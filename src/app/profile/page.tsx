@@ -8,7 +8,7 @@ import { getMeasurements } from "@/actions/measurements";
 const Profile = async () => {
   try {
     const workouts = await getWorkouts();
-    const measurements = await getMeasurements();
+    const measurements = (await getMeasurements()) || [];
     return (
       <Navbar>
         <section className="wrapper pb-20 sm:pb-5">

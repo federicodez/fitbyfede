@@ -2,7 +2,7 @@
 import prisma from "@/db";
 import { getCurrentUser } from "../users/getCurrentUser";
 
-export const getMeasurements = async () => {
+export const getRecentMeasurement = async () => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -10,13 +10,10 @@ export const getMeasurements = async () => {
       return null;
     }
 
-    const measurements = await prisma.measurements.findMany({
+    const measurements = await prisma.measurements.findFirst({
       where: { userId: currentUser.id },
+      orderBy: { createdAt: "desc" },
     });
-
-    if (!measurements) {
-      return null;
-    }
 
     return measurements;
   } catch (error) {
