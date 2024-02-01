@@ -47,27 +47,31 @@ const WorkoutCard = ({
   };
 
   const handleDrop = (e: DragEvent) => {
-    const dragBox = session?.Workout?.find(
+    const dragBox = session.Workout.find(
       ({ orderId }) => orderId === Number(dragId),
     );
-    const dropBox = session?.Workout?.find(
+    const dropBox = session.Workout.find(
       ({ orderId }) => orderId === Number(e.currentTarget.id),
     );
 
-    const newOrder = session?.Workout?.map((workout) => {
-      if (workout.id === dragBox?.id) {
-        workout.orderId = dropBox?.orderId;
-      }
-      if (workout.id === e.currentTarget.id) {
-        workout.orderId = dragBox?.orderId;
-      }
-      return workout;
-    });
+    if (dropBox?.orderId && dragBox?.orderId) {
+      session?.Workout?.map((workout) => {
+        if (workout.id === dragBox?.id) {
+          workout.orderId = dropBox.orderId;
+        }
+        if (workout.id === e.currentTarget.id) {
+          workout.orderId = dragBox.orderId;
+        }
+        return workout;
+      });
+      setSession(session);
+      console.log({ session });
+    }
   };
 
-  session.Workout.map((workout) =>
-    console.log("workout: ", workout.name, workout.orderId),
-  );
+  // session.Workout.map((workout) =>
+  //   console.log("workout: ", workout.name, workout.orderId),
+  // );
   return session?.Workout?.map(
     ({ id, orderId, name, sets, lbs, reps, bodyPart }, index) => (
       <div
