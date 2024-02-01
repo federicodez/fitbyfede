@@ -34,9 +34,13 @@ export const createManyWorkouts = async (
 
       const workouts = await Promise.all(
         exercises.map(
-          async ({ name, bodyPart, id, target, equipment, instructions }) => {
+          async (
+            { name, bodyPart, id, target, equipment, instructions },
+            idx,
+          ) => {
             await prisma.workout.create({
               data: {
+                orderId: idx++,
                 name,
                 bodyPart,
                 gifId: id,

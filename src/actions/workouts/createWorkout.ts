@@ -39,6 +39,7 @@ export const createWorkout = async (
 
     const workout = await prisma.workout.create({
       data: {
+        orderId: 1,
         name: name,
         bodyPart: bodyPartBtn,
         target: categoriesBtn,

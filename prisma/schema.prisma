@@ -60,6 +60,7 @@ model Measurements {
 
 model Workout {
   id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  orderId          Int            @default(0)
   name             String
   bodyPart         String
   gifId            String?

@@ -51,6 +51,26 @@ const WorkoutList = ({ initialSessions, currentUser }: WorkoutListProps) => {
       >
         Start a Workout
       </Link>
+      <Link
+        rel="noopener"
+        aria-label="start a workout"
+        href="/train-with-ai"
+        className={`
+          flex 
+          justify-center 
+          items-center 
+          font-bold 
+          rounded-full
+          w-80
+          mx-auto
+          my-5
+          text-[#8ebbff]
+          bg-[#2f3651]
+          sm:mx-auto
+        `}
+      >
+        Train with AI
+      </Link>
       <ul className="workoutlist">
         {sessions?.map((session) => (
           <div key={session.id} className="wrapper">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, DragEvent } from "react";
 import { WorkoutSession, Workout } from "@/types";
 import { MenuOptions, WorkoutSlider } from ".";
 import { SlOptions } from "react-icons/sl";
@@ -40,9 +40,45 @@ const WorkoutCard = ({
   addSet,
 }: WorkoutCardProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dragId, setDragId] = useState("");
+
+  const handleDrag = (e: DragEvent) => {
+    setDragId((e.currentTarget as HTMLDivElement)?.id);
+  };
+
+  const handleDrop = (e: DragEvent) => {
+    const dragBox = session?.Workout?.find(
+      ({ orderId }) => orderId === Number(dragId),
+    );
+    const dropBox = session?.Workout?.find(
+      ({ orderId }) => orderId === Number(e.currentTarget.id),
+    );
+
+    const newOrder = session?.Workout?.map((workout) => {
+      if (workout.id === dragBox?.id) {
+        workout.orderId = dropBox?.orderId;
+      }
+      if (workout.id === e.currentTarget.id) {
+        workout.orderId = dragBox?.orderId;
+      }
+      return workout;
+    });
+  };
+
+  session.Workout.map((workout) =>
+    console.log("workout: ", workout.name, workout.orderId),
+  );
   return session?.Workout?.map(
-    ({ id, name, sets, lbs, reps, bodyPart }, index) => (
-      <div key={id} className="">
+    ({ id, orderId, name, sets, lbs, reps, bodyPart }, index) => (
+      <div
+        draggable
+        onDragOver={(e) => e.preventDefault()}
+        onDragStart={(e) => handleDrag(e)}
+        onDrop={(e) => handleDrop(e)}
+        id={`${orderId}`}
+        key={id}
+        className=""
+      >
         <div className="flex flex-row justify-between items-center my-4">
           <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
 

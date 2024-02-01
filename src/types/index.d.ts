@@ -21,6 +21,7 @@ export type CurrentUser = {
 
 export type Workout = {
   id: string;
+  orderId: number;
   name: string;
   bodyPart: string;
   gifId?: string | null;
