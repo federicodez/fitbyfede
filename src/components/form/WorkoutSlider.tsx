@@ -155,7 +155,6 @@ const WorkoutSlider = ({
                         : ""
                     }`}
                     className="pl-4 bg-gray-300 text-black rounded-lg w-14 md:w-20"
-                    required
                   />
                 </div>
               </li>

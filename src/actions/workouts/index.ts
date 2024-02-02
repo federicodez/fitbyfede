@@ -14,6 +14,7 @@ import { getSessionById } from "./getSessionById";
 import { getSessions } from "./getSessions";
 import { getWorkouts } from "./getWorkouts";
 import { getWorkoutsBySessionId } from "./getWorkoutsBySessionId";
+import { resort } from "./resort";
 import { updateManyWorkouts } from "./updateManyWorkouts";
 import { updateSessionDate } from "./updateSessionDate";
 import { updateWorkout } from "./updateWorkout";
@@ -38,6 +39,7 @@ export {
   getSessions,
   getWorkouts,
   getWorkoutsBySessionId,
+  resort,
   updateManyWorkouts,
   updateSessionDate,
   updateWorkout,

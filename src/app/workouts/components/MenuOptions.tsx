@@ -5,6 +5,9 @@ import Link from "next/link";
 import { WorkoutSession } from "@/types";
 import { HiPencilAlt } from "react-icons/hi";
 import React, { useRef, useEffect } from "react";
+import { HiOutlineTrash } from "react-icons/hi";
+import { deleteSession } from "@/actions/workouts";
+import { useRouter } from "next/navigation";
 
 type MenuOptionsProps = {
   session: WorkoutSession;
@@ -20,6 +23,7 @@ const MenuOptions = ({
   showOptions,
 }: MenuOptionsProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isModalOpen) return;
@@ -36,6 +40,11 @@ const MenuOptions = ({
       document.removeEventListener("click", checkIfClickedOutside);
     };
   }, [menuRef, setIsModalOpen, isModalOpen]);
+
+  const removeWorkout = async (id: string) => {
+    await deleteSession(id);
+    router.refresh();
+  };
 
   return (
     showOptions === session.id && (
@@ -56,7 +65,15 @@ const MenuOptions = ({
             <HiPencilAlt className="workoutlist__edit-btn text-blue-700" />
             <span className="text-lg px-1 text-[#2f3651]">Edit Workout</span>
           </Link>
-          <RemoveBtn id={session.id} />
+
+          <div
+            className="flex flex-row items-center gap-2 text-xl text-red-500"
+            onClick={() => removeWorkout(session.id)}
+          >
+            <HiOutlineTrash role="none" />
+            <span className="text-lg px-1 text-[#2f3651]">Delete</span>
+          </div>
+          {/* <RemoveBtn id={session.id} /> */}
         </div>
       </div>
     )

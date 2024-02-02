@@ -1,8 +1,8 @@
 "use client";
 
 import { HiOutlineTrash } from "react-icons/hi";
-import { useRouter } from "next/navigation";
 import { deleteSession } from "@/actions/workouts";
+import { useRouter } from "next/navigation";
 
 const RemoveBtn = ({ id }: { id: string }) => {
   const router = useRouter();

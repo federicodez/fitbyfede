@@ -3,8 +3,6 @@ import { EmptyState } from "@/components";
 import WorkoutList from "./components/WorkoutList";
 import { getCurrentUser } from "@/actions/users";
 
-export const dynamic = "force-dynamic";
-
 const Workouts = async () => {
   try {
     const currentUser = await getCurrentUser();

@@ -3,6 +3,7 @@ import { WorkoutSession, Workout } from "@/types";
 import { MenuOptions, WorkoutSlider } from ".";
 import { SlOptions } from "react-icons/sl";
 import { ChangeEvent } from "react";
+import { resort } from "@/actions/workouts";
 
 type WorkoutCardProps = {
   session: WorkoutSession;
@@ -46,7 +47,7 @@ const WorkoutCard = ({
     setDragId((e.currentTarget as HTMLDivElement)?.id);
   };
 
-  const handleDrop = (e: DragEvent) => {
+  const handleDrop = async (e: DragEvent) => {
     const dragBox = session.Workout.find(
       ({ orderId }) => orderId === Number(dragId),
     );
@@ -54,101 +55,98 @@ const WorkoutCard = ({
       ({ orderId }) => orderId === Number(e.currentTarget.id),
     );
 
-    if (dropBox?.orderId && dragBox?.orderId) {
-      session?.Workout?.map((workout) => {
-        if (workout.id === dragBox?.id) {
-          workout.orderId = dropBox.orderId;
-        }
-        if (workout.id === e.currentTarget.id) {
-          workout.orderId = dragBox.orderId;
-        }
-        return workout;
-      });
-      setSession(session);
-      console.log({ session });
+    if (dragBox && dropBox && dragBox.orderId !== dropBox.orderId) {
+      const workouts = await resort(dragBox, dropBox);
+
+      if (workouts) {
+        setSession((prev) => ({ ...prev, Workout: workouts }));
+      }
     }
   };
 
-  // session.Workout.map((workout) =>
-  //   console.log("workout: ", workout.name, workout.orderId),
-  // );
-  return session?.Workout?.map(
-    ({ id, orderId, name, sets, lbs, reps, bodyPart }, index) => (
-      <div
-        draggable
-        onDragOver={(e) => e.preventDefault()}
-        onDragStart={(e) => handleDrag(e)}
-        onDrop={(e) => handleDrop(e)}
-        id={`${orderId}`}
-        key={id}
-        className=""
-      >
-        <div className="flex flex-row justify-between items-center my-4">
-          <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
+  return session?.Workout?.sort((a, b) => {
+    if (a.orderId > b.orderId) {
+      return 1;
+    }
+    if (a.orderId < b.orderId) {
+      return -1;
+    }
+    return 0;
+  }).map(({ id, orderId, name, sets, lbs, reps, bodyPart }, index) => (
+    <div
+      draggable
+      onDragOver={(e) => e.preventDefault()}
+      onDragStart={(e) => handleDrag(e)}
+      onDrop={(e) => handleDrop(e)}
+      id={`${orderId}`}
+      key={id}
+      className=""
+    >
+      <div className="flex flex-row justify-between items-center my-4">
+        <h1 className="capitalize flex text-2xl font-bold">{name}</h1>
 
-          <div className="relative">
-            {isMenuOpen && (
-              <MenuOptions
-                id={id}
-                noteIds={noteIds}
-                setNoteIds={setNoteIds}
-                replace={replace}
-                openMenu={openMenu}
-                setOpenMenu={setOpenMenu}
-                isMenuOpen={isMenuOpen}
-                setIsMenuOpen={setIsMenuOpen}
-                setReplace={setReplace}
-                setAddExercise={setAddExercise}
-                removeExercise={removeExercise}
-              />
-            )}
-            <div
-              role="button"
-              onClick={() => {
-                setIsMenuOpen(!isMenuOpen);
-                setOpenMenu(id);
-              }}
-            >
-              <SlOptions
-                role="none"
-                className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
-              />
-            </div>
+        <div className="relative">
+          {isMenuOpen && (
+            <MenuOptions
+              id={id}
+              noteIds={noteIds}
+              setNoteIds={setNoteIds}
+              replace={replace}
+              openMenu={openMenu}
+              setOpenMenu={setOpenMenu}
+              isMenuOpen={isMenuOpen}
+              setIsMenuOpen={setIsMenuOpen}
+              setReplace={setReplace}
+              setAddExercise={setAddExercise}
+              removeExercise={removeExercise}
+            />
+          )}
+          <div
+            role="button"
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+              setOpenMenu(id);
+            }}
+          >
+            <SlOptions
+              role="none"
+              className="flex w-10 bg-gray-300 text-black rounded-md px-2 right-0"
+            />
           </div>
         </div>
-
-        <div className={noteIds.includes(id) ? "" : "hidden"}>
-          <input
-            type="text"
-            name={id}
-            className="bg-white text-black rounded-md w-full"
-            onChange={(e) => handleNotes(e)}
-          />
-        </div>
-        <WorkoutSlider
-          workoutId={id}
-          index={index}
-          sets={sets}
-          lbs={lbs}
-          reps={reps}
-          session={session}
-          setSession={setSession}
-          previous={previous}
-          bodyPart={bodyPart}
-          setOptions={setOptions}
-          setSetOptions={setSetOptions}
-        />
-        <div className="flex flex-col my-4">
-          <button
-            type="button"
-            onClick={() => addSet(id, sets, lbs, reps)}
-            className="mx-10 rounded-full bg-gray-300 text-black"
-          >
-            Add Set
-          </button>
-        </div>
       </div>
-    ),
-  );
+
+      <div className={noteIds.includes(id) ? "" : "hidden"}>
+        <input
+          type="text"
+          name={id}
+          className="bg-white text-black rounded-md w-full"
+          onChange={(e) => handleNotes(e)}
+        />
+      </div>
+      <WorkoutSlider
+        workoutId={id}
+        index={index}
+        sets={sets}
+        lbs={lbs}
+        reps={reps}
+        session={session}
+        setSession={setSession}
+        previous={previous}
+        bodyPart={bodyPart}
+        setOptions={setOptions}
+        setSetOptions={setSetOptions}
+      />
+      <div className="flex flex-col my-4">
+        <button
+          type="button"
+          onClick={() => addSet(id, sets, lbs, reps)}
+          className="mx-10 rounded-full bg-gray-300 text-black"
+        >
+          Add Set
+        </button>
+      </div>
+    </div>
+  ));
 };
 export default WorkoutCard;

@@ -35,19 +35,7 @@ const WorkoutList = ({ initialSessions, currentUser }: WorkoutListProps) => {
         rel="noopener"
         aria-label="start a workout"
         href="/search-workout"
-        className={`
-          flex 
-          justify-center 
-          items-center 
-          font-bold 
-          rounded-full
-          w-80
-          mx-auto
-          my-5
-          bg-[#8ebbff]
-          text-[#2f3651]
-          sm:mx-auto
-        `}
+        className="flex justify-center items-center font-bold rounded-full w-80 mx-auto my-5 bg-[#8ebbff] text-[#2f3651] sm:mx-auto"
       >
         Start a Workout
       </Link>
@@ -55,19 +43,7 @@ const WorkoutList = ({ initialSessions, currentUser }: WorkoutListProps) => {
         rel="noopener"
         aria-label="start a workout"
         href="/train-with-ai"
-        className={`
-          flex 
-          justify-center 
-          items-center 
-          font-bold 
-          rounded-full
-          w-80
-          mx-auto
-          my-5
-          text-[#8ebbff]
-          bg-[#2f3651]
-          sm:mx-auto
-        `}
+        className="flex justify-center items-center font-bold rounded-full w-80 mx-auto my-5 text-[#8ebbff] bg-[#2f3651] sm:mx-auto"
       >
         Train with AI
       </Link>
