@@ -222,7 +222,7 @@ const CreateWorkoutForm = ({
             className="rounded-md bg-blue-300 text-blue-900"
             /**
              * Changing state so AddExercise below renders
-             * Then invoking a function from line 65 with the data entered
+             * Then invoking a function from line 70 with the data entered
              * that will update the workout session in the database
              */
             formAction={(data) => {
