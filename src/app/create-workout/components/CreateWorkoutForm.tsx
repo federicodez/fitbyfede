@@ -1,9 +1,9 @@
 "use client";
 
 /**
- Code Sample
- Lines 62 - 73
- Lines 212 - 221
+ * Code Sample
+ * Lines 70 - 81
+ * Lines 220 - 234
  */
 
 import { useState, Suspense, ChangeEvent } from "react";
@@ -58,7 +58,15 @@ const CreateWorkoutForm = ({
   const router = useRouter();
   const { time } = useTimerContext();
 
-  // updating database with user input
+  /**
+   * I wanted to be able to add another exercise without
+   * losing the data the user entered. Lets say I just finished
+   * adding info for a squat exercise, and now I'm going to do
+   * some bench press. Well if I render the component AddExercise
+   * without updating the workout session in the database then all
+   * the information on squats I previously entered will be lost.
+   * So updating the database with the data entered here is very important.
+   */
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
@@ -212,7 +220,11 @@ const CreateWorkoutForm = ({
           <button
             type="submit"
             className="rounded-md bg-blue-300 text-blue-900"
-            // changing state so AddExercise below renders
+            /**
+             * Changing state so AddExercise below renders
+             * Then invoking a function from line 65 with the data entered
+             * that will update the workout session in the database
+             */
             formAction={(data) => {
               setAddExercise(true);
               addAnotherExercise(data);
@@ -230,6 +242,9 @@ const CreateWorkoutForm = ({
       </form>
     </div>
   ) : (
+    /*
+     * Renders only if the state property addExercise is set to false
+     */
     <AddExercise
       session={session}
       setAddExercise={setAddExercise}
