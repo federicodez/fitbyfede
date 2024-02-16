@@ -243,7 +243,7 @@ const CreateWorkoutForm = ({
     </div>
   ) : (
     /*
-     * Renders only if the state property addExercise is set to false
+     * Renders only if the state property addExercise is set to true
      */
     <AddExercise
       session={session}
