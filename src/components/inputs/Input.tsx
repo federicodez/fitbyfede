@@ -12,6 +12,7 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
+  tabIndex?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -23,6 +24,7 @@ const Input: React.FC<InputProps> = ({
   errors,
   type = "text",
   disabled,
+  tabIndex,
 }) => {
   return (
     <div>
@@ -41,6 +43,7 @@ const Input: React.FC<InputProps> = ({
       <div className="mt-2">
         <input
           id={id}
+          tabIndex={tabIndex}
           type={type}
           placeholder={placeholder}
           autoComplete={id}

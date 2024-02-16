@@ -80,7 +80,7 @@ const WorkoutCard = ({
       onDrop={(e) => handleDrop(e)}
       id={`${orderId}`}
       key={id}
-      className=""
+      className="border-2 rounded-md px-4 my-2"
     >
       <div className="flex flex-row justify-between items-center my-4">
         <h1 className="capitalize flex text-2xl font-bold">{name}</h1>

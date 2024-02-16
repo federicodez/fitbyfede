@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ Code Sample
+ Lines 62 - 73
+ Lines 212 - 221
+ */
+
 import { useState, Suspense, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Workout, WorkoutSession } from "@/types";
@@ -8,7 +14,6 @@ import LoadingModal from "@/components/modals/LoadingModal";
 import {
   HeaderMenu,
   SessionNotes,
-  RestTimer,
   WorkoutCard,
   WorkoutDate,
   WorkoutName,
@@ -22,7 +27,6 @@ import {
 } from "@/actions/workouts";
 import { HiX } from "react-icons/hi";
 import { useTimerContext } from "@/context/TimerContext";
-import { BiTimer } from "react-icons/bi";
 
 type CreateWorkoutFormProps = {
   previous: Workout[] | [];
@@ -54,6 +58,7 @@ const CreateWorkoutForm = ({
   const router = useRouter();
   const { time } = useTimerContext();
 
+  // updating database with user input
   const addAnotherExercise = async (data: FormData) => {
     const dataLbs = Object.values(data.getAll("lbs")?.valueOf());
     const dataReps = Object.values(data.getAll("reps")?.valueOf());
@@ -207,6 +212,7 @@ const CreateWorkoutForm = ({
           <button
             type="submit"
             className="rounded-md bg-blue-300 text-blue-900"
+            // changing state so AddExercise below renders
             formAction={(data) => {
               setAddExercise(true);
               addAnotherExercise(data);

@@ -1,8 +1,17 @@
 "use client";
 
-export default function Ai() {
-  const fullBody = () => {
+import { CurrentUser, WorkoutSession } from "@/types";
+import { fullBody } from "@/actions/workouts/fullbody";
+
+type AiProps = {
+  currentUser: CurrentUser;
+  sessions: WorkoutSession[];
+};
+
+export default function Ai({ currentUser, sessions }: AiProps) {
+  const getfullBody = async () => {
     // check which exercises user worked out previous and select a different exercise
+    const prevWorkout = await fullBody();
   };
 
   const legDay = () => {};
@@ -37,7 +46,7 @@ export default function Ai() {
       <div className="grid grid-cols-2 gap-2">
         <div
           className="text-center border-2 rounded-md cursor-pointer hover:bg-blue-900 hover:text-white"
-          onClick={fullBody}
+          onClick={getfullBody}
         >
           Train Full Body
         </div>

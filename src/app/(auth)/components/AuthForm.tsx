@@ -148,6 +148,7 @@ const AuthForm = () => {
             {variant === "REGISTER" && (
               <Input
                 disabled={isLoading}
+                tabIndex={0}
                 register={register}
                 errors={errors}
                 aria-required
@@ -159,6 +160,7 @@ const AuthForm = () => {
             )}
             <Input
               disabled={isLoading}
+              tabIndex={0}
               register={register}
               errors={errors}
               aria-required
@@ -237,7 +239,7 @@ const AuthForm = () => {
             </div>
             <div
               role="button"
-              tabIndex={1}
+              tabIndex={0}
               onClick={toggleVariant}
               className="underline cursor-pointer"
             >

@@ -53,7 +53,6 @@ const WorkoutSlider = ({
       const { sets, lbs, reps } = workout[0];
       const updated = await deleteSet(id, sets, lbs, reps, setId);
       if (updated) {
-        navigator.vibrate(200);
         setSession(updated);
         swiper.slideTo(0);
         router.refresh();
