@@ -8,3 +8,5 @@ I created this app because I was tired of adding my workouts to my phones notes 
 ## Demo
 
 https://fitbyfede.com
+email: `chandler@bing.com`  
+password: `friends`
